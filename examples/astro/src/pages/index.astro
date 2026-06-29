@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+const base = import.meta.env.BASE_URL;
 ---
 <Base title="Home">
   <h1 class="page-title">Component Anatomy</h1>
@@ -8,7 +9,7 @@ import Base from '../layouts/Base.astro';
   </p>
 
   <div style="display:flex; gap:1rem; flex-wrap:wrap;">
-    <a href="/button" style="
+    <a href={`${base}button`} style="
       display:inline-flex; align-items:center; gap:0.4rem;
       padding:0.6rem 1.2rem; border-radius:6px;
       background:#4f46e5; color:#fff;
@@ -17,7 +18,7 @@ import Base from '../layouts/Base.astro';
     ">
       Button anatomy →
     </a>
-    <a href="/slider" style="
+    <a href={`${base}slider`} style="
       display:inline-flex; align-items:center; gap:0.4rem;
       padding:0.6rem 1.2rem; border-radius:6px;
       border:1px solid #e5e7eb; color:#374151;

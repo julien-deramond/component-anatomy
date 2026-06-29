@@ -3,6 +3,11 @@ export interface Props {
   title: string;
 }
 const { title } = Astro.props;
+
+// import.meta.env.BASE_URL is '/' locally and '/component-anatomy/' on GitHub Pages.
+// Using it as a prefix makes all internal links work in both environments.
+const base = import.meta.env.BASE_URL;
+const path = Astro.url.pathname;
 ---
 <!doctype html>
 <html lang="en">
@@ -97,16 +102,16 @@ const { title } = Astro.props;
   </head>
   <body>
     <header class="site-header">
-      <a href="/" class="site-logo">Component Anatomy</a>
+      <a href={base} class="site-logo">Component Anatomy</a>
       <nav class="site-nav">
-        <a href="/button" aria-current={Astro.url.pathname === '/button' ? 'page' : undefined}>Button</a>
-        <a href="/slider" aria-current={Astro.url.pathname === '/slider' ? 'page' : undefined}>Slider</a>
+        <a href={`${base}button`}   aria-current={path === `${base}button`   ? 'page' : undefined}>Button</a>
+        <a href={`${base}slider`}   aria-current={path === `${base}slider`   ? 'page' : undefined}>Slider</a>
         <span class="site-nav-sep">·</span>
-        <a href="/bs-button" aria-current={Astro.url.pathname === '/bs-button' ? 'page' : undefined}>BS Button</a>
-        <a href="/bs-alert" aria-current={Astro.url.pathname === '/bs-alert' ? 'page' : undefined}>BS Alert</a>
-        <a href="/bs-card" aria-current={Astro.url.pathname === '/bs-card' ? 'page' : undefined}>BS Card</a>
-        <a href="/bs-badge" aria-current={Astro.url.pathname === '/bs-badge' ? 'page' : undefined}>BS Badge</a>
-        <a href="/bs-navbar" aria-current={Astro.url.pathname === '/bs-navbar' ? 'page' : undefined}>BS Navbar</a>
+        <a href={`${base}bs-button`} aria-current={path === `${base}bs-button` ? 'page' : undefined}>BS Button</a>
+        <a href={`${base}bs-alert`}  aria-current={path === `${base}bs-alert`  ? 'page' : undefined}>BS Alert</a>
+        <a href={`${base}bs-card`}   aria-current={path === `${base}bs-card`   ? 'page' : undefined}>BS Card</a>
+        <a href={`${base}bs-badge`}  aria-current={path === `${base}bs-badge`  ? 'page' : undefined}>BS Badge</a>
+        <a href={`${base}bs-navbar`} aria-current={path === `${base}bs-navbar` ? 'page' : undefined}>BS Navbar</a>
       </nav>
     </header>
 

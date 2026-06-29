@@ -1,0 +1,61 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  # Allow triggering a deployment manually from the Actions tab
+  workflow_dispatch:
+
+# Allow only one concurrent deployment; queue new ones, don't cancel in-flight.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        # npm install (not ci) ensures the correct platform-specific esbuild
+        # binary is resolved for the runner OS rather than the lock file's OS.
+        run: npm install
+
+      - name: Build core package
+        run: npm run build
+
+      - name: Build Astro example
+        run: npm run build -w examples/astro
+        env:
+          SITE_URL: https://julienderamond.github.io
+          BASE_PATH: /component-anatomy
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: examples/astro/dist
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
