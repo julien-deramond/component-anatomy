@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-const base = import.meta.env.BASE_URL;
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 ---
 <Base title="Home">
   <h1 class="page-title">Component Anatomy</h1>

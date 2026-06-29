@@ -4,9 +4,9 @@ export interface Props {
 }
 const { title } = Astro.props;
 
-// import.meta.env.BASE_URL is '/' locally and '/component-anatomy/' on GitHub Pages.
-// Using it as a prefix makes all internal links work in both environments.
-const base = import.meta.env.BASE_URL;
+// Normalize BASE_URL to always end with '/' so path concatenation works
+// regardless of whether Astro appends the slash or not.
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 const path = Astro.url.pathname;
 ---
 <!doctype html>
