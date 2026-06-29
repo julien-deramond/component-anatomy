@@ -1,19 +1,22 @@
 /**
- * AnatomyOverlay — renders position:fixed highlight boxes over target elements.
- * Injected into document.body to escape ancestor stacking contexts and transforms.
+ * AnatomyOverlay — renders position:fixed highlight boxes + name label chips
+ * over target elements. Injected into document.body to escape ancestor
+ * stacking contexts and CSS transforms.
  */
 export declare class AnatomyOverlay {
     private overlays;
+    private labels;
     private activeElements;
+    private activePartName;
     private rafId;
     constructor();
     /**
-     * Show highlight overlays over each of the given elements.
-     * Replaces any existing overlays.
+     * Show highlight overlays + label chip over each of the given elements.
+     * partName is shown in the floating chip.
      */
-    show(elements: HTMLElement[]): void;
+    show(elements: HTMLElement[], partName?: string): void;
     /**
-     * Remove all overlays from the DOM.
+     * Remove all overlays and labels from the DOM.
      */
     hide(): void;
     /**

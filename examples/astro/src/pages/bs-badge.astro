@@ -1,0 +1,48 @@
+---
+import Base from '../layouts/Base.astro';
+import ComponentAnatomy from '@component-anatomy/astro/ComponentAnatomy.astro';
+import type { AnatomyPartDefinition } from '@component-anatomy/core';
+
+const parts: AnatomyPartDefinition[] = [
+  {
+    id: 'root',
+    name: 'Root',
+    description: `The outer container — here a \`<button>\` — that the badge is attached to. Bootstrap does not define a formal wrapper; the badge is typically an inline child of its host element.\n\nThe host element provides the positioning context (\`position: relative\`) when the badge is used in "counter" mode.`,
+  },
+  {
+    id: 'label',
+    name: 'Label',
+    description: `The host element's visible text. In a button, this is the button label. The badge visually modifies the label's meaning (e.g. "Messages" + "4 unread").`,
+  },
+  {
+    id: 'badge',
+    name: 'Badge',
+    description: `The \`.badge\` element itself. A \`<span>\` with \`display: inline-flex\`, \`white-space: nowrap\`, \`border-radius\`, and a contextual background.\n\nFor counters, add a visually hidden \`<span class="visually-hidden">\` inside the badge to provide context for screen readers — e.g. "4 unread messages" rather than just "4".`,
+  },
+  {
+    id: 'sr-hint',
+    name: 'Screen reader hint',
+    description: `A \`.visually-hidden\` (or \`.visually-hidden-focusable\`) span inside or adjacent to the badge that provides context for assistive technology.\n\nBootstrap's \`.visually-hidden\` applies a CSS-clip technique: the element is 1×1px and clipped, remaining in the accessibility tree without affecting visual layout.`,
+  },
+];
+---
+
+<Base title="Bootstrap Badge">
+  <h1 class="page-title">Bootstrap Badge</h1>
+  <p class="page-subtitle">
+    Bootstrap v5 · <code>.badge</code> — a small status and count indicator.
+  </p>
+
+  <div class="section">
+    <p class="section-label">Anatomy</p>
+    <ComponentAnatomy parts={parts}>
+      <button data-part="root" type="button" class="btn btn-secondary d-inline-flex align-items-center gap-2">
+        <span data-part="label">Messages</span>
+        <span data-part="badge" class="badge bg-danger rounded-pill">
+          4
+          <span data-part="sr-hint" class="visually-hidden">unread messages</span>
+        </span>
+      </button>
+    </ComponentAnatomy>
+  </div>
+</Base>

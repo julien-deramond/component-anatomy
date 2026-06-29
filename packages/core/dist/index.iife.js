@@ -88,6 +88,7 @@ var ComponentAnatomy = (() => {
 
   // src/overlay.ts
   var OVERLAY_CLASS = "ca-overlay";
+  var LABEL_CLASS = "ca-overlay-label";
   var STYLE_ID = "ca-overlay-styles";
   function injectStyles() {
     if (document.getElementById(STYLE_ID)) return;
@@ -99,14 +100,48 @@ var ComponentAnatomy = (() => {
       pointer-events: none;
       box-sizing: border-box;
       border-radius: var(--ca-overlay-radius, 4px);
-      background: var(--ca-overlay-bg, rgba(99, 102, 241, 0.10));
-      outline: 2px solid var(--ca-overlay-border, rgba(99, 102, 241, 0.55));
+      background: var(--ca-overlay-bg, rgba(99, 102, 241, 0.18));
+      outline: 2px solid var(--ca-overlay-border, rgba(99, 102, 241, 0.75));
       outline-offset: 1px;
-      z-index: var(--ca-overlay-z, 9999);
-      transition: opacity 120ms ease;
+      z-index: var(--ca-overlay-z, 9998);
+      transition: opacity 150ms ease;
     }
     .${OVERLAY_CLASS}.ca-overlay--hidden {
       opacity: 0;
+    }
+
+    /* Name label chip \u2014 floats above the overlay */
+    .${LABEL_CLASS} {
+      position: fixed;
+      pointer-events: none;
+      z-index: var(--ca-overlay-z, 9999);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 7px 2px 5px;
+      border-radius: 4px;
+      background: var(--ca-label-bg, rgba(79, 70, 229, 1));
+      color: var(--ca-label-fg, #fff);
+      font-family: ui-monospace, 'Cascadia Code', 'Fira Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+      line-height: 1.6;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+      transition: opacity 150ms ease;
+    }
+    .${LABEL_CLASS}.ca-overlay--hidden {
+      opacity: 0;
+    }
+    .${LABEL_CLASS}::before {
+      content: '';
+      display: inline-block;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.6);
+      flex-shrink: 0;
     }
   `;
     document.head.appendChild(style);
@@ -114,31 +149,41 @@ var ComponentAnatomy = (() => {
   var AnatomyOverlay = class {
     constructor() {
       this.overlays = [];
+      this.labels = [];
       this.activeElements = [];
+      this.activePartName = "";
       this.rafId = null;
       injectStyles();
     }
     /**
-     * Show highlight overlays over each of the given elements.
-     * Replaces any existing overlays.
+     * Show highlight overlays + label chip over each of the given elements.
+     * partName is shown in the floating chip.
      */
-    show(elements) {
+    show(elements, partName = "") {
       this.hide();
       this.activeElements = elements;
-      elements.forEach((el) => {
+      this.activePartName = partName;
+      elements.forEach(() => {
         const div = document.createElement("div");
         div.className = `${OVERLAY_CLASS} ca-overlay--hidden`;
         div.setAttribute("aria-hidden", "true");
         document.body.appendChild(div);
         this.overlays.push(div);
+        const label = document.createElement("div");
+        label.className = `${LABEL_CLASS} ca-overlay--hidden`;
+        label.setAttribute("aria-hidden", "true");
+        label.textContent = partName;
+        document.body.appendChild(label);
+        this.labels.push(label);
       });
       requestAnimationFrame(() => {
         this._position();
         this.overlays.forEach((o) => o.classList.remove("ca-overlay--hidden"));
+        this.labels.forEach((l) => l.classList.remove("ca-overlay--hidden"));
       });
     }
     /**
-     * Remove all overlays from the DOM.
+     * Remove all overlays and labels from the DOM.
      */
     hide() {
       if (this.rafId !== null) {
@@ -146,8 +191,11 @@ var ComponentAnatomy = (() => {
         this.rafId = null;
       }
       this.overlays.forEach((o) => o.remove());
+      this.labels.forEach((l) => l.remove());
       this.overlays = [];
+      this.labels = [];
       this.activeElements = [];
+      this.activePartName = "";
     }
     /**
      * Recompute overlay positions. Call on scroll or resize.
@@ -164,14 +212,22 @@ var ComponentAnatomy = (() => {
       this.hide();
     }
     _position() {
+      const LABEL_OFFSET = 6;
+      const LABEL_HEIGHT = 22;
       this.activeElements.forEach((el, i) => {
         const overlay = this.overlays[i];
+        const label = this.labels[i];
         if (!overlay) return;
         const rect = el.getBoundingClientRect();
         overlay.style.top = `${rect.top}px`;
         overlay.style.left = `${rect.left}px`;
         overlay.style.width = `${rect.width}px`;
         overlay.style.height = `${rect.height}px`;
+        if (!label) return;
+        const labelTop = rect.top - LABEL_HEIGHT - LABEL_OFFSET;
+        const finalTop = labelTop < 4 ? rect.bottom + LABEL_OFFSET : labelTop;
+        label.style.top = `${finalTop}px`;
+        label.style.left = `${rect.left}px`;
       });
     }
   };
@@ -190,13 +246,16 @@ var ComponentAnatomy = (() => {
       listeners.get(event)?.forEach((fn) => fn(partId));
     }
     const cleanupFns = [];
-    function highlight(partId) {
+    function highlight(partId, source = "panel") {
       const elements = registry.query().get(partId) ?? [];
-      overlay.show(elements);
+      overlay.show(elements, partId);
       if (panel) {
         panel.querySelectorAll("[data-anatomy-item]").forEach((el) => {
           if (el.dataset.anatomyItem === partId) {
             el.setAttribute("data-active", "");
+            if (source === "preview") {
+              el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            }
           } else {
             el.removeAttribute("data-active");
           }
@@ -217,17 +276,13 @@ var ComponentAnatomy = (() => {
       const map = registry.query();
       map.forEach((elements, partId) => {
         elements.forEach((el) => {
-          const enter = () => highlight(partId);
+          const enter = () => highlight(partId, "preview");
           const leave = () => unhighlight();
           el.addEventListener("mouseenter", enter);
           el.addEventListener("mouseleave", leave);
-          el.addEventListener("focus", enter);
-          el.addEventListener("blur", leave);
           cleanupFns.push(() => {
             el.removeEventListener("mouseenter", enter);
             el.removeEventListener("mouseleave", leave);
-            el.removeEventListener("focus", enter);
-            el.removeEventListener("blur", leave);
           });
         });
       });
@@ -236,7 +291,7 @@ var ComponentAnatomy = (() => {
       if (!panel) return;
       panel.querySelectorAll("[data-anatomy-item]").forEach((el) => {
         const partId = el.dataset.anatomyItem ?? "";
-        const enter = () => highlight(partId);
+        const enter = () => highlight(partId, "panel");
         const leave = () => unhighlight();
         el.addEventListener("mouseenter", enter);
         el.addEventListener("mouseleave", leave);

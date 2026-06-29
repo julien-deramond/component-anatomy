@@ -35,15 +35,19 @@ export function createController(options: AnatomyOptions): AnatomyController {
   // Cleanup registry
   const cleanupFns: Array<() => void> = [];
 
-  function highlight(partId: string) {
+  function highlight(partId: string, source: 'preview' | 'panel' = 'panel') {
     const elements = registry.query().get(partId) ?? [];
-    overlay.show(elements);
+    overlay.show(elements, partId);
 
-    // Mark matching panel items active
+    // Mark matching panel items active + scroll into view when triggered from preview
     if (panel) {
       panel.querySelectorAll<HTMLElement>('[data-anatomy-item]').forEach((el) => {
         if (el.dataset.anatomyItem === partId) {
           el.setAttribute('data-active', '');
+          // Only auto-scroll when hover comes from the component, not the panel itself
+          if (source === 'preview') {
+            el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
         } else {
           el.removeAttribute('data-active');
         }
@@ -71,17 +75,17 @@ export function createController(options: AnatomyOptions): AnatomyController {
 
     map.forEach((elements, partId) => {
       elements.forEach((el) => {
-        const enter = () => highlight(partId);
+        // Mouse only — no focus/blur here.
+        // Preview elements are a live component; adding tabstops breaks
+        // their natural tab order and confuses assistive technology.
+        // Keyboard navigation is handled via the panel entries only.
+        const enter = () => highlight(partId, 'preview');
         const leave = () => unhighlight();
         el.addEventListener('mouseenter', enter);
         el.addEventListener('mouseleave', leave);
-        el.addEventListener('focus', enter);
-        el.addEventListener('blur', leave);
         cleanupFns.push(() => {
           el.removeEventListener('mouseenter', enter);
           el.removeEventListener('mouseleave', leave);
-          el.removeEventListener('focus', enter);
-          el.removeEventListener('blur', leave);
         });
       });
     });
@@ -92,7 +96,7 @@ export function createController(options: AnatomyOptions): AnatomyController {
 
     panel.querySelectorAll<HTMLElement>('[data-anatomy-item]').forEach((el) => {
       const partId = el.dataset.anatomyItem ?? '';
-      const enter = () => highlight(partId);
+      const enter = () => highlight(partId, 'panel');
       const leave = () => unhighlight();
       el.addEventListener('mouseenter', enter);
       el.addEventListener('mouseleave', leave);
