@@ -1,0 +1,79 @@
+---
+export interface Props {
+  value?: number;
+  min?: number;
+  max?: number;
+}
+const { value = 40, min = 0, max = 100 } = Astro.props;
+const pct = ((value - min) / (max - min)) * 100;
+---
+
+<div data-part="root" class="slider" role="none">
+  <div data-part="track" class="slider-track">
+    <div data-part="range" class="slider-range" style={`width: ${pct}%`}></div>
+    <div
+      data-part="thumb"
+      class="slider-thumb"
+      style={`left: ${pct}%`}
+      role="slider"
+      aria-valuemin={min}
+      aria-valuemax={max}
+      aria-valuenow={value}
+      tabindex="0"
+    ></div>
+  </div>
+  <div data-part="output" class="slider-output" aria-live="polite">
+    {value}
+  </div>
+</div>
+
+<style>
+  .slider {
+    width: 100%;
+    max-width: 280px;
+    user-select: none;
+  }
+
+  .slider-track {
+    position: relative;
+    height: 6px;
+    background: #e5e7eb;
+    border-radius: 99px;
+    margin-bottom: 1.2rem;
+  }
+
+  .slider-range {
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    background: #4f46e5;
+    border-radius: 99px;
+    pointer-events: none;
+  }
+
+  .slider-thumb {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid #4f46e5;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+    cursor: grab;
+    transition: border-color 120ms;
+  }
+
+  .slider-thumb:focus-visible {
+    outline: 2px solid #818cf8;
+    outline-offset: 2px;
+  }
+
+  .slider-output {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #4f46e5;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+</style>

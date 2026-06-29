@@ -1,0 +1,27 @@
+{
+  "name": "@component-anatomy/core",
+  "version": "0.1.0",
+  "description": "Framework-agnostic runtime for interactive component anatomy documentation",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "browser": "./dist/index.iife.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "node build.mjs",
+    "dev": "node build.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "tsup": "^8.3.0",
+    "typescript": "^5.4.5"
+  }
+}

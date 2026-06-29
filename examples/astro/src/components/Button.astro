@@ -1,0 +1,54 @@
+---
+export interface Props {
+  label?: string;
+  icon?: boolean;
+}
+const { label = 'Save changes', icon = true } = Astro.props;
+---
+
+<button data-part="root" class="btn" type="button">
+  {icon && (
+    <span data-part="icon" class="btn-icon" aria-hidden="true">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M2 8.5L6 12.5L14 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </span>
+  )}
+  <span data-part="label" class="btn-label">{label}</span>
+</button>
+
+<style>
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 1.1rem;
+    border-radius: 6px;
+    border: 1px solid #4f46e5;
+    background: #4f46e5;
+    color: #fff;
+    font-size: 0.875rem;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 120ms ease, border-color 120ms ease;
+    line-height: 1.4;
+  }
+
+  .btn:hover { background: #4338ca; border-color: #4338ca; }
+  .btn:active { background: #3730a3; }
+  .btn:focus-visible {
+    outline: 2px solid #818cf8;
+    outline-offset: 2px;
+  }
+
+  .btn-icon {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .btn-label {
+    white-space: nowrap;
+  }
+</style>

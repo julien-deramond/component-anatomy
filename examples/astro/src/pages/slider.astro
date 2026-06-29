@@ -1,0 +1,75 @@
+---
+import Base from '../layouts/Base.astro';
+import ComponentAnatomy from '@component-anatomy/astro/ComponentAnatomy.astro';
+import Slider from '../components/Slider.astro';
+import type { AnatomyPartDefinition } from '@component-anatomy/core';
+
+const parts: AnatomyPartDefinition[] = [
+  {
+    id: 'root',
+    name: 'Root',
+    description: `
+The outermost container. Sets the width context for the track and coordinates
+keyboard and pointer events across all child parts.
+    `.trim(),
+  },
+  {
+    id: 'track',
+    name: 'Track',
+    description: `
+The horizontal rail that represents the full range of values.
+
+The track is a positioned container — both the range fill and the thumb are
+absolutely positioned relative to it. Its height and border-radius define
+the visual style of the slider line.
+    `.trim(),
+  },
+  {
+    id: 'range',
+    name: 'Range',
+    description: `
+The filled portion of the track from the minimum to the current value.
+
+Its width is set inline as a percentage: \`width: ${40}%\`. It is
+purely decorative and carries \`pointer-events: none\` so clicks pass
+through to the track.
+    `.trim(),
+  },
+  {
+    id: 'thumb',
+    name: 'Thumb',
+    description: `
+The draggable handle that represents the current value.
+
+Receives \`role="slider"\` and exposes \`aria-valuenow\`, \`aria-valuemin\`,
+and \`aria-valuemax\` for assistive technology. Keyboard interaction:
+\`ArrowLeft\` / \`ArrowRight\` decrement / increment the value by one step.
+    `.trim(),
+  },
+  {
+    id: 'output',
+    name: 'Output',
+    description: `
+Displays the current numeric value as text.
+
+Uses \`aria-live="polite"\` so screen readers announce value changes
+without interrupting the user. Updates in sync with the thumb position.
+    `.trim(),
+  },
+];
+---
+
+<Base title="Slider">
+  <h1 class="page-title">Slider</h1>
+  <p class="page-subtitle">
+    A range input for selecting a numeric value within a defined interval.
+    Hover a part name or the live component to explore the anatomy.
+  </p>
+
+  <div class="section">
+    <p class="section-label">Anatomy</p>
+    <ComponentAnatomy parts={parts}>
+      <Slider value={40} />
+    </ComponentAnatomy>
+  </div>
+</Base>

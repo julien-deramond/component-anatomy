@@ -1,0 +1,205 @@
+---
+import { marked } from 'marked';
+import type { AnatomyPartDefinition } from '@component-anatomy/core';
+
+export interface Props {
+  parts?: AnatomyPartDefinition[];
+  class?: string;
+  label?: string;
+}
+
+const { parts, class: className, label = 'Component anatomy' } = Astro.props;
+
+// Unique ID per instance — prevents cross-wiring when multiple
+// ComponentAnatomy blocks appear on the same page.
+const instanceId = `ca-${Math.random().toString(36).slice(2, 9)}`;
+
+// Render all Markdown descriptions server-side (zero client Markdown bundle)
+const renderedParts = await Promise.all(
+  (parts ?? []).map(async (part) => ({
+    ...part,
+    html: part.description ? await marked.parse(part.description) : null,
+  }))
+);
+---
+
+<div
+  class:list={['ca-root', className]}
+  data-anatomy-root={instanceId}
+  aria-label={label}
+>
+  {/* Left column: live component preview */}
+  <div class="ca-preview" data-anatomy-preview={instanceId}>
+    <slot />
+  </div>
+
+  {/* Right column: documentation panel */}
+  <div class="ca-panel" data-anatomy-panel={instanceId} role="list" aria-label="Anatomy parts">
+    {renderedParts.length > 0
+      ? renderedParts.map((part) => (
+          <div
+            class="ca-part-entry"
+            data-anatomy-item={part.id}
+            role="listitem"
+            tabindex="0"
+            aria-label={part.name}
+          >
+            <h3 class="ca-part-name">
+              <span class="ca-part-dot" aria-hidden="true"></span>
+              {part.name}
+            </h3>
+            {part.html && (
+              <div class="ca-part-description" set:html={part.html} />
+            )}
+          </div>
+        ))
+      : (
+          <p class="ca-no-parts">
+            No parts defined. Add <code>data-part="name"</code> to your component elements.
+          </p>
+        )
+    }
+  </div>
+</div>
+
+{/* Inline styles scoped to this component */}
+<style>
+  .ca-root {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--ca-gap, 2.5rem);
+    align-items: start;
+    font-family: inherit;
+  }
+
+  .ca-preview {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 120px;
+    padding: var(--ca-preview-padding, 2rem);
+    border-radius: var(--ca-preview-radius, 8px);
+    background: var(--ca-preview-bg, #f8f9fa);
+    border: 1px solid var(--ca-preview-border, #e9ecef);
+  }
+
+  .ca-panel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ca-part-gap, 0);
+  }
+
+  .ca-part-entry {
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    cursor: default;
+    transition: background 120ms ease;
+    border-left: 2px solid transparent;
+    outline: none;
+  }
+
+  .ca-part-entry:focus-visible {
+    outline: 2px solid var(--ca-overlay-border, rgba(99, 102, 241, 0.7));
+    outline-offset: 2px;
+  }
+
+  .ca-part-entry[data-active] {
+    background: var(--ca-item-active-bg, rgba(99, 102, 241, 0.07));
+    border-left-color: var(--ca-overlay-border, rgba(99, 102, 241, 0.6));
+  }
+
+  .ca-part-name {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0 0 0.35rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--ca-part-name-color, #374151);
+  }
+
+  .ca-part-entry[data-active] .ca-part-name {
+    color: var(--ca-overlay-border, rgba(99, 102, 241, 0.9));
+  }
+
+  .ca-part-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.5;
+    flex-shrink: 0;
+  }
+
+  .ca-part-description {
+    font-size: 0.875rem;
+    line-height: 1.65;
+    color: var(--ca-part-desc-color, #4b5563);
+  }
+
+  /* Prose resets for Markdown output */
+  .ca-part-description :global(p) { margin: 0 0 0.6em; }
+  .ca-part-description :global(p:last-child) { margin-bottom: 0; }
+  .ca-part-description :global(h1),
+  .ca-part-description :global(h2),
+  .ca-part-description :global(h3) {
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin: 0.8em 0 0.3em;
+    color: var(--ca-part-name-color, #374151);
+  }
+  .ca-part-description :global(code) {
+    font-size: 0.8em;
+    padding: 0.1em 0.35em;
+    border-radius: 3px;
+    background: rgba(0,0,0,0.06);
+    font-family: ui-monospace, monospace;
+  }
+  .ca-part-description :global(a) {
+    color: var(--ca-link-color, #4f46e5);
+  }
+  .ca-part-description :global(ul) {
+    margin: 0.4em 0;
+    padding-left: 1.2em;
+  }
+
+  .ca-no-parts {
+    font-size: 0.875rem;
+    color: #9ca3af;
+    font-style: italic;
+  }
+
+  @media (max-width: 720px) {
+    .ca-root {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+{/* Client script — Astro deduplicates this module across all instances on a page */}
+<script>
+  import { createAnatomy } from '@component-anatomy/core';
+
+  function init() {
+    document.querySelectorAll<HTMLElement>('[data-anatomy-root]').forEach((root) => {
+      // Skip already-initialized instances
+      if (root.dataset.anatomyInit) return;
+      root.dataset.anatomyInit = '1';
+
+      const id = root.dataset.anatomyRoot!;
+      const preview = root.querySelector<HTMLElement>(`[data-anatomy-preview="${id}"]`);
+      const panel   = root.querySelector<HTMLElement>(`[data-anatomy-panel="${id}"]`);
+      if (!preview) return;
+
+      createAnatomy({ root: preview, panel: panel ?? undefined });
+    });
+  }
+
+  // Run on load and on any future navigation (Astro View Transitions)
+  init();
+  document.addEventListener('astro:page-load', init);
+</script>

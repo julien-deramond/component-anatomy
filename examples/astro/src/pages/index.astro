@@ -1,0 +1,30 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="Home">
+  <h1 class="page-title">Component Anatomy</h1>
+  <p class="page-subtitle">
+    Interactive anatomy documentation for your design system components.
+  </p>
+
+  <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+    <a href="/button" style="
+      display:inline-flex; align-items:center; gap:0.4rem;
+      padding:0.6rem 1.2rem; border-radius:6px;
+      background:#4f46e5; color:#fff;
+      font-size:0.875rem; font-weight:500;
+      text-decoration:none;
+    ">
+      Button anatomy →
+    </a>
+    <a href="/slider" style="
+      display:inline-flex; align-items:center; gap:0.4rem;
+      padding:0.6rem 1.2rem; border-radius:6px;
+      border:1px solid #e5e7eb; color:#374151;
+      font-size:0.875rem; font-weight:500;
+      text-decoration:none;
+    ">
+      Slider anatomy →
+    </a>
+  </div>
+</Base>

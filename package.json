@@ -1,0 +1,17 @@
+{
+  "name": "component-anatomy-monorepo",
+  "private": true,
+  "version": "0.0.0",
+  "workspaces": [
+    "packages/*",
+    "examples/*"
+  ],
+  "scripts": {
+    "build": "npm run build -w packages/core",
+    "dev": "npm run dev -w examples/astro --",
+    "typecheck": "npm run typecheck -w packages/core"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5"
+  }
+}

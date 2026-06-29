@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Component Anatomy — Plain HTML</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #fff;
+      color: #111827;
+      padding: 3rem 2rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    h1 { font-size: 1.5rem; margin-bottom: 0.35rem; }
+    .subtitle { font-size: 0.9rem; color: #6b7280; margin-bottom: 2.5rem; }
+
+    .section-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #9ca3af;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #f3f4f6;
+    }
+
+    /* ── Anatomy layout ── */
+    .ca-root {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2.5rem;
+      align-items: start;
+    }
+
+    .ca-preview {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 120px;
+      padding: 2rem;
+      border-radius: 8px;
+      background: #f8f9fa;
+      border: 1px solid #e9ecef;
+    }
+
+    .ca-panel {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .ca-part-entry {
+      padding: 0.75rem 1rem;
+      border-radius: 6px;
+      cursor: default;
+      transition: background 120ms ease;
+      border-left: 2px solid transparent;
+    }
+
+    .ca-part-entry[data-active] {
+      background: rgba(99, 102, 241, 0.07);
+      border-left-color: rgba(99, 102, 241, 0.6);
+    }
+
+    .ca-part-name {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: #374151;
+      margin-bottom: 0.3rem;
+    }
+
+    .ca-part-entry[data-active] .ca-part-name {
+      color: rgba(99, 102, 241, 0.9);
+    }
+
+    .ca-part-dot {
+      display: inline-block;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+      opacity: 0.5;
+      flex-shrink: 0;
+    }
+
+    .ca-part-description {
+      font-size: 0.875rem;
+      line-height: 1.6;
+      color: #4b5563;
+    }
+
+    /* ── Slider component ── */
+    .slider {
+      width: 100%;
+      max-width: 260px;
+      user-select: none;
+    }
+
+    .slider-track {
+      position: relative;
+      height: 6px;
+      background: #e5e7eb;
+      border-radius: 99px;
+      margin-bottom: 1.2rem;
+    }
+
+    .slider-range {
+      position: absolute;
+      top: 0; left: 0; bottom: 0;
+      width: 40%;
+      background: #4f46e5;
+      border-radius: 99px;
+      pointer-events: none;
+    }
+
+    .slider-thumb {
+      position: absolute;
+      top: 50%;
+      left: 40%;
+      transform: translate(-50%, -50%);
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: #fff;
+      border: 2px solid #4f46e5;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+      cursor: grab;
+    }
+
+    .slider-output {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #4f46e5;
+      text-align: right;
+    }
+
+    @media (max-width: 640px) {
+      .ca-root { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Slider</h1>
+  <p class="subtitle">
+    Hover a part name or the component to see the interactive anatomy overlay.
+    No build step — loaded via IIFE from a local file.
+  </p>
+
+  <p class="section-label">Anatomy</p>
+
+  <div class="ca-root" data-anatomy-root="slider-demo">
+
+    <!-- Left: live component preview -->
+    <div class="ca-preview" data-anatomy-preview="slider-demo">
+      <div data-part="root" class="slider">
+        <div data-part="track" class="slider-track">
+          <div data-part="range" class="slider-range"></div>
+          <div
+            data-part="thumb"
+            class="slider-thumb"
+            role="slider"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-valuenow="40"
+            tabindex="0"
+          ></div>
+        </div>
+        <div data-part="output" class="slider-output">40</div>
+      </div>
+    </div>
+
+    <!-- Right: documentation panel -->
+    <div class="ca-panel" data-anatomy-panel="slider-demo" role="list">
+
+      <div class="ca-part-entry" data-anatomy-item="root" tabindex="0" role="listitem">
+        <div class="ca-part-name"><span class="ca-part-dot"></span>Root</div>
+        <p class="ca-part-description">
+          The outermost container. Sets width context and coordinates events
+          across all child parts.
+        </p>
+      </div>
+
+      <div class="ca-part-entry" data-anatomy-item="track" tabindex="0" role="listitem">
+        <div class="ca-part-name"><span class="ca-part-dot"></span>Track</div>
+        <p class="ca-part-description">
+          The horizontal rail representing the full value range. Acts as a
+          positioned container for the Range and Thumb.
+        </p>
+      </div>
+
+      <div class="ca-part-entry" data-anatomy-item="range" tabindex="0" role="listitem">
+        <div class="ca-part-name"><span class="ca-part-dot"></span>Range</div>
+        <p class="ca-part-description">
+          The filled portion of the track from the minimum to the current value.
+          Width is set as a percentage of the track.
+        </p>
+      </div>
+
+      <div class="ca-part-entry" data-anatomy-item="thumb" tabindex="0" role="listitem">
+        <div class="ca-part-name"><span class="ca-part-dot"></span>Thumb</div>
+        <p class="ca-part-description">
+          The draggable handle. Carries <code>role="slider"</code> and
+          <code>aria-valuenow</code> for assistive technology.
+        </p>
+      </div>
+
+      <div class="ca-part-entry" data-anatomy-item="output" tabindex="0" role="listitem">
+        <div class="ca-part-name"><span class="ca-part-dot"></span>Output</div>
+        <p class="ca-part-description">
+          Displays the current numeric value. Uses <code>aria-live="polite"</code>
+          so screen readers announce changes.
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Load the core IIFE from the local build output -->
+  <script src="../../packages/core/dist/index.iife.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var root = document.getElementById
+        ? document.querySelector('[data-anatomy-preview="slider-demo"]')
+        : null;
+      var panel = document.querySelector('[data-anatomy-panel="slider-demo"]');
+      if (root) {
+        window.ComponentAnatomy.createAnatomy({ root: root, panel: panel });
+      }
+    });
+  </script>
+
+</body>
+</html>
