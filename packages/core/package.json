@@ -2,10 +2,30 @@
   "name": "@component-anatomy/core",
   "version": "0.1.0",
   "description": "Framework-agnostic runtime for interactive component anatomy documentation",
+  "license": "MIT",
+  "author": "Julien Déramond",
+  "homepage": "https://github.com/julienderamond/component-anatomy#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/julienderamond/component-anatomy",
+    "directory": "packages/core"
+  },
+  "bugs": {
+    "url": "https://github.com/julienderamond/component-anatomy/issues"
+  },
+  "keywords": [
+    "component-anatomy",
+    "design-system",
+    "documentation",
+    "dom",
+    "overlay",
+    "anatomy",
+    "interactive",
+    "framework-agnostic"
+  ],
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
-  "browser": "./dist/index.iife.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
@@ -14,14 +34,20 @@
       "types": "./dist/index.d.ts"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist",
+    "src"
+  ],
+  "sideEffects": false,
   "scripts": {
     "build": "node build.mjs",
-    "dev": "node build.mjs",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "tsup": "^8.3.0",
+    "esbuild": "^0.21.0",
     "typescript": "^5.4.5"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }

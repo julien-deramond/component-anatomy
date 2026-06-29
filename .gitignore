@@ -1,2 +1,34 @@
-/node_modules/
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+
+# Temp files (created by tsup/esbuild in restricted environments)
 _tmp_*
+tsup.config.bundled_*
+
+# Vite / Astro caches
+.vite/
+.astro/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editor
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln

@@ -2,16 +2,27 @@
   "name": "component-anatomy-monorepo",
   "private": true,
   "version": "0.0.0",
+  "description": "Monorepo for the component-anatomy library",
+  "license": "MIT",
+  "author": "Julien Déramond",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/julienderamond/component-anatomy"
+  },
   "workspaces": [
     "packages/*",
     "examples/*"
   ],
   "scripts": {
     "build": "npm run build -w packages/core",
-    "dev": "npm run dev -w examples/astro --",
+    "dev": "npm run dev -w examples/astro",
     "typecheck": "npm run typecheck -w packages/core"
   },
   "devDependencies": {
     "typescript": "^5.4.5"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
   }
 }

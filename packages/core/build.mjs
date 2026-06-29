@@ -1,6 +1,6 @@
 /**
  * Build script for @component-anatomy/core
- * Uses esbuild directly (no tsup) to avoid mounted-FS unlink issues in dev environments.
+ * Uses esbuild directly rather than tsup for maximum portability across environments.
  */
 import { build } from 'esbuild';
 import { execSync } from 'child_process';

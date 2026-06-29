@@ -1,7 +1,27 @@
 {
   "name": "@component-anatomy/astro",
   "version": "0.1.0",
-  "description": "Astro integration for component-anatomy",
+  "description": "Astro integration for component-anatomy — SSR-rendered anatomy panels with live hover sync",
+  "license": "MIT",
+  "author": "Julien Déramond",
+  "homepage": "https://github.com/julienderamond/component-anatomy#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/julienderamond/component-anatomy",
+    "directory": "packages/astro"
+  },
+  "bugs": {
+    "url": "https://github.com/julienderamond/component-anatomy/issues"
+  },
+  "keywords": [
+    "component-anatomy",
+    "astro",
+    "astro-component",
+    "design-system",
+    "documentation",
+    "anatomy",
+    "interactive"
+  ],
   "type": "module",
   "exports": {
     ".": {
@@ -10,8 +30,11 @@
     },
     "./ComponentAnatomy.astro": "./src/ComponentAnatomy.astro"
   },
+  "files": [
+    "src"
+  ],
   "scripts": {
-    "build": "echo 'Astro package — no separate build step needed'",
+    "build": "echo 'No build step — Astro resolves .astro files directly'",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -24,5 +47,8 @@
   },
   "peerDependencies": {
     "astro": ">=4.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }

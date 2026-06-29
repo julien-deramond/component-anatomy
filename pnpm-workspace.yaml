@@ -1,3 +1,9 @@
+# pnpm workspace configuration
+# This project supports both npm (>=8) and pnpm (>=8).
+# - npm:  `npm install` at the repo root
+# - pnpm: `pnpm install` at the repo root
+#
+# Workspace package references use "*" (compatible with both managers).
 packages:
   - 'packages/*'
   - 'examples/*'

@@ -309,6 +309,16 @@ const renderedParts = await Promise.all(
 
       if (!preview) return;
 
+      // The preview is a visual demo — hide it from the accessibility tree
+      // and remove all interactive elements from the tab order.
+      // We use tabindex="-1" rather than `inert` because `inert` also blocks
+      // pointer events, which would break our mouseenter/mouseleave detection.
+      preview.setAttribute('aria-hidden', 'true');
+      const FOCUSABLE = 'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])';
+      preview.querySelectorAll<HTMLElement>(FOCUSABLE).forEach((el) => {
+        el.setAttribute('tabindex', '-1');
+      });
+
       const anatomy = createAnatomy({ root: preview, panel: panel ?? undefined });
 
       // Sticky pill: show/hide based on whether the active panel entry is in view
