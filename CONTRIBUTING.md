@@ -20,7 +20,7 @@ component-anatomy/
 
 ## Prerequisites
 
-- Node.js ≥ 18
+- Node.js — this repo tracks the latest LTS via [`.nvmrc`](./.nvmrc); run `nvm use` if you use nvm (minimum supported: Node ≥ 22.12, required by Astro 7)
 - pnpm ≥ 9 (this repo is pnpm-only — see [RELEASING.md](./RELEASING.md) for why)
 
 ## Setting up locally
