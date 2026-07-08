@@ -10,7 +10,7 @@
     "preview": "astro preview"
   },
   "dependencies": {
-    "@component-anatomy/astro": "*",
+    "@component-anatomy/astro": "workspace:^",
     "astro": "^4.11.0"
   }
 }

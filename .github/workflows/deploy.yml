@@ -24,23 +24,25 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: pnpm
 
       - name: Install dependencies
-        # npm install (not ci) ensures the correct platform-specific esbuild
-        # binary is resolved for the runner OS rather than the lock file's OS.
-        run: npm install
+        run: pnpm install --frozen-lockfile
 
       - name: Build core package
-        run: npm run build
+        run: pnpm run build
 
       - name: Build Astro example
-        run: npm run build -w examples/astro
+        run: pnpm --filter examples-astro build
         env:
-          SITE_URL: https://julienderamond.github.io
+          SITE_URL: https://julien-deramond.github.io
           BASE_PATH: /component-anatomy
 
       - name: Upload Pages artifact

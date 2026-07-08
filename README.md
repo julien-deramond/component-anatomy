@@ -161,9 +161,9 @@ See [`packages/astro/README.md`](./packages/astro/README.md) for the `<Component
 To run the Astro example:
 
 ```bash
-npm install
-npm run build   # build core package
-npm run dev     # start at http://localhost:4321
+pnpm install
+pnpm run build   # build core package
+pnpm run dev      # start at http://localhost:4321
 ```
 
 ---

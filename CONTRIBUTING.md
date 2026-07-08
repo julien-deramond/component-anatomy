@@ -21,14 +21,14 @@ component-anatomy/
 ## Prerequisites
 
 - Node.js ≥ 18
-- npm ≥ 8 (or pnpm ≥ 8)
+- pnpm ≥ 9 (this repo is pnpm-only — see [RELEASING.md](./RELEASING.md) for why)
 
 ## Setting up locally
 
 ```bash
-git clone https://github.com/julienderamond/component-anatomy
+git clone https://github.com/julien-deramond/component-anatomy
 cd component-anatomy
-npm install
+pnpm install
 ```
 
 ## Development workflow
@@ -36,28 +36,35 @@ npm install
 Build the core package first — all other packages depend on it:
 
 ```bash
-npm run build              # builds packages/core
+pnpm run build              # builds packages/core
 ```
 
 Then start the example dev server to see changes live:
 
 ```bash
-npm run dev                # runs examples/astro at localhost:4321
+pnpm run dev                # runs examples/astro at localhost:4321
 ```
 
 To typecheck:
 
 ```bash
-npm run typecheck
+pnpm run typecheck
 ```
+
+Internal packages reference each other with the `workspace:^` protocol
+(e.g. `packages/astro` depends on `"@component-anatomy/core": "workspace:^"`),
+so any change you make in `packages/core` is picked up immediately by
+`packages/astro` and the examples — no need to publish or bump a version
+while developing.
 
 ## Making changes
 
 1. Fork the repo and create a branch from `main`: `git checkout -b feat/my-change`
 2. Make your changes, keeping the same code style (2 spaces, LF line endings — `.editorconfig` handles this automatically in most editors)
-3. If you touched `packages/core`, rebuild before testing: `npm run build`
-4. Verify the example site still works: `npm run dev` and check the relevant pages
-5. Open a pull request against `main` with a clear description of what changed and why
+3. If you touched `packages/core`, rebuild before testing: `pnpm run build`
+4. Verify the example site still works: `pnpm run dev` and check the relevant pages
+5. If your change should ship in the next release, add a changeset: `pnpm changeset` (see [RELEASING.md](./RELEASING.md))
+6. Open a pull request against `main` with a clear description of what changed and why
 
 ## Commit conventions
 
@@ -74,7 +81,7 @@ Common prefixes: `feat`, `fix`, `docs`, `test`, `chore`, `refactor`, `style`, `p
 
 ## Reporting issues
 
-Open an issue at <https://github.com/julienderamond/component-anatomy/issues>.
+Open an issue at <https://github.com/julien-deramond/component-anatomy/issues>.
 
 Please include:
 - What you expected to happen

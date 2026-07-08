@@ -1,17 +1,17 @@
 {
   "name": "@component-anatomy/core",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "description": "Framework-agnostic runtime for interactive component anatomy documentation",
   "license": "MIT",
   "author": "Julien Déramond",
-  "homepage": "https://github.com/julienderamond/component-anatomy#readme",
+  "homepage": "https://github.com/julien-deramond/component-anatomy#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/julienderamond/component-anatomy",
+    "url": "https://github.com/julien-deramond/component-anatomy",
     "directory": "packages/core"
   },
   "bugs": {
-    "url": "https://github.com/julienderamond/component-anatomy/issues"
+    "url": "https://github.com/julien-deramond/component-anatomy/issues"
   },
   "keywords": [
     "component-anatomy",
@@ -38,6 +38,9 @@
     "dist",
     "src"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "sideEffects": false,
   "scripts": {
     "build": "node build.mjs",

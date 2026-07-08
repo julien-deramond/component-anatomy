@@ -7,22 +7,25 @@
   "author": "Julien Déramond",
   "repository": {
     "type": "git",
-    "url": "https://github.com/julienderamond/component-anatomy"
+    "url": "https://github.com/julien-deramond/component-anatomy"
   },
-  "workspaces": [
-    "packages/*",
-    "examples/*"
-  ],
+  "packageManager": "pnpm@9.15.9",
   "scripts": {
-    "build": "npm run build -w packages/core",
-    "dev": "npm run dev -w examples/astro",
-    "typecheck": "npm run typecheck -w packages/core"
+    "build": "pnpm --filter @component-anatomy/core build",
+    "build:packages": "pnpm --filter @component-anatomy/core build && pnpm --filter @component-anatomy/astro build",
+    "dev": "pnpm --filter examples-astro dev",
+    "typecheck": "pnpm --filter @component-anatomy/core typecheck",
+    "changeset": "changeset",
+    "version": "changeset version",
+    "release": "pnpm run build:packages && changeset publish"
   },
   "devDependencies": {
+    "@changesets/changelog-github": "^0.7.0",
+    "@changesets/cli": "^2.31.0",
     "typescript": "^5.4.5"
   },
   "engines": {
     "node": ">=18.0.0",
-    "npm": ">=8.0.0"
+    "pnpm": ">=9.0.0"
   }
 }
