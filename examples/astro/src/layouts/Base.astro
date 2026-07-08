@@ -1,13 +1,57 @@
 ---
 export interface Props {
   title: string;
+  description?: string;
+  /** Landing pages render full-width without sidebar/TOC. */
+  landing?: boolean;
 }
-const { title } = Astro.props;
+const {
+  title,
+  description = 'Interactive anatomy documentation for design system components.',
+  landing = false,
+} = Astro.props;
 
 // Normalize BASE_URL to always end with '/' so path concatenation works
 // regardless of whether Astro appends the slash or not.
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
-const path = Astro.url.pathname;
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+
+const isActive = (href: string) => path === `${base}${href}`.replace(/\/$/, '');
+
+const nav = [
+  {
+    group: 'Documentation',
+    items: [
+      { href: 'docs/core', label: 'Core library' },
+      { href: 'docs/customization', label: 'Customization' },
+      { href: 'docs/astro', label: 'Astro integration' },
+      { href: 'docs/storybook', label: 'Storybook addon' },
+      { href: 'docs/faq', label: 'Troubleshooting & FAQ' },
+    ],
+  },
+  {
+    group: 'Demos',
+    items: [
+      { href: 'button', label: 'Button' },
+      { href: 'slider', label: 'Slider' },
+      { href: 'theming', label: 'Theming' },
+      { href: 'shadcn', label: 'Shadcn-style' },
+    ],
+  },
+  {
+    group: 'Bootstrap via CDN',
+    items: [
+      { href: 'bs-button', label: 'Button' },
+      { href: 'bs-alert', label: 'Alert' },
+      { href: 'bs-card', label: 'Card' },
+      { href: 'bs-badge', label: 'Badge' },
+      { href: 'bs-navbar', label: 'Navbar' },
+    ],
+  },
+];
+
+const GITHUB = 'https://github.com/julien-deramond/component-anatomy';
+const NPM = 'https://www.npmjs.com/package/@component-anatomy/core';
 ---
 <!doctype html>
 <html lang="en">
@@ -15,108 +59,541 @@ const path = Astro.url.pathname;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title} — Component Anatomy</title>
+    <meta name="description" content={description} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
     <!-- Bootstrap v5 (used by Bootstrap example pages) -->
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
       crossorigin="anonymous"
     />
-    <style>
+    <style is:global>
+      :root {
+        --site-accent: #4f46e5;
+        --site-accent-soft: #eef2ff;
+        --site-ink: #0f172a;
+        --site-body: #334155;
+        --site-muted: #64748b;
+        --site-faint: #94a3b8;
+        --site-line: #e2e8f0;
+        --site-line-soft: #f1f5f9;
+        --site-bg: #ffffff;
+        --site-sidebar-bg: #fafbfc;
+        --site-code-bg: #0f172a;
+        --site-radius: 10px;
+        --sidebar-w: 264px;
+        --toc-w: 210px;
+        --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        --font-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Code', monospace;
+      }
+
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      html { scroll-behavior: smooth; scroll-padding-top: 2rem; }
 
       body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-        background: #fff;
-        color: #111827;
-        line-height: 1.6;
+        font-family: var(--font-sans);
+        background: var(--site-bg);
+        color: var(--site-body);
+        line-height: 1.65;
+        -webkit-font-smoothing: antialiased;
       }
 
-      .site-header {
-        border-bottom: 1px solid #e5e7eb;
-        padding: 0 2rem;
+      ::selection { background: #c7d2fe; color: var(--site-ink); }
+
+      /* ════════ Sidebar ════════ */
+      .sidebar {
+        position: fixed;
+        inset: 0 auto 0 0;
+        width: var(--sidebar-w);
+        background: var(--site-sidebar-bg);
+        border-right: 1px solid var(--site-line);
+        display: flex;
+        flex-direction: column;
+        z-index: 50;
+        transition: transform 200ms ease;
+      }
+
+      .sidebar-brand {
         display: flex;
         align-items: center;
-        height: 56px;
-        gap: 2rem;
+        gap: 0.6rem;
+        padding: 1.1rem 1.25rem;
+        border-bottom: 1px solid var(--site-line-soft);
+        text-decoration: none;
       }
-
-      .site-logo {
-        font-size: 0.85rem;
+      .brand-mark {
+        display: grid;
+        place-items: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        color: #fff;
+        flex-shrink: 0;
+        box-shadow: 0 2px 6px rgb(99 102 241 / 0.35);
+      }
+      .brand-name {
+        font-size: 0.86rem;
         font-weight: 700;
-        letter-spacing: 0.03em;
-        color: #111;
-        text-decoration: none;
+        letter-spacing: -0.01em;
+        color: var(--site-ink);
+        line-height: 1.2;
+      }
+      .brand-version {
+        font-size: 0.62rem;
+        font-weight: 600;
+        font-family: var(--font-mono);
+        color: var(--site-accent);
+        background: var(--site-accent-soft);
+        border: 1px solid #e0e7ff;
+        padding: 0.05rem 0.4rem;
+        border-radius: 99px;
+        margin-left: auto;
       }
 
-      .site-nav {
+      .sidebar-nav {
+        flex: 1;
+        overflow-y: auto;
+        padding: 1rem 0.75rem 1rem;
+        scrollbar-width: thin;
+        scrollbar-color: var(--site-line) transparent;
+      }
+
+      .nav-home {
         display: flex;
-        gap: 1.5rem;
+        align-items: center;
+        gap: 0.55rem;
+        padding: 0.42rem 0.6rem;
+        border-radius: 7px;
+        font-size: 0.82rem;
+        font-weight: 500;
+        color: var(--site-body);
+        text-decoration: none;
+        margin-bottom: 0.9rem;
+      }
+      .nav-home:hover { background: #f1f5f9; color: var(--site-ink); }
+      .nav-home[aria-current="page"] { background: var(--site-accent-soft); color: var(--site-accent); font-weight: 600; }
+
+      .nav-group { margin-bottom: 1.4rem; }
+      .nav-group-label {
+        font-size: 0.66rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.09em;
+        color: var(--site-faint);
+        padding: 0 0.6rem;
+        margin-bottom: 0.35rem;
+      }
+      .nav-link {
+        display: block;
+        padding: 0.34rem 0.6rem;
+        border-radius: 7px;
+        font-size: 0.82rem;
+        font-weight: 450;
+        color: var(--site-body);
+        text-decoration: none;
+        border-left: 2px solid transparent;
+      }
+      .nav-link:hover { background: #f1f5f9; color: var(--site-ink); }
+      .nav-link[aria-current="page"] {
+        background: var(--site-accent-soft);
+        color: var(--site-accent);
+        font-weight: 600;
       }
 
-      .site-nav a {
-        font-size: 0.875rem;
-        color: #6b7280;
+      .sidebar-footer {
+        border-top: 1px solid var(--site-line-soft);
+        padding: 0.8rem 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+      }
+      .icon-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.35rem 0.55rem;
+        border-radius: 7px;
+        color: var(--site-muted);
+        font-size: 0.75rem;
+        font-weight: 550;
         text-decoration: none;
       }
+      .icon-link:hover { background: #f1f5f9; color: var(--site-ink); }
+      .icon-link svg { flex-shrink: 0; }
 
-      .site-nav-sep { color: #d1d5db; }
-
-      .site-nav a:hover,
-      .site-nav a[aria-current="page"] {
-        color: #111;
+      /* ════════ Content ════════ */
+      .layout-main {
+        margin-left: var(--sidebar-w);
+        display: flex;
+        justify-content: center;
+        gap: 2.5rem;
+        padding: 0 2.5rem;
       }
-
       .page {
-        max-width: 960px;
-        margin: 0 auto;
-        padding: 3rem 2rem;
+        width: 100%;
+        max-width: 760px;
+        min-width: 0;
+        padding: 3.25rem 0 5rem;
       }
 
       .page-title {
-        font-size: 1.5rem;
-        font-weight: 700;
-        margin-bottom: 0.4rem;
+        font-size: 1.9rem;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+        color: var(--site-ink);
+        margin-bottom: 0.5rem;
+        line-height: 1.2;
       }
-
       .page-subtitle {
-        font-size: 0.9rem;
-        color: #6b7280;
-        margin-bottom: 2.5rem;
+        font-size: 0.98rem;
+        color: var(--site-muted);
+        margin-bottom: 2.75rem;
+        max-width: 58ch;
       }
+      .page-subtitle a { color: var(--site-accent); }
 
-      .section {
-        margin-bottom: 4rem;
-      }
-
+      .section { margin-bottom: 4rem; }
       .section-label {
         font-size: 0.7rem;
-        font-weight: 600;
+        font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.1em;
-        color: #9ca3af;
+        color: var(--site-faint);
         margin-bottom: 1.5rem;
         padding-bottom: 0.5rem;
-        border-bottom: 1px solid #f3f4f6;
+        border-bottom: 1px solid var(--site-line-soft);
+        font-family: var(--font-mono);
+      }
+
+      /* ════════ TOC ════════ */
+      .toc {
+        width: var(--toc-w);
+        flex-shrink: 0;
+        display: none;
+      }
+      @media (min-width: 1240px) {
+        .toc { display: block; }
+      }
+      .toc-inner {
+        position: sticky;
+        top: 3.4rem;
+        max-height: calc(100vh - 6rem);
+        overflow-y: auto;
+        padding-top: 0.35rem;
+      }
+      .toc-title {
+        font-size: 0.68rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.09em;
+        color: var(--site-faint);
+        margin-bottom: 0.6rem;
+      }
+      .toc-list { list-style: none; }
+      .toc-list a {
+        display: block;
+        font-size: 0.78rem;
+        color: var(--site-muted);
+        text-decoration: none;
+        padding: 0.22rem 0 0.22rem 0.75rem;
+        border-left: 2px solid var(--site-line);
+        line-height: 1.4;
+      }
+      .toc-list a.toc-h3 { padding-left: 1.5rem; }
+      .toc-list a:hover { color: var(--site-ink); }
+      .toc-list a.toc-active {
+        color: var(--site-accent);
+        border-left-color: var(--site-accent);
+        font-weight: 550;
+      }
+
+      /* ════════ Prose ════════ */
+      .prose h2 {
+        font-size: 1.28rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        color: var(--site-ink);
+        margin: 3rem 0 0.85rem;
+        padding-top: 1.25rem;
+        border-top: 1px solid var(--site-line-soft);
+      }
+      .prose h2:first-of-type { border-top: none; padding-top: 0; margin-top: 2.25rem; }
+      .prose h3 {
+        font-size: 1rem;
+        font-weight: 650;
+        color: var(--site-ink);
+        margin: 1.9rem 0 0.5rem;
+      }
+      .prose p, .prose ul, .prose ol {
+        font-size: 0.9rem;
+        margin-bottom: 0.85rem;
+      }
+      .prose ul, .prose ol { padding-left: 1.4rem; }
+      .prose li { margin-bottom: 0.35rem; }
+      .prose li::marker { color: var(--site-faint); }
+      .prose strong { color: var(--site-ink); font-weight: 650; }
+      .prose a { color: var(--site-accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+
+      .prose code, code {
+        font-family: var(--font-mono);
+        font-size: 0.8em;
+        background: #f1f5f9;
+        border: 1px solid var(--site-line);
+        border-radius: 5px;
+        padding: 0.1em 0.35em;
+        color: #3730a3;
+      }
+      .prose pre {
+        background: var(--site-code-bg);
+        color: #e2e8f0;
+        border-radius: var(--site-radius);
+        padding: 1.05rem 1.3rem;
+        font-size: 0.79rem;
+        line-height: 1.65;
+        overflow-x: auto;
+        margin: 0.85rem 0 1.6rem;
+        border: 1px solid #1e293b;
+        box-shadow: 0 1px 3px rgb(15 23 42 / 0.08);
+      }
+      .prose pre code {
+        background: none; border: none; padding: 0;
+        color: inherit; font-size: inherit;
+      }
+      .prose table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.83rem;
+        margin: 0.85rem 0 1.6rem;
+        border: 1px solid var(--site-line);
+        border-radius: var(--site-radius);
+        overflow: hidden;
+      }
+      .prose th, .prose td {
+        text-align: left;
+        padding: 0.55rem 0.85rem;
+        border-bottom: 1px solid var(--site-line-soft);
+        vertical-align: top;
+      }
+      .prose tbody tr:last-child td { border-bottom: none; }
+      .prose th {
+        font-size: 0.68rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        color: var(--site-faint);
+        background: var(--site-sidebar-bg);
+      }
+
+      /* Heading anchors */
+      .heading-anchor {
+        margin-left: 0.4rem;
+        color: var(--site-line);
+        text-decoration: none;
+        font-weight: 400;
+        opacity: 0;
+        transition: opacity 120ms ease;
+      }
+      h2:hover .heading-anchor, h3:hover .heading-anchor { opacity: 1; }
+      .heading-anchor:hover { color: var(--site-accent); }
+
+      /* ════════ Mobile ════════ */
+      .mobile-bar { display: none; }
+      .sidebar-backdrop { display: none; }
+
+      @media (max-width: 900px) {
+        .sidebar { transform: translateX(-100%); }
+        .sidebar.is-open { transform: translateX(0); box-shadow: 0 0 40px rgb(15 23 42 / 0.2); }
+        .layout-main { margin-left: 0; padding: 0 1.25rem; }
+        .mobile-bar {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          position: sticky;
+          top: 0;
+          z-index: 40;
+          background: rgb(255 255 255 / 0.85);
+          backdrop-filter: blur(8px);
+          border-bottom: 1px solid var(--site-line);
+          padding: 0.7rem 1.25rem;
+        }
+        .mobile-menu-btn {
+          display: grid;
+          place-items: center;
+          width: 34px; height: 34px;
+          border: 1px solid var(--site-line);
+          border-radius: 8px;
+          background: #fff;
+          color: var(--site-ink);
+          cursor: pointer;
+        }
+        .mobile-title { font-size: 0.85rem; font-weight: 700; color: var(--site-ink); }
+        .sidebar-backdrop.is-open {
+          display: block;
+          position: fixed; inset: 0;
+          background: rgb(15 23 42 / 0.35);
+          z-index: 45;
+        }
       }
     </style>
   </head>
   <body>
-    <header class="site-header">
-      <a href={base} class="site-logo">Component Anatomy</a>
-      <nav class="site-nav">
-        <a href={`${base}button`}   aria-current={path === `${base}button`   ? 'page' : undefined}>Button</a>
-        <a href={`${base}slider`}   aria-current={path === `${base}slider`   ? 'page' : undefined}>Slider</a>
-        <span class="site-nav-sep">·</span>
-        <a href={`${base}bs-button`} aria-current={path === `${base}bs-button` ? 'page' : undefined}>BS Button</a>
-        <a href={`${base}bs-alert`}  aria-current={path === `${base}bs-alert`  ? 'page' : undefined}>BS Alert</a>
-        <a href={`${base}bs-card`}   aria-current={path === `${base}bs-card`   ? 'page' : undefined}>BS Card</a>
-        <a href={`${base}bs-badge`}  aria-current={path === `${base}bs-badge`  ? 'page' : undefined}>BS Badge</a>
-        <a href={`${base}bs-navbar`} aria-current={path === `${base}bs-navbar` ? 'page' : undefined}>BS Navbar</a>
-      </nav>
-    </header>
+    {!landing && (
+      <>
+        <div class="mobile-bar">
+          <button class="mobile-menu-btn" aria-label="Open navigation" data-menu-btn>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+          </button>
+          <span class="mobile-title">Component Anatomy</span>
+        </div>
+        <div class="sidebar-backdrop" data-backdrop></div>
 
-    <main class="page">
-      <slot />
-    </main>
+        <aside class="sidebar" data-sidebar>
+          <a href={base} class="sidebar-brand">
+            <span class="brand-mark" aria-hidden="true">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+                <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+                <circle cx="12" cy="12" r="3.2"/>
+              </svg>
+            </span>
+            <span class="brand-name">Component<br/>Anatomy</span>
+            <span class="brand-version">v0.1</span>
+          </a>
+
+          <nav class="sidebar-nav" aria-label="Site navigation">
+            <a href={base} class="nav-home" aria-current={path === base.replace(/\/$/, '') || path === base ? 'page' : undefined}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5M5 9.5V21h14V9.5"/></svg>
+              Home
+            </a>
+            {nav.map((group) => (
+              <div class="nav-group">
+                <p class="nav-group-label">{group.group}</p>
+                {group.items.map((item) => (
+                  <a
+                    href={`${base}${item.href}`}
+                    class="nav-link"
+                    aria-current={isActive(item.href) ? 'page' : undefined}
+                  >{item.label}</a>
+                ))}
+              </div>
+            ))}
+            <div class="nav-group">
+              <p class="nav-group-label">Resources</p>
+              <a href={`${base}storybook/`} class="nav-link">Live Storybook ↗</a>
+              <a href={GITHUB} class="nav-link" target="_blank" rel="noopener">GitHub ↗</a>
+              <a href={NPM} class="nav-link" target="_blank" rel="noopener">npm ↗</a>
+            </div>
+          </nav>
+
+          <div class="sidebar-footer">
+            <a href={GITHUB} class="icon-link" target="_blank" rel="noopener" aria-label="GitHub repository">
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+              GitHub
+            </a>
+            <a href={NPM} class="icon-link" target="_blank" rel="noopener" aria-label="npm package">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M0 7.334v8h6.666v1.332H12v-1.332h12v-8H0zm6.666 6.664H5.334v-4H3.999v4H1.335V8.667h5.331v5.331zm4 0v1.336H8.001V8.667h5.334v5.332h-2.669v-.001zm12.001 0h-1.33v-4h-1.336v4h-1.335v-4h-1.33v4h-2.671V8.667h8.002v5.331z"/></svg>
+              npm
+            </a>
+          </div>
+        </aside>
+
+        <div class="layout-main">
+          <main class="page">
+            <slot />
+          </main>
+          <aside class="toc" data-toc aria-label="Table of contents">
+            <div class="toc-inner">
+              <p class="toc-title">On this page</p>
+              <ul class="toc-list" data-toc-list></ul>
+            </div>
+          </aside>
+        </div>
+
+        <script>
+          // ── Mobile sidebar ──
+          const sidebar = document.querySelector('[data-sidebar]');
+          const backdrop = document.querySelector('[data-backdrop]');
+          document.querySelector('[data-menu-btn]')?.addEventListener('click', () => {
+            sidebar?.classList.add('is-open');
+            backdrop?.classList.add('is-open');
+          });
+          backdrop?.addEventListener('click', () => {
+            sidebar?.classList.remove('is-open');
+            backdrop?.classList.remove('is-open');
+          });
+
+          // ── Table of contents: collect h2/h3, add ids + anchors, scrollspy ──
+          const page = document.querySelector('.page');
+          const tocList = document.querySelector('[data-toc-list]');
+          const toc = document.querySelector('[data-toc]');
+          const headings = page
+            ? Array.from(page.querySelectorAll<HTMLElement>('h2, h3'))
+            : [];
+
+          if (!tocList || headings.length < 2) {
+            (toc as HTMLElement | null)?.style.setProperty('display', 'none');
+          } else {
+            const slug = (s: string) =>
+              s.toLowerCase().replace(/[^a-z0-9\s-]/g, '').trim().replace(/\s+/g, '-');
+            const seen = new Set<string>();
+
+            headings.forEach((h) => {
+              let id = h.id || slug(h.textContent ?? '');
+              while (seen.has(id)) id += '-x';
+              seen.add(id);
+              h.id = id;
+
+              const anchor = document.createElement('a');
+              anchor.className = 'heading-anchor';
+              anchor.href = `#${id}`;
+              anchor.textContent = '#';
+              anchor.setAttribute('aria-label', 'Link to this section');
+              h.appendChild(anchor);
+
+              const li = document.createElement('li');
+              const a = document.createElement('a');
+              a.href = `#${id}`;
+              a.textContent = (h.textContent ?? '').replace(/#$/, '');
+              a.dataset.target = id;
+              if (h.tagName === 'H3') a.className = 'toc-h3';
+              li.appendChild(a);
+              tocList.appendChild(li);
+            });
+
+            // Scrollspy
+            const links = new Map(
+              Array.from(tocList.querySelectorAll<HTMLAnchorElement>('a')).map((a) => [
+                a.dataset.target!,
+                a,
+              ])
+            );
+            let activeId: string | null = null;
+            const setActive = (id: string | null) => {
+              if (id === activeId) return;
+              activeId = id;
+              links.forEach((a, key) =>
+                a.classList.toggle('toc-active', key === id)
+              );
+            };
+            const spy = () => {
+              let current: string | null = null;
+              for (const h of headings) {
+                if (h.getBoundingClientRect().top <= 90) current = h.id;
+                else break;
+              }
+              setActive(current ?? headings[0]?.id ?? null);
+            };
+            document.addEventListener('scroll', spy, { passive: true });
+            spy();
+          }
+        </script>
+      </>
+    )}
+    {landing && <slot />}
   </body>
 </html>

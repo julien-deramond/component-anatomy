@@ -1,0 +1,131 @@
+---
+import Base from '../layouts/Base.astro';
+import ComponentAnatomy from '@component-anatomy/astro/ComponentAnatomy.astro';
+import type { AnatomyPartDefinition } from '@component-anatomy/core';
+
+const cardParts: AnatomyPartDefinition[] = [
+  { id: 'card', name: 'Card', description: 'The outer container. `rounded-lg border bg-card shadow-sm` in Tailwind terms.' },
+  { id: 'card-header', name: 'Header', description: 'Groups title and description with vertical spacing.' },
+  { id: 'card-title', name: 'Title', description: 'The heading. Semantic `<h3>`, `font-semibold tracking-tight`.' },
+  { id: 'card-description', name: 'Description', description: 'Muted supporting copy under the title.' },
+  { id: 'card-content', name: 'Content', description: 'The main body — here a form field.' },
+  { id: 'card-footer', name: 'Footer', description: 'Action row, typically right-aligned buttons.' },
+];
+
+const buttonParts: AnatomyPartDefinition[] = [
+  { id: 'button', name: 'Button', description: 'shadcn-style default variant: solid foreground, `rounded-md`, `h-9 px-4`.' },
+  { id: 'button-icon', name: 'Icon', description: 'Optional 16px leading icon, `aria-hidden`.' },
+];
+---
+<Base title="Shadcn-style">
+  <h1 class="page-title">Shadcn-style components</h1>
+  <p class="page-subtitle">
+    The shadcn/ui look recreated with plain CSS — no build step, works in any
+    CDN context. Anatomy ids mirror the slot names shadcn users know.
+  </p>
+
+  <div class="section">
+    <p class="section-label">Card — with form field and actions</p>
+    <ComponentAnatomy parts={cardParts} theme={{ accent: '#18181b' }}>
+      <div class="ui-card" data-part="card">
+        <div class="ui-card-header" data-part="card-header">
+          <h3 class="ui-card-title" data-part="card-title">Create project</h3>
+          <p class="ui-card-desc" data-part="card-description">
+            Deploy your new project in one click.
+          </p>
+        </div>
+        <div class="ui-card-content" data-part="card-content">
+          <label class="ui-label" for="project-name">Name</label>
+          <input class="ui-input" id="project-name" placeholder="my-app" />
+        </div>
+        <div class="ui-card-footer" data-part="card-footer">
+          <button class="ui-btn ui-btn-outline">Cancel</button>
+          <button class="ui-btn">Deploy</button>
+        </div>
+      </div>
+    </ComponentAnatomy>
+  </div>
+
+  <div class="section">
+    <p class="section-label">Button — default variant with icon</p>
+    <ComponentAnatomy parts={buttonParts} theme={{ accent: '#18181b' }}>
+      <button class="ui-btn" data-part="button">
+        <svg data-part="button-icon" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M5 12h14M12 5v14" />
+        </svg>
+        New project
+      </button>
+    </ComponentAnatomy>
+  </div>
+</Base>
+
+<style>
+  /* shadcn/ui zinc theme, hand-rolled for CDN contexts */
+  .ui-card {
+    width: 340px;
+    border: 1px solid #e4e4e7;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
+    font-family: inherit;
+  }
+  .ui-card-header { padding: 1.4rem 1.4rem 0; }
+  .ui-card-title {
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: #09090b;
+    margin: 0 0 0.25rem;
+  }
+  .ui-card-desc { font-size: 0.85rem; color: #71717a; margin: 0; }
+  .ui-card-content { padding: 1.25rem 1.4rem; }
+  .ui-label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #09090b;
+    margin-bottom: 0.4rem;
+  }
+  .ui-input {
+    width: 100%;
+    height: 36px;
+    padding: 0 0.75rem;
+    font: inherit;
+    font-size: 0.85rem;
+    border: 1px solid #e4e4e7;
+    border-radius: 8px;
+    background: transparent;
+    outline: none;
+    box-sizing: border-box;
+  }
+  .ui-input:focus-visible { border-color: #18181b; box-shadow: 0 0 0 1px #18181b; }
+  .ui-card-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    padding: 0 1.4rem 1.4rem;
+  }
+  .ui-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    height: 36px;
+    padding: 0 1rem;
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #fafafa;
+    background: #18181b;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .ui-btn:hover { background: #27272a; }
+  .ui-btn-outline {
+    color: #09090b;
+    background: transparent;
+    border: 1px solid #e4e4e7;
+  }
+  .ui-btn-outline:hover { background: #f4f4f5; }
+</style>

@@ -1,0 +1,110 @@
+---
+import Base from '../../layouts/Base.astro';
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+---
+<Base title="Rendering customization">
+  <div class="prose">
+    <h1 class="page-title">Rendering customization</h1>
+    <p class="page-subtitle">
+      Zero-config by default, themable in one line, fully hookable when you need it.
+      See it live on the <a href={`${base}theming`}>theming demo</a>.
+    </p>
+
+    <h2>The layering model</h2>
+    <p>Every visual decision resolves in this order (lowest → highest priority):</p>
+    <ol>
+      <li><strong>Default look</strong> — the built-in indigo style. Nothing to configure.</li>
+      <li><strong>Global CSS variables</strong> — set <code>--ca-*</code> on <code>:root</code> for a page-wide brand.</li>
+      <li><strong>Preset</strong> — a named token bundle passed per instance.</li>
+      <li><strong>Theme tokens</strong> — individual overrides passed per instance.</li>
+    </ol>
+
+    <h2>1. Presets</h2>
+    <pre is:raw><code>createAnatomy({ root, panel, preset: 'blueprint' });</code></pre>
+    <table>
+      <thead><tr><th>Preset</th><th>Look</th></tr></thead>
+      <tbody>
+        <tr><td><code>default</code></td><td>Indigo fill + solid border, filled label chip.</td></tr>
+        <tr><td><code>minimal</code></td><td>No fill, thin neutral border, subdued gray label.</td></tr>
+        <tr><td><code>contrast</code></td><td>Yellow/black, thick square border. High visibility.</td></tr>
+        <tr><td><code>blueprint</code></td><td>Blue dashed outline on a light wash — technical drawing style.</td></tr>
+      </tbody>
+    </table>
+    <p>Presets are plain objects — import, spread, and tweak them:</p>
+    <pre is:raw><code>import { presets } from '@component-anatomy/core';
+createAnatomy({ root, theme: { ...presets.blueprint, labelBg: '#0f172a' } });</code></pre>
+
+    <h2>2. Theme tokens</h2>
+    <p>
+      The <code>accent</code> shorthand derives the overlay border, a 15% background
+      wash, and the label background from a single brand color:
+    </p>
+    <pre is:raw><code>createAnatomy({ root, panel, theme: { accent: '#0d9488' } });</code></pre>
+    <table>
+      <thead><tr><th>Token</th><th>Type</th><th>Maps to</th></tr></thead>
+      <tbody>
+        <tr><td><code>accent</code></td><td>color</td><td>Shorthand → border, bg wash, label bg</td></tr>
+        <tr><td><code>overlayBg</code></td><td>color</td><td><code>--ca-overlay-bg</code></td></tr>
+        <tr><td><code>overlayBorder</code></td><td>color</td><td><code>--ca-overlay-border</code></td></tr>
+        <tr><td><code>overlayBorderWidth</code></td><td>px | CSS length</td><td><code>--ca-overlay-border-width</code></td></tr>
+        <tr><td><code>overlayBorderStyle</code></td><td>solid | dashed | dotted</td><td><code>--ca-overlay-border-style</code></td></tr>
+        <tr><td><code>overlayRadius</code></td><td>px | CSS length</td><td><code>--ca-overlay-radius</code></td></tr>
+        <tr><td><code>labelBg</code> / <code>labelFg</code></td><td>color</td><td><code>--ca-label-bg</code> / <code>--ca-label-fg</code></td></tr>
+        <tr><td><code>labelFont</code> / <code>labelFontSize</code></td><td>font | px</td><td><code>--ca-label-font</code> / <code>--ca-label-font-size</code></td></tr>
+        <tr><td><code>zIndex</code></td><td>number</td><td><code>--ca-overlay-z</code></td></tr>
+        <tr><td><code>transitionMs</code></td><td>ms | CSS time</td><td><code>--ca-transition</code></td></tr>
+      </tbody>
+    </table>
+    <p>Numbers get sensible units automatically (<code>8</code> → <code>8px</code>, <code>300</code> → <code>300ms</code> for <code>transitionMs</code>).</p>
+
+    <h3>Runtime switching</h3>
+    <pre is:raw><code>controller.setTheme({ accent: picker.value }, 'minimal');</code></pre>
+
+    <h3>Global CSS variables (no JS)</h3>
+    <pre is:raw><code>:root {
+  --ca-overlay-border: #e11d48;
+  --ca-overlay-bg: rgb(225 29 72 / 0.12);
+  --ca-label-bg: #e11d48;
+}</code></pre>
+    <p>
+      Instances without a preset/theme pick these up automatically — useful for
+      theming a whole docs site in CSS only.
+    </p>
+
+    <h2>3. Overlay hooks</h2>
+    <pre is:raw><code>createAnatomy({
+  root,
+  overlay: {
+    label: true,          // false hides the name chips entirely
+    padding: 4,           // inflate every highlight box by 4px
+    className: 'glow',    // your own CSS class on every box
+
+    // Custom label text/content per box
+    renderLabel: ({ part, element, index }) =>
+      part.id === 'tab' ? `${part.name} #${index + 1}` : part.name,
+
+    // Full access to the box element after creation
+    decorateOverlay: (box, { part }) => {
+      box.style.boxShadow = '0 4px 16px rgb(13 148 136 / .3)';
+      if (part.id === 'thumb') box.append(makeCornerBadge());
+    },
+  },
+});</code></pre>
+    <ul>
+      <li><code>renderLabel</code> returns a string (used as text) or a Node (appended). Return null to fall back to the part name.</li>
+      <li><code>decorateOverlay</code> runs once per box per highlight — keep it cheap; it executes on every hover.</li>
+    </ul>
+
+    <h2>Recipes</h2>
+    <h3>Match your brand in one line</h3>
+    <pre is:raw><code>createAnatomy({ root, panel, theme: { accent: 'var(--brand-500)' } });</code></pre>
+    <h3>Screenshot-friendly (no animation, no labels)</h3>
+    <pre is:raw><code>createAnatomy({ root, theme: { transitionMs: 0 }, overlay: { label: false } });</code></pre>
+    <h3>Dark page</h3>
+    <pre is:raw><code>createAnatomy({ root, theme: {
+  overlayBg: 'rgb(255 255 255 / 0.08)',
+  overlayBorder: '#a5b4fc',
+  labelBg: '#e0e7ff', labelFg: '#1e1b4b',
+}});</code></pre>
+  </div>
+</Base>

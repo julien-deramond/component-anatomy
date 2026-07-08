@@ -60,6 +60,9 @@ const anatomy = createAnatomy({
 | `root` | `HTMLElement` | Yes | The component preview container |
 | `panel` | `HTMLElement` | No | The documentation panel container |
 | `parts` | `AnatomyPartDefinition[]` | No | Part definitions (auto-discovered from DOM if omitted) |
+| `preset` | `'default' \| 'minimal' \| 'contrast' \| 'blueprint'` | No | Named visual preset |
+| `theme` | `AnatomyTheme` | No | Theme token overrides, e.g. `{ accent: '#0d9488' }` |
+| `overlay` | `OverlayOptions` | No | Overlay hooks: `label`, `padding`, `className`, `renderLabel`, `decorateOverlay` |
 
 ### `AnatomyController`
 
@@ -70,8 +73,32 @@ interface AnatomyController {
   refresh(): void;                   // Re-discover DOM parts after dynamic updates
   destroy(): void;                   // Remove all listeners and overlays
   on(event: AnatomyEvent, handler: AnatomyEventHandler): () => void;
+  getParts(): AnatomyPartDefinition[]; // Resolved (explicit or auto-discovered) parts
+  setTheme(theme: AnatomyTheme, preset?: AnatomyPresetName): void; // Runtime theme switch
 }
 ```
+
+### Theming
+
+```js
+// One-line brand match — border, background wash and label derive from accent
+createAnatomy({ root, panel, theme: { accent: '#0d9488' } });
+
+// Named presets
+createAnatomy({ root, panel, preset: 'blueprint' });
+
+// Overlay hooks
+createAnatomy({
+  root,
+  overlay: {
+    padding: 4,
+    renderLabel: ({ part, index }) => `${part.name} #${index + 1}`,
+    decorateOverlay: (box, ctx) => box.classList.add('glow'),
+  },
+});
+```
+
+Full token table: [customization guide](https://julien-deramond.github.io/component-anatomy/docs/customization).
 
 ### `AnatomyPartDefinition`
 
@@ -92,12 +119,21 @@ anatomy.on('part:leave', (partId) => console.log('left:', partId));
 
 ## CSS custom properties
 
+Instances without a `preset`/`theme` pick up global variables — theme a whole site in CSS only:
+
 ```css
 :root {
   --ca-overlay-bg: rgba(99, 102, 241, 0.18);
   --ca-overlay-border: rgba(99, 102, 241, 0.75);
+  --ca-overlay-border-width: 2px;
+  --ca-overlay-border-style: solid;
+  --ca-overlay-radius: 4px;
   --ca-label-bg: rgba(79, 70, 229, 1);
-  --ca-label-color: #fff;
+  --ca-label-fg: #fff;
+  --ca-label-font: ui-monospace, monospace;
+  --ca-label-font-size: 11px;
+  --ca-overlay-z: 9998;
+  --ca-transition: 150ms;
 }
 ```
 

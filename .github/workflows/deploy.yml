@@ -36,14 +36,22 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build core package
-        run: pnpm run build
+      - name: Build packages
+        run: pnpm run build:packages
 
-      - name: Build Astro example
+      - name: Build Astro docs site
         run: pnpm --filter examples-astro build
         env:
           SITE_URL: https://julien-deramond.github.io
           BASE_PATH: /component-anatomy
+
+      - name: Build Storybook example
+        run: pnpm --filter examples-storybook build
+
+      - name: Nest Storybook under /storybook/
+        run: |
+          mkdir -p examples/astro/dist/storybook
+          cp -r examples/storybook/storybook-static/* examples/astro/dist/storybook/
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
