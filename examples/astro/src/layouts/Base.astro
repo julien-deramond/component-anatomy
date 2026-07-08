@@ -1,4 +1,6 @@
 ---
+import { version } from '@component-anatomy/core/package.json';
+
 export interface Props {
   title: string;
   description?: string;
@@ -462,7 +464,7 @@ const NPM = 'https://www.npmjs.com/package/@component-anatomy/core';
               </svg>
             </span>
             <span class="brand-name">Component<br/>Anatomy</span>
-            <span class="brand-version">v0.1</span>
+            <span class="brand-version">v{version}</span>
           </a>
 
           <nav class="sidebar-nav" aria-label="Site navigation">

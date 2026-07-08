@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@component-anatomy/astro": "workspace:^",
+    "@component-anatomy/core": "workspace:^",
     "astro": "^7.0.5"
   }
 }

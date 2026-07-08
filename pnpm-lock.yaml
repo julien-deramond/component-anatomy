@@ -23,6 +23,9 @@ importers:
       '@component-anatomy/astro':
         specifier: workspace:^
         version: link:../../packages/astro
+      '@component-anatomy/core':
+        specifier: workspace:^
+        version: link:../../packages/core
       astro:
         specifier: ^7.0.5
         version: 7.0.5(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(rollup@4.62.2)
