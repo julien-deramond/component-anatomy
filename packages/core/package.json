@@ -48,10 +48,10 @@
     "test": "vitest run"
   },
   "devDependencies": {
-    "esbuild": "^0.21.0",
-    "typescript": "^5.4.5",
-    "vitest": "^2.1.0",
-    "jsdom": "^24.1.0"
+    "esbuild": "^0.28.1",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.9",
+    "jsdom": "^29.1.1"
   },
   "engines": {
     "node": ">=18.0.0"
