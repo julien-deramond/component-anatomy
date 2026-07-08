@@ -1,0 +1,411 @@
+---
+import { marked } from 'marked';
+import { resolveThemeVars } from '@component-anatomy/core';
+import type {
+  AnatomyPartDefinition,
+  AnatomyPresetName,
+  AnatomyTheme,
+} from '@component-anatomy/core';
+
+export interface Props {
+  parts?: AnatomyPartDefinition[];
+  class?: string;
+  label?: string;
+  /** Named visual preset for overlays + panel accent. Default: 'default'. */
+  preset?: AnatomyPresetName;
+  /** Theme token overrides (applied on top of the preset). */
+  theme?: AnatomyTheme;
+  /** Show the floating name label chip over highlighted elements. Default: true. */
+  overlayLabel?: boolean;
+}
+
+const {
+  parts,
+  class: className,
+  label = 'Component anatomy',
+  preset,
+  theme,
+  overlayLabel = true,
+} = Astro.props;
+
+const instanceId = `ca-${Math.random().toString(36).slice(2, 9)}`;
+
+// Resolved theme vars are applied twice on purpose:
+//  1. Inline on .ca-root — so panel accents (active entry, pill) match the theme.
+//  2. Serialized to the client — overlays live in document.body, outside this
+//     element's cascade, so createAnatomy() needs the tokens directly.
+const themeVars = resolveThemeVars(preset, theme);
+const themeStyle = Object.entries(themeVars)
+  .map(([k, v]) => `${k}: ${v};`)
+  .join(' ');
+const clientConfig = JSON.stringify({ preset, theme, overlayLabel });
+
+const renderedParts = await Promise.all(
+  (parts ?? []).map(async (part) => ({
+    ...part,
+    html: part.description ? await marked.parse(part.description) : null,
+  }))
+);
+---
+
+<div
+  class:list={['ca-root', className]}
+  data-anatomy-root={instanceId}
+  data-anatomy-config={clientConfig}
+  aria-label={label}
+  style={themeStyle || undefined}
+>
+  <!-- Left: live component preview with dot-grid background -->
+  <div class="ca-preview" data-anatomy-preview={instanceId}>
+    <div class="ca-preview-inner">
+      <slot />
+    </div>
+  </div>
+
+  <!-- Right: documentation panel -->
+  <div class="ca-panel-wrapper">
+    {Astro.slots.has('header') && (
+      <div class="ca-panel-header">
+        <slot name="header" />
+      </div>
+    )}
+    <!-- Sticky "active part" indicator — visible when scrolled past the active entry -->
+    <div class="ca-active-pill" data-anatomy-pill={instanceId} aria-hidden="true">
+      <span class="ca-active-pill-dot"></span>
+      <span class="ca-active-pill-name"></span>
+    </div>
+
+    <div
+      class="ca-panel"
+      data-anatomy-panel={instanceId}
+      role="list"
+      aria-label="Anatomy parts"
+    >
+      {renderedParts.length > 0
+        ? renderedParts.map((part) => (
+            <div
+              class="ca-part-entry"
+              data-anatomy-item={part.id}
+              role="listitem"
+              tabindex="0"
+              aria-label={part.name}
+            >
+              <div class="ca-part-header">
+                <span class="ca-part-indicator" aria-hidden="true"></span>
+                <span class="ca-part-name">{part.name}</span>
+                <code class="ca-part-id">{part.id}</code>
+              </div>
+              {part.html && (
+                <div class="ca-part-description" set:html={part.html} />
+              )}
+            </div>
+          ))
+        : (
+            <p class="ca-no-parts">
+              No parts defined. Add <code>data-part="name"</code> to your component elements.
+            </p>
+          )
+      }
+    </div>
+  </div>
+</div>
+
+<style>
+  /* ─── Layout ─── */
+  .ca-root {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--ca-gap, 2rem);
+    align-items: start;
+    font-family: inherit;
+  }
+
+  /* ─── Preview ─── */
+  .ca-preview {
+    position: sticky;
+    top: 1.5rem;
+    border-radius: var(--ca-preview-radius, 10px);
+    border: 1px solid var(--ca-preview-border, #e5e7eb);
+    overflow: hidden;
+    background:
+      /* dot grid */
+      radial-gradient(circle, #d1d5db 1px, transparent 1px),
+      var(--ca-preview-bg, #f9fafb);
+    background-size: 20px 20px;
+  }
+
+  .ca-preview-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 160px;
+    padding: var(--ca-preview-padding, 2.5rem 2rem);
+    /* Slight backdrop so the component pops against the dot grid */
+    background: transparent;
+  }
+
+  /* ─── Panel wrapper ─── */
+  .ca-panel-wrapper {
+    position: relative;
+  }
+
+  /* ─── Optional header slot ─── */
+  .ca-panel-header {
+    margin-bottom: 0.75rem;
+    font-size: 0.875rem;
+    color: #4b5563;
+  }
+  .ca-panel-header :global(> :first-child) { margin-top: 0; }
+  .ca-panel-header :global(> :last-child) { margin-bottom: 0; }
+
+  /* ─── Sticky active pill ─── */
+  .ca-active-pill {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: none; /* shown via JS when scrolled */
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px;
+    margin-bottom: 4px;
+    border-radius: 6px;
+    background: var(--ca-label-bg, #4f46e5);
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    pointer-events: none;
+    box-shadow: 0 2px 8px rgba(79,70,229,0.25);
+  }
+
+  .ca-active-pill.ca-pill--visible {
+    display: flex;
+  }
+
+  .ca-active-pill-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.7);
+    flex-shrink: 0;
+  }
+
+  /* ─── Panel ─── */
+  .ca-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    max-height: var(--ca-panel-max-height, 480px);
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    padding-right: 2px; /* room for scrollbar */
+
+    /* Subtle scrollbar */
+    scrollbar-width: thin;
+    scrollbar-color: #e5e7eb transparent;
+  }
+
+  .ca-panel::-webkit-scrollbar { width: 4px; }
+  .ca-panel::-webkit-scrollbar-track { background: transparent; }
+  .ca-panel::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 99px; }
+
+  /* ─── Part entries ─── */
+  .ca-part-entry {
+    padding: 0.8rem 0.9rem;
+    border-radius: 8px;
+    cursor: default;
+    transition: background 120ms ease, border-color 120ms ease;
+    border: 1px solid transparent;
+    outline: none;
+  }
+
+  .ca-part-entry:focus-visible {
+    outline: 2px solid var(--ca-overlay-border, rgba(99, 102, 241, 0.7));
+    outline-offset: 2px;
+  }
+
+  .ca-part-entry[data-active] {
+    background: var(--ca-item-active-bg, rgba(99, 102, 241, 0.06));
+    border-color: rgba(99, 102, 241, 0.15);
+  }
+
+  /* ─── Part header row ─── */
+  .ca-part-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 0.4rem;
+  }
+
+  .ca-part-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: 2px solid #d1d5db;
+    flex-shrink: 0;
+    transition: background 120ms ease, border-color 120ms ease;
+  }
+
+  .ca-part-entry[data-active] .ca-part-indicator {
+    background: var(--ca-label-bg, #4f46e5);
+    border-color: var(--ca-label-bg, #4f46e5);
+  }
+
+  .ca-part-name {
+    font-size: 0.82rem;
+    font-weight: 650;
+    color: var(--ca-part-name-color, #111827);
+    flex: 1;
+    letter-spacing: 0.01em;
+  }
+
+  .ca-part-entry[data-active] .ca-part-name {
+    color: var(--ca-label-bg, #4f46e5);
+  }
+
+  .ca-part-id {
+    font-family: ui-monospace, 'Cascadia Code', 'Fira Mono', monospace;
+    font-size: 0.68rem;
+    padding: 1px 6px;
+    border-radius: 4px;
+    background: #f3f4f6;
+    color: #6b7280;
+    border: 1px solid #e5e7eb;
+    flex-shrink: 0;
+  }
+
+  .ca-part-entry[data-active] .ca-part-id {
+    background: rgba(99,102,241,0.08);
+    border-color: rgba(99,102,241,0.2);
+    color: #4f46e5;
+  }
+
+  /* ─── Markdown description ─── */
+  .ca-part-description {
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: var(--ca-part-desc-color, #4b5563);
+    padding-left: 16px; /* aligns with text after the indicator dot */
+  }
+
+  .ca-part-description :global(p) { margin: 0 0 0.5em; }
+  .ca-part-description :global(p:last-child) { margin-bottom: 0; }
+  .ca-part-description :global(h1),
+  .ca-part-description :global(h2),
+  .ca-part-description :global(h3) {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #9ca3af;
+    margin: 0.9em 0 0.3em;
+  }
+  .ca-part-description :global(code) {
+    font-size: 0.78em;
+    padding: 0.15em 0.4em;
+    border-radius: 3px;
+    background: #f3f4f6;
+    border: 1px solid #e5e7eb;
+    font-family: ui-monospace, 'Cascadia Code', monospace;
+    color: #374151;
+  }
+  .ca-part-description :global(a) {
+    color: var(--ca-label-bg, #4f46e5);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .ca-part-description :global(ul), .ca-part-description :global(ol) {
+    margin: 0.3em 0 0.5em;
+    padding-left: 1.3em;
+  }
+  .ca-part-description :global(li) { margin-bottom: 0.2em; }
+  .ca-part-description :global(strong) { color: #111827; font-weight: 600; }
+
+  .ca-no-parts {
+    font-size: 0.875rem;
+    color: #9ca3af;
+    font-style: italic;
+    padding: 0.75rem;
+  }
+
+  /* ─── Responsive ─── */
+  @media (max-width: 720px) {
+    .ca-root { grid-template-columns: 1fr; }
+    .ca-preview { position: static; }
+    .ca-panel { max-height: 360px; }
+  }
+</style>
+
+<script>
+  import { createAnatomy } from '@component-anatomy/core';
+
+  function init() {
+    document.querySelectorAll<HTMLElement>('[data-anatomy-root]').forEach((root) => {
+      if (root.dataset.anatomyInit) return;
+      root.dataset.anatomyInit = '1';
+
+      const id = root.dataset.anatomyRoot!;
+      const preview = root.querySelector<HTMLElement>(`[data-anatomy-preview="${id}"]`);
+      const panel   = root.querySelector<HTMLElement>(`[data-anatomy-panel="${id}"]`);
+      const pill    = root.querySelector<HTMLElement>(`[data-anatomy-pill="${id}"]`);
+      const pillName = pill?.querySelector<HTMLElement>('.ca-active-pill-name');
+
+      if (!preview) return;
+
+      // The preview is a visual demo — hide it from the accessibility tree
+      // and remove all interactive elements from the tab order.
+      // We use tabindex="-1" rather than `inert` because `inert` also blocks
+      // pointer events, which would break our mouseenter/mouseleave detection.
+      preview.setAttribute('aria-hidden', 'true');
+      const FOCUSABLE = 'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])';
+      preview.querySelectorAll<HTMLElement>(FOCUSABLE).forEach((el) => {
+        el.setAttribute('tabindex', '-1');
+      });
+
+      let config: { preset?: string; theme?: object; overlayLabel?: boolean } = {};
+      try {
+        config = JSON.parse(root.dataset.anatomyConfig ?? '{}');
+      } catch { /* malformed config — fall back to defaults */ }
+
+      const anatomy = createAnatomy({
+        root: preview,
+        panel: panel ?? undefined,
+        preset: config.preset as import('@component-anatomy/core').AnatomyPresetName | undefined,
+        theme: config.theme as import('@component-anatomy/core').AnatomyTheme | undefined,
+        overlay: { label: config.overlayLabel !== false },
+      });
+
+      // Sticky pill: show/hide based on whether the active panel entry is in view
+      if (pill && panel) {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            const activeEntry = panel.querySelector<HTMLElement>('[data-anatomy-item][data-active]');
+            if (!activeEntry) { pill.classList.remove('ca-pill--visible'); return; }
+            const isVisible = entries.some(
+              (e) => e.target === activeEntry && e.isIntersecting
+            );
+            pill.classList.toggle('ca-pill--visible', !isVisible);
+          },
+          { root: panel, threshold: 0.5 }
+        );
+
+        // Re-observe whenever a new part becomes active
+        anatomy.on('part:enter', (partId) => {
+          if (pillName) pillName.textContent = partId;
+          const activeEntry = panel.querySelector<HTMLElement>(`[data-anatomy-item="${partId}"]`);
+          if (activeEntry) observer.observe(activeEntry);
+          else pill.classList.remove('ca-pill--visible');
+        });
+
+        anatomy.on('part:leave', () => {
+          pill.classList.remove('ca-pill--visible');
+          if (pillName) pillName.textContent = '';
+        });
+      }
+    });
+  }
+
+  init();
+  document.addEventListener('astro:page-load', init);
+</script>

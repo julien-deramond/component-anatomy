@@ -1,0 +1,106 @@
+---
+import Base from '../../layouts/Base.astro';
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+---
+<Base title="Core docs">
+  <div class="prose">
+    <h1 class="page-title">Core library</h1>
+    <p class="page-subtitle">
+      <code>@component-anatomy/core</code> — the framework-agnostic runtime.
+      Works anywhere a browser DOM exists.
+    </p>
+
+    <h2>What it solves</h2>
+    <p>
+      Design systems document component anatomy with static images exported from
+      design tools. Those go stale and offer no interactivity. Component Anatomy
+      turns <code>data-part</code> attributes on live DOM elements into an
+      interactive, synchronized documentation panel — hover a part name to
+      highlight the element, hover the element to highlight the part name.
+    </p>
+
+    <h2>Installation</h2>
+    <pre is:raw><code>npm install @component-anatomy/core</code></pre>
+    <p>Or with no build step, straight from a CDN:</p>
+    <pre is:raw><code>&lt;script src="https://unpkg.com/@component-anatomy/core/dist/index.iife.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  const controller = ComponentAnatomy.createAnatomy({ /* ... */ });
+&lt;/script&gt;</code></pre>
+
+    <h2>Quick start — basic HTML</h2>
+    <p>1. Annotate the elements you want to document with <code>data-part</code>:</p>
+    <pre is:raw><code>&lt;div id="preview"&gt;
+  &lt;div class="slider"&gt;
+    &lt;div class="track" data-part="track"&gt;&lt;/div&gt;
+    &lt;div class="thumb" data-part="thumb"&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id="panel"&gt;
+  &lt;div data-anatomy-item="track" tabindex="0"&gt;Track — the rail the thumb moves on&lt;/div&gt;
+  &lt;div data-anatomy-item="thumb" tabindex="0"&gt;Thumb — the draggable control&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+    <p>2. Create the controller:</p>
+    <pre is:raw><code>import { createAnatomy } from '@component-anatomy/core';
+
+const controller = createAnatomy({
+  root: document.querySelector('#preview'),
+  panel: document.querySelector('#panel'),
+  parts: [
+    { id: 'track', name: 'Track', description: 'The rail the thumb moves on.' },
+    { id: 'thumb', name: 'Thumb', description: 'The draggable control.' },
+  ],
+});</code></pre>
+    <p>
+      That's it. Hovering either side highlights the other. Panel entries with
+      <code>tabindex="0"</code> also respond to keyboard focus. If you omit
+      <code>parts</code>, they are auto-discovered from the DOM and names are
+      derived from the ids (<code>leading-icon</code> → "Leading Icon").
+    </p>
+
+    <h2>Core concepts</h2>
+    <table>
+      <thead><tr><th>Concept</th><th>Role</th></tr></thead>
+      <tbody>
+        <tr><td><code>data-part="id"</code></td><td>Marks an element in the live component as a documented anatomy part. Multiple elements may share one id.</td></tr>
+        <tr><td><code>data-anatomy-item="id"</code></td><td>Marks a panel entry as the documentation for that part.</td></tr>
+        <tr><td><code>createAnatomy(options)</code></td><td>Wires a root + panel pair and returns a controller.</td></tr>
+        <tr><td>Controller</td><td>Programmatic API: <code>highlight(id)</code>, <code>unhighlight()</code>, <code>refresh()</code>, <code>destroy()</code>, <code>on(event, fn)</code>, <code>getParts()</code>, <code>setTheme(theme, preset?)</code>.</td></tr>
+        <tr><td>Overlay</td><td>Highlight boxes + name chips rendered into <code>document.body</code>, positioned with <code>getBoundingClientRect</code>, repositioned on scroll/resize.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Options</h2>
+    <pre is:raw><code>createAnatomy({
+  root,                       // HTMLElement — required
+  panel,                      // HTMLElement — optional
+  parts,                      // AnatomyPartDefinition[] — optional (auto-discovered)
+  preset: 'minimal',          // 'default' | 'minimal' | 'contrast' | 'blueprint'
+  theme: { accent: '#0d9488' },
+  overlay: {
+    label: true,              // show the floating name chip
+    padding: 4,               // inflate boxes by N px
+    className: 'my-overlay',  // extra class on every box
+    renderLabel: (ctx) => `${ctx.part.name} #${ctx.index + 1}`,
+    decorateOverlay: (box, ctx) => { /* mutate the box element */ },
+  },
+});</code></pre>
+    <p>
+      See <a href={`${base}docs/customization`}>Rendering customization</a> for
+      the full theming guide.
+    </p>
+
+    <h2>Events</h2>
+    <pre is:raw><code>const off = controller.on('part:enter', (partId) => console.log('active:', partId));
+controller.on('part:leave', () => console.log('inactive'));
+off(); // unsubscribe</code></pre>
+
+    <h2>Behavior notes</h2>
+    <ul>
+      <li>Dynamic DOM: a <code>MutationObserver</code> re-binds listeners when <code>data-part</code> elements are added/removed. Call <code>refresh()</code> after replacing the panel markup.</li>
+      <li>Multiple instances per page are fully independent — part ids only need to be unique within one root.</li>
+      <li>Nested parts work: hovering a child highlights the child, not the parent.</li>
+      <li>Overlays are <code>aria-hidden</code> and <code>pointer-events: none</code>; keyboard access goes through the panel entries.</li>
+    </ul>
+  </div>
+</Base>

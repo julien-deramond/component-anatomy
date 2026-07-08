@@ -1,0 +1,71 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  # Allow triggering a deployment manually from the Actions tab
+  workflow_dispatch:
+
+# Allow only one concurrent deployment; queue new ones, don't cancel in-flight.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build packages
+        run: pnpm run build:packages
+
+      - name: Build Astro docs site
+        run: pnpm --filter examples-astro build
+        env:
+          SITE_URL: https://julien-deramond.github.io
+          BASE_PATH: /component-anatomy
+
+      - name: Build Storybook example
+        run: pnpm --filter examples-storybook build
+
+      - name: Nest Storybook under /storybook/
+        run: |
+          mkdir -p examples/astro/dist/storybook
+          cp -r examples/storybook/storybook-static/* examples/astro/dist/storybook/
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: examples/astro/dist
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

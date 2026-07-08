@@ -1,0 +1,19 @@
+{
+  "name": "examples-sandbox",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Vite vanilla-TS sandbox — exercises every rendering customization of @component-anatomy/core",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@component-anatomy/core": "workspace:^"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "vite": "^5.4.0"
+  }
+}

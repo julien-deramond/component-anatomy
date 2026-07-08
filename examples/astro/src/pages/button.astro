@@ -1,0 +1,58 @@
+---
+import Base from '../layouts/Base.astro';
+import ComponentAnatomy from '@component-anatomy/astro/ComponentAnatomy.astro';
+import Button from '../components/Button.astro';
+import type { AnatomyPartDefinition } from '@component-anatomy/core';
+
+const parts: AnatomyPartDefinition[] = [
+  {
+    id: 'root',
+    name: 'Root',
+    description: `
+The outer \`<button>\` element. It is the interactive, focusable container
+for the entire component.
+
+Carries \`type="button"\` to prevent accidental form submission, and
+receives all native button attributes like \`disabled\`, \`aria-label\`, etc.
+    `.trim(),
+  },
+  {
+    id: 'icon',
+    name: 'Icon',
+    description: `
+An optional decorative icon rendered before the label.
+
+Marked \`aria-hidden="true"\` so screen readers skip it — the label
+carries the accessible name. The icon slot accepts any inline SVG
+or icon component.
+    `.trim(),
+  },
+  {
+    id: 'label',
+    name: 'Label',
+    description: `
+The visible text content of the button.
+
+Wrapped in a \`<span>\` to allow independent styling (truncation,
+font-weight overrides) without affecting the root's layout. This
+span is the primary source of the button's accessible name when
+no explicit \`aria-label\` is set.
+    `.trim(),
+  },
+];
+---
+
+<Base title="Button">
+  <h1 class="page-title">Button</h1>
+  <p class="page-subtitle">
+    A pressable element that triggers an action. Hover a part name or the live
+    component to explore the anatomy.
+  </p>
+
+  <div class="section">
+    <p class="section-label">Anatomy</p>
+    <ComponentAnatomy parts={parts}>
+      <Button />
+    </ComponentAnatomy>
+  </div>
+</Base>

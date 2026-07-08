@@ -1,0 +1,91 @@
+---
+import Base from '../../layouts/Base.astro';
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+---
+<Base title="Astro integration">
+  <div class="prose">
+    <h1 class="page-title">Astro integration</h1>
+    <p class="page-subtitle">
+      <code>@component-anatomy/astro</code> — a ready-made two-column anatomy
+      block: live preview left, documentation panel right. Markdown descriptions
+      are rendered server-side; the only client JS is the core runtime.
+    </p>
+
+    <h2>Installation</h2>
+    <pre is:raw><code>npm install @component-anatomy/astro</code></pre>
+
+    <h2>Usage</h2>
+    <pre is:raw><code>---
+import ComponentAnatomy from '@component-anatomy/astro/ComponentAnatomy.astro';
+import Slider from '../components/Slider.astro';
+
+const parts = [
+  { id: 'track', name: 'Track', description: 'The rail the **thumb** moves on.' },
+  { id: 'thumb', name: 'Thumb', description: 'The draggable control. `aria-valuenow` reflects the value.' },
+];
+---
+&lt;ComponentAnatomy parts={parts}&gt;
+  &lt;Slider /&gt;
+&lt;/ComponentAnatomy&gt;</code></pre>
+    <p>
+      Your component just needs <code>data-part</code> attributes on the elements
+      to document. Everything else — panel entries, hover sync, sticky active
+      pill, keyboard focus — is generated.
+    </p>
+
+    <h2>Props</h2>
+    <table>
+      <thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>parts</code></td><td><code>AnatomyPartDefinition[]</code></td><td>—</td><td>Part list. Descriptions accept Markdown.</td></tr>
+        <tr><td><code>preset</code></td><td><code>'default' | 'minimal' | 'contrast' | 'blueprint'</code></td><td><code>'default'</code></td><td>Visual preset for overlays and panel accent.</td></tr>
+        <tr><td><code>theme</code></td><td><code>AnatomyTheme</code></td><td>—</td><td>Token overrides, e.g. <code>{'{ accent: "#0d9488" }'}</code>.</td></tr>
+        <tr><td><code>overlayLabel</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Show the floating name chip.</td></tr>
+        <tr><td><code>label</code></td><td><code>string</code></td><td>"Component anatomy"</td><td>Accessible label of the block.</td></tr>
+        <tr><td><code>class</code></td><td><code>string</code></td><td>—</td><td>Extra class on the wrapper.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Theming</h2>
+    <pre is:raw><code>&lt;ComponentAnatomy parts={parts} preset="blueprint"&gt;
+  &lt;Slider /&gt;
+&lt;/ComponentAnatomy&gt;
+
+&lt;ComponentAnatomy parts={parts} theme={{ accent: '#0d9488', overlayRadius: 8 }}&gt;
+  &lt;Slider /&gt;
+&lt;/ComponentAnatomy&gt;</code></pre>
+    <p>
+      The theme is applied to both the canvas overlays and the panel accents
+      (active entry, indicator dot, sticky pill). See it on the
+      <a href={`${base}theming`}>theming demo</a>.
+    </p>
+
+    <h2>Header slot</h2>
+    <pre is:raw><code>&lt;ComponentAnatomy parts={parts}&gt;
+  &lt;Slider /&gt;
+  &lt;p slot="header"&gt;Hover a part below, or the component itself.&lt;/p&gt;
+&lt;/ComponentAnatomy&gt;</code></pre>
+
+    <h2>Layout customization</h2>
+    <p>The block exposes CSS variables of its own:</p>
+    <pre is:raw><code>.my-anatomy {
+  --ca-gap: 3rem;                 /* column gap */
+  --ca-preview-bg: #ffffff;       /* preview background */
+  --ca-preview-padding: 4rem 2rem;
+  --ca-panel-max-height: 600px;
+}</code></pre>
+
+    <h2>View transitions</h2>
+    <p>
+      The client script re-initializes on <code>astro:page-load</code>, so it
+      works with Astro view transitions out of the box.
+    </p>
+
+    <h2>Live examples</h2>
+    <ul>
+      <li><a href={`${base}button`}>Button</a>, <a href={`${base}slider`}>Slider</a> — custom Astro components</li>
+      <li><a href={`${base}bs-button`}>Bootstrap via CDN</a> — Button, Alert, Card, Badge, Navbar</li>
+      <li><a href={`${base}shadcn`}>Shadcn-style components</a></li>
+    </ul>
+  </div>
+</Base>

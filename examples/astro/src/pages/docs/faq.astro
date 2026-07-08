@@ -1,0 +1,77 @@
+---
+import Base from '../../layouts/Base.astro';
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+---
+<Base title="Troubleshooting & FAQ">
+  <div class="prose">
+    <h1 class="page-title">Troubleshooting &amp; FAQ</h1>
+    <p class="page-subtitle">Common issues and how to fix them.</p>
+
+    <h2>Troubleshooting</h2>
+
+    <h3>Overlays don't appear</h3>
+    <ul>
+      <li>Check the <code>root</code> element actually contains the <code>data-part</code> elements (<code>controller.getParts()</code> tells you what was found).</li>
+      <li>If your app sets extreme <code>z-index</code> values, raise the overlay: <code>theme: {'{ zIndex: 100000 }'}</code>.</li>
+      <li>Zero-size elements produce zero-size boxes — give empty spans a size or padding, or use <code>overlay: {'{ padding: 4 }'}</code>.</li>
+    </ul>
+
+    <h3>Overlays are misplaced</h3>
+    <ul>
+      <li>Overlays track <code>getBoundingClientRect</code> and reposition on scroll/resize. If the element moves due to CSS animation without a scroll/resize, call <code>controller.refresh()</code> — or re-highlight after the animation ends.</li>
+      <li>Inside transformed/zoomed ancestors the rects are still correct — overlays live in <code>document.body</code> precisely to escape those stacking contexts.</li>
+    </ul>
+
+    <h3>Panel doesn't react to hovering the component</h3>
+    <ul>
+      <li>Panel entries must carry <code>data-anatomy-item="&lt;id&gt;"</code> matching the <code>data-part</code> value exactly (case-sensitive).</li>
+      <li>If you rebuilt the panel DOM after <code>createAnatomy()</code>, call <code>controller.refresh()</code> to re-bind listeners.</li>
+    </ul>
+
+    <h3>Dynamic content isn't picked up</h3>
+    <p>
+      Added/removed <code>data-part</code> elements are detected automatically via
+      MutationObserver. Attribute-only changes (changing a <code>data-part</code>
+      value in place) are not — call <code>controller.refresh()</code>.
+    </p>
+
+    <h3>Storybook panel says "No anatomy configured"</h3>
+    <ul>
+      <li>The <code>anatomy</code> parameter must exist (an empty object <code>{'{}'}</code> is enough for auto-discovery).</li>
+      <li>The addon must be listed in <code>.storybook/main.ts</code> under <code>addons</code>.</li>
+    </ul>
+
+    <h2>FAQ</h2>
+
+    <h3>Does it work without a bundler?</h3>
+    <p>Yes — an IIFE build is shipped: <code>dist/index.iife.js</code> exposes <code>window.ComponentAnatomy</code>. See the <a href={`${base}docs/core`}>core docs</a>.</p>
+
+    <h3>Can several parts share one id?</h3>
+    <p>Yes. All matching elements highlight together (e.g. three tabs). Use <code>renderLabel</code> to number them.</p>
+
+    <h3>Does it affect my component's accessibility?</h3>
+    <p>
+      Overlays are <code>aria-hidden="true"</code> and ignore pointer events. The
+      core adds no tabstops to your component. Keyboard interaction is provided
+      through panel entries (focus/blur). The Astro integration additionally
+      hides the decorative preview from the accessibility tree.
+    </p>
+
+    <h3>What's the bundle cost?</h3>
+    <p>Core is dependency-free, ~4&nbsp;kB min+gzip. The Astro panel renders server-side; the Storybook decorator only loads in Storybook.</p>
+
+    <h3>Is <code>data-anatomy</code> supported instead of <code>data-part</code>?</h3>
+    <p>
+      The attribute is <code>data-part</code>, aligning with design-system
+      conventions (Zag.js, Ark UI, Radix internals) so annotations can double as
+      styling/testing hooks.
+    </p>
+
+    <h3>Can I use it in React / Vue / Svelte?</h3>
+    <p>
+      The core is framework-agnostic — call <code>createAnatomy()</code> in a
+      mount effect and <code>destroy()</code> on unmount. Dedicated wrappers are
+      on the roadmap; the Storybook addon already covers any renderer.
+    </p>
+  </div>
+</Base>

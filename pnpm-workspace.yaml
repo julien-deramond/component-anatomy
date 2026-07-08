@@ -1,0 +1,11 @@
+# pnpm workspace configuration.
+# This monorepo is pnpm-only. Install with `pnpm install` at the repo root.
+#
+# Internal package-to-package dependencies use the `workspace:^` protocol
+# (e.g. packages/astro depends on "@component-anatomy/core": "workspace:^"),
+# so local development always resolves to the in-repo package regardless of
+# its current version. Changesets rewrites `workspace:^` to a real semver
+# range (e.g. "^1.2.0") automatically when publishing — see RELEASING.md.
+packages:
+  - 'packages/*'
+  - 'examples/*'

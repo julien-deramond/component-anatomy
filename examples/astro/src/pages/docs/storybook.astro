@@ -1,0 +1,79 @@
+---
+import Base from '../../layouts/Base.astro';
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+---
+<Base title="Storybook addon">
+  <div class="prose">
+    <h1 class="page-title">Storybook addon</h1>
+    <p class="page-subtitle">
+      <code>@component-anatomy/storybook</code> — an "Anatomy" panel next to
+      Controls and Actions, synced two-way with the story canvas.
+      <a href={`${base}storybook/`}>Open the live Storybook →</a>
+    </p>
+
+    <h2>Compatibility</h2>
+    <p>Storybook <strong>9 and 10</strong>, any renderer (React, Vue, HTML, Web Components…). The canvas side is framework-agnostic — it only reads the rendered DOM.</p>
+
+    <h2>Installation</h2>
+    <pre is:raw><code>npm install --save-dev @component-anatomy/storybook</code></pre>
+    <pre is:raw><code>// .storybook/main.ts
+export default {
+  addons: ['@component-anatomy/storybook'],
+};</code></pre>
+    <p>That's the whole setup — the addon registers its panel and a global decorator automatically.</p>
+
+    <h2>Usage</h2>
+    <p>Annotate the story's DOM with <code>data-part</code> and add the <code>anatomy</code> parameter:</p>
+    <pre is:raw><code>export const Anatomy: Story = {
+  parameters: {
+    anatomy: {
+      parts: [
+        { id: 'icon',  name: 'Icon',  description: 'Optional leading glyph.' },
+        { id: 'label', name: 'Label', description: 'The visible action text.' },
+        { id: 'badge', name: 'Badge', description: 'Numeric counter.' },
+      ],
+    },
+  },
+};</code></pre>
+    <p>
+      Hover a part in the panel → the canvas element is highlighted. Hover the
+      element in the canvas → the panel entry activates. Omit <code>parts</code>
+      entirely and the panel lists what it finds in the DOM.
+    </p>
+
+    <h2>Parameters</h2>
+    <table>
+      <thead><tr><th>Key</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>parts</code></td><td><code>AnatomyPartDefinition[]</code></td><td>Part list. Omit to auto-discover from <code>data-part</code>.</td></tr>
+        <tr><td><code>preset</code></td><td><code>string</code></td><td><code>default</code> | <code>minimal</code> | <code>contrast</code> | <code>blueprint</code>.</td></tr>
+        <tr><td><code>theme</code></td><td><code>AnatomyTheme</code></td><td>Token overrides for canvas overlays, e.g. <code>{'{ accent: "#0d9488" }'}</code>.</td></tr>
+        <tr><td><code>overlayLabel</code></td><td><code>boolean</code></td><td>Show the floating name chip. Default true.</td></tr>
+        <tr><td><code>overlayPadding</code></td><td><code>number</code></td><td>Inflate highlight boxes by N px.</td></tr>
+        <tr><td><code>root</code></td><td><code>string</code></td><td>CSS selector narrowing the anatomy root inside the canvas.</td></tr>
+        <tr><td><code>disable</code></td><td><code>boolean</code></td><td>Turn the addon off for a story.</td></tr>
+      </tbody>
+    </table>
+    <p>
+      Parameters follow Storybook's normal inheritance: set project-wide defaults in
+      <code>.storybook/preview.ts</code>, per-component defaults in <code>meta.parameters</code>,
+      and per-story overrides in <code>story.parameters</code>. Typed as
+      <code>AnatomyParameters</code>:
+    </p>
+    <pre is:raw><code>import type { AnatomyParameters } from '@component-anatomy/storybook';
+
+export const Anatomy: Story = {
+  parameters: {
+    anatomy: { preset: 'blueprint', overlayPadding: 2 } satisfies AnatomyParameters,
+  },
+};</code></pre>
+
+    <h2>Live examples</h2>
+    <p>
+      The <a href={`${base}storybook/`}>deployed Storybook</a> shows Button
+      (default + blueprint theme), Slider (accent theme) and Tabs
+      (auto-discovery + high-contrast preset). Sources live in
+      <code>examples/storybook</code> in the repo.
+    </p>
+  </div>
+</Base>

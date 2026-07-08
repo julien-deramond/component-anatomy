@@ -1,0 +1,66 @@
+---
+import Base from '../layouts/Base.astro';
+import ComponentAnatomy from '@component-anatomy/astro/ComponentAnatomy.astro';
+import Slider from '../components/Slider.astro';
+import type { AnatomyPartDefinition } from '@component-anatomy/core';
+
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+
+const parts: AnatomyPartDefinition[] = [
+  { id: 'root', name: 'Root', description: 'The component wrapper.' },
+  { id: 'track', name: 'Track', description: 'The rail the thumb travels along.' },
+  { id: 'range', name: 'Range', description: 'The filled portion of the track.' },
+  { id: 'thumb', name: 'Thumb', description: 'The draggable handle.' },
+  { id: 'output', name: 'Output', description: 'Live value readout.' },
+];
+---
+<Base title="Theming">
+  <h1 class="page-title">Theming</h1>
+  <p class="page-subtitle">
+    The same component with different presets and theme tokens — hover each
+    panel to compare. Full guide in
+    <a href={`${base}docs/customization`} style="color:#4f46e5;">Rendering customization</a>.
+  </p>
+
+  <div class="section">
+    <p class="section-label">preset="default" (zero config)</p>
+    <ComponentAnatomy parts={parts}>
+      <Slider />
+    </ComponentAnatomy>
+  </div>
+
+  <div class="section">
+    <p class="section-label">preset="minimal"</p>
+    <ComponentAnatomy parts={parts} preset="minimal">
+      <Slider />
+    </ComponentAnatomy>
+  </div>
+
+  <div class="section">
+    <p class="section-label">preset="contrast"</p>
+    <ComponentAnatomy parts={parts} preset="contrast">
+      <Slider />
+    </ComponentAnatomy>
+  </div>
+
+  <div class="section">
+    <p class="section-label">preset="blueprint"</p>
+    <ComponentAnatomy parts={parts} preset="blueprint">
+      <Slider />
+    </ComponentAnatomy>
+  </div>
+
+  <div class="section">
+    <p class="section-label">{'theme={{ accent: "#0d9488", overlayRadius: 8 }}'}</p>
+    <ComponentAnatomy parts={parts} theme={{ accent: '#0d9488', overlayRadius: 8 }}>
+      <Slider />
+    </ComponentAnatomy>
+  </div>
+
+  <div class="section">
+    <p class="section-label">{'overlayLabel={false}'} — quiet mode</p>
+    <ComponentAnatomy parts={parts} preset="minimal" overlayLabel={false}>
+      <Slider />
+    </ComponentAnatomy>
+  </div>
+</Base>

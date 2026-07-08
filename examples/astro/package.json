@@ -1,0 +1,16 @@
+{
+  "name": "examples-astro",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Astro example site for component-anatomy — Bootstrap v5 components with live anatomy panels",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@component-anatomy/astro": "workspace:^",
+    "astro": "^4.11.0"
+  }
+}
