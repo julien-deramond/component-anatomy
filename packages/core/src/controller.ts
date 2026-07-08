@@ -1,5 +1,6 @@
 import { AnatomyRegistry } from './registry.js';
 import { AnatomyOverlay } from './overlay.js';
+import { resolveThemeVars } from './theme.js';
 import type {
   AnatomyOptions,
   AnatomyController,
@@ -19,11 +20,18 @@ export function createController(options: AnatomyOptions): AnatomyController {
   const { root, panel } = options;
 
   const registry = new AnatomyRegistry(root);
-  const overlay = new AnatomyOverlay();
+  const overlay = new AnatomyOverlay(
+    resolveThemeVars(options.preset, options.theme),
+    options.overlay ?? {}
+  );
 
   // Resolve part definitions: explicit or auto-discovered
   let parts: AnatomyPartDefinition[] = options.parts ??
     registry.partIds().map((id) => ({ id, name: idToName(id) }));
+
+  function findPart(partId: string): AnatomyPartDefinition {
+    return parts.find((p) => p.id === partId) ?? { id: partId, name: idToName(partId) };
+  }
 
   // Event emitter
   const listeners = new Map<AnatomyEvent, Set<AnatomyEventHandler>>();
@@ -37,7 +45,7 @@ export function createController(options: AnatomyOptions): AnatomyController {
 
   function highlight(partId: string, source: 'preview' | 'panel' = 'panel') {
     const elements = registry.query().get(partId) ?? [];
-    overlay.show(elements, partId);
+    overlay.show(elements, findPart(partId));
 
     // Mark matching panel items active + scroll into view when triggered from preview
     if (panel) {
@@ -179,6 +187,14 @@ export function createController(options: AnatomyOptions): AnatomyController {
       if (!listeners.has(event)) listeners.set(event, new Set());
       listeners.get(event)!.add(handler);
       return () => listeners.get(event)?.delete(handler);
+    },
+
+    getParts() {
+      return parts.slice();
+    },
+
+    setTheme(theme, preset) {
+      overlay.setVars(resolveThemeVars(preset, theme));
     },
   };
 }

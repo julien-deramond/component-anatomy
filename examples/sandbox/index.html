@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Component Anatomy — Sandbox</title>
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+  <header class="page-header">
+    <h1>Component Anatomy — Sandbox</h1>
+    <p>
+      A playground for <code>@component-anatomy/core</code> rendering customization:
+      presets, theme tokens, overlay hooks, auto-discovery and dynamic DOM.
+      Hover the components or the panels.
+    </p>
+  </header>
+
+  <!-- ────────────────── 1. Default preset ────────────────── -->
+  <section class="demo" id="demo-button">
+    <div class="demo-head">
+      <h2>1. Button — zero-config default</h2>
+      <p>Explicit part definitions, default look. No theme, no preset.</p>
+    </div>
+    <div class="demo-grid">
+      <div class="preview" data-demo-root>
+        <button class="btn">
+          <span class="btn-icon" data-part="icon">★</span>
+          <span class="btn-label" data-part="label">Favorite</span>
+          <span class="btn-badge" data-part="badge">12</span>
+        </button>
+      </div>
+      <div class="panel" data-demo-panel></div>
+    </div>
+  </section>
+
+  <!-- ────────────────── 2. Presets + live theming ────────────────── -->
+  <section class="demo" id="demo-slider">
+    <div class="demo-head">
+      <h2>2. Slider — presets &amp; live theme switching</h2>
+      <p>Switch presets and accent color at runtime via <code>controller.setTheme()</code>.</p>
+      <div class="controls">
+        <label>Preset
+          <select id="preset-select">
+            <option value="default">default</option>
+            <option value="minimal">minimal</option>
+            <option value="contrast">contrast</option>
+            <option value="blueprint">blueprint</option>
+          </select>
+        </label>
+        <label>Accent
+          <input type="color" id="accent-input" value="#4f46e5" />
+        </label>
+        <label><input type="checkbox" id="accent-enabled" /> use accent</label>
+      </div>
+    </div>
+    <div class="demo-grid">
+      <div class="preview" data-demo-root>
+        <div class="slider">
+          <div class="slider-track" data-part="track">
+            <div class="slider-fill" data-part="fill"></div>
+            <div class="slider-thumb" data-part="thumb"></div>
+          </div>
+          <div class="slider-marks">
+            <span class="slider-mark" data-part="mark"></span>
+            <span class="slider-mark" data-part="mark"></span>
+            <span class="slider-mark" data-part="mark"></span>
+          </div>
+        </div>
+      </div>
+      <div class="panel" data-demo-panel></div>
+    </div>
+  </section>
+
+  <!-- ────────────────── 3. Overlay hooks ────────────────── -->
+  <section class="demo" id="demo-tabs">
+    <div class="demo-head">
+      <h2>3. Tabs — overlay hooks</h2>
+      <p>
+        <code>renderLabel</code> numbers multiple matches, <code>decorateOverlay</code>
+        adds a corner marker, <code>padding</code> inflates the box.
+      </p>
+    </div>
+    <div class="demo-grid">
+      <div class="preview" data-demo-root>
+        <div class="tabs">
+          <div class="tabs-list" data-part="tablist">
+            <button class="tab is-active" data-part="tab">Overview</button>
+            <button class="tab" data-part="tab">Specs</button>
+            <button class="tab" data-part="tab">Reviews</button>
+            <div class="tabs-indicator" data-part="indicator"></div>
+          </div>
+          <div class="tabs-panel" data-part="tabpanel">
+            The overview content lives here.
+          </div>
+        </div>
+      </div>
+      <div class="panel" data-demo-panel></div>
+    </div>
+  </section>
+
+  <!-- ────────────────── 4. Auto-discovery + dynamic DOM ────────────────── -->
+  <section class="demo" id="demo-input">
+    <div class="demo-head">
+      <h2>4. Input — auto-discovery &amp; dynamic DOM</h2>
+      <p>
+        No <code>parts</code> passed: names are derived from <code>data-part</code> ids.
+        Toggling the clear button exercises the <code>MutationObserver</code>.
+      </p>
+      <div class="controls">
+        <button id="toggle-clear" class="control-btn">Toggle clear button</button>
+      </div>
+    </div>
+    <div class="demo-grid">
+      <div class="preview" data-demo-root>
+        <label class="field">
+          <span class="field-label" data-part="label">Email</span>
+          <span class="field-box">
+            <span class="field-prefix" data-part="leading-icon">@</span>
+            <input class="field-input" data-part="input" placeholder="you@example.com" />
+          </span>
+          <span class="field-hint" data-part="hint">We never share your email.</span>
+        </label>
+      </div>
+      <div class="panel" data-demo-panel></div>
+    </div>
+  </section>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

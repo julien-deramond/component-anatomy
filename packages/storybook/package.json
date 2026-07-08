@@ -1,0 +1,70 @@
+{
+  "name": "@component-anatomy/storybook",
+  "version": "0.0.1",
+  "description": "Storybook addon — interactive component anatomy panel synced with the story canvas",
+  "license": "MIT",
+  "author": "Julien Déramond",
+  "homepage": "https://github.com/julien-deramond/component-anatomy#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/julien-deramond/component-anatomy",
+    "directory": "packages/storybook"
+  },
+  "bugs": {
+    "url": "https://github.com/julien-deramond/component-anatomy/issues"
+  },
+  "keywords": [
+    "storybook-addon",
+    "component-anatomy",
+    "design-system",
+    "documentation",
+    "anatomy",
+    "appearance"
+  ],
+  "storybook": {
+    "displayName": "Component Anatomy",
+    "supportedFrameworks": ["react", "vue", "angular", "web-components", "html"]
+  },
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./manager": "./dist/manager.js",
+    "./preview": "./dist/preview.js",
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "src",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "node build.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@component-anatomy/core": "workspace:^"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.3",
+    "esbuild": "^0.21.0",
+    "react": "^18.3.1",
+    "storybook": "^10.0.0",
+    "typescript": "^5.4.5"
+  },
+  "peerDependencies": {
+    "storybook": ">=9.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

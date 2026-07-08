@@ -12,12 +12,13 @@
   "packageManager": "pnpm@9.15.9",
   "scripts": {
     "build": "pnpm --filter @component-anatomy/core build",
-    "build:packages": "pnpm --filter @component-anatomy/core build && pnpm --filter @component-anatomy/astro build",
+    "build:packages": "pnpm --filter @component-anatomy/core build && pnpm --filter @component-anatomy/astro build && pnpm --filter @component-anatomy/storybook build",
     "dev": "pnpm --filter examples-astro dev",
-    "typecheck": "pnpm --filter @component-anatomy/core typecheck",
+    "typecheck": "pnpm --filter @component-anatomy/core typecheck && pnpm --filter @component-anatomy/storybook typecheck",
     "changeset": "changeset",
     "version": "changeset version",
-    "release": "pnpm run build:packages && changeset publish"
+    "release": "pnpm run build:packages && changeset publish",
+    "test": "pnpm --filter @component-anatomy/core test"
   },
   "devDependencies": {
     "@changesets/changelog-github": "^0.7.0",

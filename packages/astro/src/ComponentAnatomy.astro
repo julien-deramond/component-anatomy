@@ -1,16 +1,44 @@
 ---
 import { marked } from 'marked';
-import type { AnatomyPartDefinition } from '@component-anatomy/core';
+import { resolveThemeVars } from '@component-anatomy/core';
+import type {
+  AnatomyPartDefinition,
+  AnatomyPresetName,
+  AnatomyTheme,
+} from '@component-anatomy/core';
 
 export interface Props {
   parts?: AnatomyPartDefinition[];
   class?: string;
   label?: string;
+  /** Named visual preset for overlays + panel accent. Default: 'default'. */
+  preset?: AnatomyPresetName;
+  /** Theme token overrides (applied on top of the preset). */
+  theme?: AnatomyTheme;
+  /** Show the floating name label chip over highlighted elements. Default: true. */
+  overlayLabel?: boolean;
 }
 
-const { parts, class: className, label = 'Component anatomy' } = Astro.props;
+const {
+  parts,
+  class: className,
+  label = 'Component anatomy',
+  preset,
+  theme,
+  overlayLabel = true,
+} = Astro.props;
 
 const instanceId = `ca-${Math.random().toString(36).slice(2, 9)}`;
+
+// Resolved theme vars are applied twice on purpose:
+//  1. Inline on .ca-root — so panel accents (active entry, pill) match the theme.
+//  2. Serialized to the client — overlays live in document.body, outside this
+//     element's cascade, so createAnatomy() needs the tokens directly.
+const themeVars = resolveThemeVars(preset, theme);
+const themeStyle = Object.entries(themeVars)
+  .map(([k, v]) => `${k}: ${v};`)
+  .join(' ');
+const clientConfig = JSON.stringify({ preset, theme, overlayLabel });
 
 const renderedParts = await Promise.all(
   (parts ?? []).map(async (part) => ({
@@ -23,7 +51,9 @@ const renderedParts = await Promise.all(
 <div
   class:list={['ca-root', className]}
   data-anatomy-root={instanceId}
+  data-anatomy-config={clientConfig}
   aria-label={label}
+  style={themeStyle || undefined}
 >
   <!-- Left: live component preview with dot-grid background -->
   <div class="ca-preview" data-anatomy-preview={instanceId}>
@@ -34,6 +64,11 @@ const renderedParts = await Promise.all(
 
   <!-- Right: documentation panel -->
   <div class="ca-panel-wrapper">
+    {Astro.slots.has('header') && (
+      <div class="ca-panel-header">
+        <slot name="header" />
+      </div>
+    )}
     <!-- Sticky "active part" indicator — visible when scrolled past the active entry -->
     <div class="ca-active-pill" data-anatomy-pill={instanceId} aria-hidden="true">
       <span class="ca-active-pill-dot"></span>
@@ -113,6 +148,15 @@ const renderedParts = await Promise.all(
   .ca-panel-wrapper {
     position: relative;
   }
+
+  /* ─── Optional header slot ─── */
+  .ca-panel-header {
+    margin-bottom: 0.75rem;
+    font-size: 0.875rem;
+    color: #4b5563;
+  }
+  .ca-panel-header :global(> :first-child) { margin-top: 0; }
+  .ca-panel-header :global(> :last-child) { margin-bottom: 0; }
 
   /* ─── Sticky active pill ─── */
   .ca-active-pill {
@@ -319,7 +363,18 @@ const renderedParts = await Promise.all(
         el.setAttribute('tabindex', '-1');
       });
 
-      const anatomy = createAnatomy({ root: preview, panel: panel ?? undefined });
+      let config: { preset?: string; theme?: object; overlayLabel?: boolean } = {};
+      try {
+        config = JSON.parse(root.dataset.anatomyConfig ?? '{}');
+      } catch { /* malformed config — fall back to defaults */ }
+
+      const anatomy = createAnatomy({
+        root: preview,
+        panel: panel ?? undefined,
+        preset: config.preset as import('@component-anatomy/core').AnatomyPresetName | undefined,
+        theme: config.theme as import('@component-anatomy/core').AnatomyTheme | undefined,
+        overlay: { label: config.overlayLabel !== false },
+      });
 
       // Sticky pill: show/hide based on whether the active panel entry is in view
       if (pill && panel) {

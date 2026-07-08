@@ -44,11 +44,14 @@
   "sideEffects": false,
   "scripts": {
     "build": "node build.mjs",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
   },
   "devDependencies": {
     "esbuild": "^0.21.0",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "vitest": "^2.1.0",
+    "jsdom": "^24.1.0"
   },
   "engines": {
     "node": ">=18.0.0"
