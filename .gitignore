@@ -4,6 +4,8 @@ node_modules/
 
 # Build outputs
 dist/
+storybook-static/
+examples/storybook/storybook-static/
 
 # Temp files (created by tsup/esbuild in restricted environments)
 _tmp_*
