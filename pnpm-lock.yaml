@@ -28,7 +28,7 @@ importers:
         version: link:../../packages/core
       astro:
         specifier: ^7.1.1
-        version: 7.1.1(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(rollup@4.62.2)
+        version: 7.1.1(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.3)(rollup@4.62.2)
 
   examples/plain-html: {}
 
@@ -67,12 +67,12 @@ importers:
         specifier: workspace:^
         version: link:../core
       marked:
-        specifier: ^18.0.6
+        specifier: ^18.0.5
         version: 18.0.6
     devDependencies:
       astro:
-        specifier: ^7.1.1
-        version: 7.1.1(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.3)(rollup@4.62.2)
+        specifier: ^7.0.6
+        version: 7.1.1(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(rollup@4.62.2)
       typescript:
         specifier: ^7.0.2
         version: 7.0.2
@@ -89,7 +89,7 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
       vitest:
-        specifier: ^4.1.10
+        specifier: ^4.1.9
         version: 4.1.10(jsdom@29.1.1)(vite@8.1.5(esbuild@0.28.1))
 
   packages/storybook:
@@ -108,7 +108,7 @@ importers:
         specifier: ^19.2.7
         version: 19.2.7
       storybook:
-        specifier: ^10.5.2
+        specifier: ^10.0.0
         version: 10.5.2(@types/react@19.2.17)(prettier@2.8.8)(react@19.2.7)
       typescript:
         specifier: ^7.0.2
