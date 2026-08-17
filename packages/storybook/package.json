@@ -55,10 +55,10 @@
     "@component-anatomy/core": "workspace:^"
   },
   "devDependencies": {
-    "@types/react": "^19.2.17",
-    "esbuild": "^0.28.1",
-    "react": "^19.2.7",
-    "storybook": "^10.0.0",
+    "@types/react": "^19.2.18",
+    "esbuild": "^0.28.2",
+    "react": "^19.2.8",
+    "storybook": "^10.5.7",
     "typescript": "^7.0.2"
   },
   "peerDependencies": {
