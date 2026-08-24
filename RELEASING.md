@@ -196,6 +196,21 @@ git push --follow-tags
   Each publishable package sets `"publishConfig": { "access": "public" }`
   in its `package.json` so publishing doesn't fail on a free npm account.
 - No GitHub secrets are needed — nothing in CI touches npm.
+- `pnpm run version` (`changeset version`) needs a `GITHUB_TOKEN` env var.
+  `.changeset/config.json` uses `@changesets/changelog-github` to link PRs
+  and authors in each `CHANGELOG.md`, and that lookup calls the GitHub API.
+  The first release skipped this — it went straight to `pnpm run release`
+  with no prior changesets to version (see "First release: 0.0.1" above) —
+  so the missing token went unnoticed until the second release. If you're
+  logged in via `gh auth login`, reuse that token instead of minting a new
+  one:
+
+  ```bash
+  GITHUB_TOKEN=$(gh auth token) pnpm run version
+  ```
+
+  Otherwise, create a token with `read:user` and `repo:status` scopes at
+  <https://github.com/settings/tokens/new> and export it as `GITHUB_TOKEN`.
 
 ## Adding a new package later (React, …)
 
