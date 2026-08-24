@@ -17,8 +17,9 @@
     "typecheck": "pnpm --filter @component-anatomy/core typecheck && pnpm --filter @component-anatomy/storybook typecheck",
     "changeset": "changeset",
     "version": "changeset version",
-    "release": "pnpm run build:packages && changeset publish",
-    "test": "pnpm --filter @component-anatomy/core test"
+    "verify:dist": "node scripts/verify-package-dist.mjs",
+    "release": "pnpm run build:packages && pnpm run verify:dist && changeset publish",
+    "test": "pnpm --filter @component-anatomy/core test && pnpm --filter @component-anatomy/storybook test"
   },
   "devDependencies": {
     "@changesets/changelog-github": "^0.7.0",

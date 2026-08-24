@@ -29,6 +29,9 @@ jobs:
       - name: Build packages
         run: pnpm run build:packages
 
+      - name: Verify published package contents
+        run: pnpm run verify:dist
+
       - name: Typecheck
         run: pnpm run typecheck
 
