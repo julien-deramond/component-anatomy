@@ -5,6 +5,7 @@
 import { build } from 'esbuild';
 import { execSync } from 'child_process';
 import { rmSync, mkdirSync } from 'fs';
+import { assertFilesExist } from '../../scripts/assert-files.mjs';
 
 const entry = 'src/index.ts';
 const outDir = 'dist';
@@ -46,5 +47,10 @@ await Promise.all([
 execSync('../../node_modules/.bin/tsc --emitDeclarationOnly --declaration --outDir dist', {
   stdio: 'inherit',
 });
+
+// tsc can exit 0 without emitting anything (e.g. a stray "noEmit": true in
+// tsconfig.json) — verify the declarations actually landed before claiming
+// success. See issue #12.
+assertFilesExist([`${outDir}/index.d.ts`], { packageName: '@component-anatomy/core' });
 
 console.log('✓ @component-anatomy/core built');

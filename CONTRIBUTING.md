@@ -10,10 +10,12 @@ Thank you for considering a contribution! This document covers how to set up the
 component-anatomy/
 ├── packages/
 │   ├── core/          # @component-anatomy/core — framework-agnostic runtime
-│   └── astro/         # @component-anatomy/astro — Astro integration
+│   ├── astro/         # @component-anatomy/astro — Astro integration
+│   └── storybook/     # @component-anatomy/storybook — Storybook addon
 ├── examples/
 │   ├── astro/         # Astro docs site (runs at localhost:4321)
 │   └── plain-html/    # Single-file IIFE demo
+├── scripts/           # Repo-wide build/release safety checks (see below)
 ├── docs/              # Architecture and product notes
 └── research/          # Competitive analysis
 ```
@@ -50,6 +52,21 @@ To typecheck:
 ```bash
 pnpm run typecheck
 ```
+
+`pnpm run typecheck` only checks that each package's *source* is correct —
+it doesn't prove that a package's build actually produced the files its
+`package.json` promises consumers (`main`/`module`/`types`/`exports`). A
+build tool can exit 0 having silently emitted nothing (this is exactly how
+`@component-anatomy/storybook@0.0.1` shipped to npm with no `.d.ts` files —
+see [#12](https://github.com/julien-deramond/component-anatomy/issues/12)).
+After building, run:
+
+```bash
+pnpm run verify:dist        # checks every publishable package's dist/ against its package.json
+```
+
+This runs automatically in CI and as part of `pnpm run release`, so a
+broken `dist/` fails before it ever reaches npm.
 
 Internal packages reference each other with the `workspace:^` protocol
 (e.g. `packages/astro` depends on `"@component-anatomy/core": "workspace:^"`),

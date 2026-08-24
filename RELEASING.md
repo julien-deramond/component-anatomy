@@ -139,10 +139,12 @@ git diff
 git add -A
 git commit -m "chore: version packages"
 
-# 5. Build every publishable package, then publish to npm. This is also
-#    the step where `workspace:^` gets rewritten to a real semver range
-#    in the published package.json — your local package.json files still
-#    show `workspace:^` afterward, that's expected.
+# 5. Build every publishable package, verify each one's dist/ actually
+#    matches what its package.json promises (main/module/types/exports —
+#    catches a build that silently emitted nothing, see #12), then publish
+#    to npm. This is also the step where `workspace:^` gets rewritten to a
+#    real semver range in the published package.json — your local
+#    package.json files still show `workspace:^` afterward, that's expected.
 pnpm run release
 
 # 6. Push the commit and the git tags changeset publish created.
@@ -157,7 +159,11 @@ pnpm being your workspace tool.
 `pnpm run version` and `pnpm run release` are just aliases:
 
 - `"version": "changeset version"`
-- `"release": "pnpm run build:packages && changeset publish"`
+- `"release": "pnpm run build:packages && pnpm run verify:dist && changeset publish"`
+
+If `verify:dist` fails, `changeset publish` never runs — fix the failing
+package's build script/tsconfig.json (see `scripts/verify-package-dist.mjs`
+for what it checks) and re-run `pnpm run release`.
 
 ## First release: 0.0.1
 
@@ -172,9 +178,10 @@ To ship `0.0.1` for the first time:
 ```bash
 pnpm install
 pnpm run build:packages
+pnpm run verify:dist   # confirm dist/ actually matches each package.json
 pnpm run typecheck
-pnpm run release   # runs `changeset publish`; publishes any package whose
-                    # version isn't yet on the npm registry
+pnpm run release       # runs `changeset publish`; publishes any package
+                        # whose version isn't yet on the npm registry
 git push --follow-tags
 ```
 
@@ -190,22 +197,43 @@ git push --follow-tags
   in its `package.json` so publishing doesn't fail on a free npm account.
 - No GitHub secrets are needed — nothing in CI touches npm.
 
-## Adding a new package later (React, Storybook, …)
+## Adding a new package later (React, …)
 
-When `packages/react` or `packages/storybook` is created:
+When `packages/react` (or similar) is created:
 
 1. Give it `"version": "0.0.1"` and `"publishConfig": { "access": "public" }`,
-   matching the pattern in `packages/core` and `packages/astro`.
+   matching the pattern in `packages/core`, `packages/astro`, and
+   `packages/storybook`.
 2. If it depends on `@component-anatomy/core`, declare it as
    `"@component-anatomy/core": "workspace:^"` — never a plain semver range
    or `"*"`. This is what makes local development always use the in-repo
    `core`, and lets Changesets rewrite it to a real range at publish time.
-3. That's it. Because it lives under `packages/*`, `pnpm-workspace.yaml`
-   and `.changeset/config.json` already pick it up — no extra Changesets
-   config needed. It will version independently and inherit the same
-   core-changes-cascade behavior automatically.
+3. That's it for Changesets. Because it lives under `packages/*`,
+   `pnpm-workspace.yaml` and `.changeset/config.json` already pick it up —
+   no extra config needed. It will version independently and inherit the
+   same core-changes-cascade behavior automatically.
+   `scripts/verify-package-dist.mjs` auto-discovers it the same way (any
+   package under `packages/*` with `publishConfig.access` is checked) —
+   no extra config needed there either.
 4. Add it to `build:packages` in the root `package.json` so `pnpm run
    release` builds it too.
+5. **If the package emits TypeScript declarations via `tsc
+   --emitDeclarationOnly`** (as `core` and `storybook` do — see their
+   `build.mjs`), make sure its `tsconfig.json`:
+   - does **not** set `"noEmit": true` — `tsc` treats that as authoritative
+     over the CLI's `--emitDeclarationOnly`/`--declaration` flags and exits
+     0 having emitted *nothing*, with no error. This is exactly what let
+     `@component-anatomy/storybook@0.0.1` ship to npm with no `.d.ts` files
+     at all ([#12](https://github.com/julien-deramond/component-anatomy/issues/12)).
+   - **does** set `"rootDir"` and `"outDir"` explicitly (see `packages/core/tsconfig.json`)
+     — TypeScript 7 errors (`TS5011`) instead of guessing when it can't
+     infer a common source directory.
+
+   `scripts/verify-package-dist.mjs` (run by `pnpm run verify:dist`, wired
+   into CI and `pnpm run release`) is the safety net if this slips through
+   anyway — it fails the build/release if `dist/` doesn't actually contain
+   what `package.json`'s `main`/`module`/`types`/`exports` fields promise.
 
 For its own first release, publish `0.0.1` the same way as above — it isn't
-tied to whatever version `core` or `astro` happen to be on at the time.
+tied to whatever version `core`, `astro`, or `storybook` happen to be on at
+the time.

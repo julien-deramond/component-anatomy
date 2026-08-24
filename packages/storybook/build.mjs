@@ -8,6 +8,7 @@
 import { build } from 'esbuild';
 import { execSync } from 'child_process';
 import { rmSync, mkdirSync } from 'fs';
+import { assertFilesExist } from '../../scripts/assert-files.mjs';
 
 const outDir = 'dist';
 
@@ -42,5 +43,14 @@ await Promise.all([
 execSync('../../node_modules/.bin/tsc --emitDeclarationOnly --declaration --outDir dist', {
   stdio: 'inherit',
 });
+
+// tsc can exit 0 without emitting anything (e.g. a stray "noEmit": true in
+// tsconfig.json) — verify the declarations actually landed before claiming
+// success. This is exactly how @component-anatomy/storybook@0.0.1 shipped
+// to npm with no .d.ts files at all (issue #12).
+assertFilesExist(
+  [`${outDir}/index.d.ts`, `${outDir}/manager.d.ts`, `${outDir}/preview.d.ts`],
+  { packageName: '@component-anatomy/storybook' }
+);
 
 console.log('✓ @component-anatomy/storybook built');
