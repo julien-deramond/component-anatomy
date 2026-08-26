@@ -1,0 +1,87 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import { Anatomy } from '@component-anatomy/storybook/blocks';
+
+import * as ButtonStories from './Button.stories';
+import * as SliderStories from './Slider.stories';
+import * as TabsStories from './Tabs.stories';
+
+{/*
+  An *unattached* docs page — no `<Meta of={...} />`, just a title. Every
+  block here names its target explicitly with `of={...}`.
+*/}
+
+<Meta title="Docs/Anatomy in MDX" />
+
+# Anatomy in MDX
+
+`@component-anatomy/storybook/blocks` exports one block:
+
+```jsx
+import { Anatomy } from '@component-anatomy/storybook/blocks';
+
+<Anatomy of={ButtonStories.Anatomy} />
+```
+
+It renders the addon panel's table inline, wired to the story you point it at.
+The addon panel itself is unchanged — it still shows in story view for every
+story in this Storybook.
+
+## Several components on one page
+
+Each block talks only to the story it names. Hovering a row below highlights
+parts in *that* canvas and no other, even though three independent anatomies
+share this page.
+
+### Slider
+
+<Canvas of={SliderStories.Anatomy} />
+
+<Anatomy of={SliderStories.Anatomy} />
+
+### Tabs — auto-discovered
+
+`Tabs.AutoDiscovered` sets `parameters.anatomy = {}` and lists no parts. The
+part list is read from the `data-part` attributes of the story as it renders,
+and reaches this block over the addon channel — so auto-discovery works in MDX
+too, as long as the story is on the page.
+
+<Canvas of={TabsStories.AutoDiscovered} />
+
+<Anatomy of={TabsStories.AutoDiscovered} />
+
+### Tabs — high contrast
+
+<Canvas of={TabsStories.HighContrast} />
+
+<Anatomy of={TabsStories.HighContrast} />
+
+## Pointing at a meta
+
+Pass the whole CSF module to document the component rather than one story. The
+meta's `parameters.anatomy` is used; there is no canvas to discover parts from
+or to sync hover with, so this form needs an explicit `parts` list.
+
+```jsx
+<Anatomy of={ButtonStories} />
+```
+
+## A curated subset
+
+`parts` overrides both `parameters.anatomy.parts` and auto-discovery, for when
+prose needs to focus on two rows out of ten. Hover sync still works.
+
+<Canvas of={ButtonStories.Anatomy} />
+
+<Anatomy
+  of={ButtonStories.Anatomy}
+  parts={[
+    { id: 'icon', name: 'Icon', description: 'The only part this section is about.' },
+  ]}
+/>
+
+## Static table
+
+`sync={false}` drops the channel wiring entirely — no hover sync, no
+auto-discovery, just the rows.
+
+<Anatomy of={SliderStories.Anatomy} sync={false} />

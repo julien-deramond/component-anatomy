@@ -28,7 +28,7 @@ Design systems document component anatomy as static annotated images exported fr
 |---------|-------------|
 | [`@component-anatomy/core`](./packages/core) | Framework-agnostic runtime — works anywhere a DOM exists |
 | [`@component-anatomy/astro`](./packages/astro) | Astro component with SSR Markdown panel and zero-config hover sync |
-| [`@component-anatomy/storybook`](./packages/storybook) | Storybook 9/10 addon — "Anatomy" panel synced with the story canvas |
+| [`@component-anatomy/storybook`](./packages/storybook) | Storybook 9/10 addon — "Anatomy" panel synced with the story canvas, plus an `<Anatomy>` block for MDX |
 
 ---
 
@@ -113,6 +113,16 @@ export const Anatomy: Story = {
 };
 ```
 
+The same table renders inside an MDX docs page, next to the preview:
+
+```mdx
+import { Canvas } from '@storybook/addon-docs/blocks';
+import { Anatomy } from '@component-anatomy/storybook/blocks';
+
+<Canvas of={ButtonStories.Anatomy} />
+<Anatomy of={ButtonStories.Anatomy} />
+```
+
 ---
 
 ## Core API concepts
@@ -170,7 +180,7 @@ Full token table and recipes: [customization guide](https://julien-deramond.gith
 ## Framework integrations
 
 - **Astro** — `<ComponentAnatomy parts={...} preset theme overlayLabel>` with SSR Markdown descriptions, sticky active pill, `header` slot. [Guide](https://julien-deramond.github.io/component-anatomy/docs/astro)
-- **Storybook 9/10** — `parameters.anatomy = { parts, preset, theme, root, disable }`, auto-discovery included, any renderer. [Guide](https://julien-deramond.github.io/component-anatomy/docs/storybook)
+- **Storybook 9/10** — `parameters.anatomy = { parts, preset, theme, root, disable }`, auto-discovery included, any renderer. Plus an `<Anatomy of={…} />` doc block for MDX pages. [Guide](https://julien-deramond.github.io/component-anatomy/docs/storybook)
 - **React/Vue/Svelte** — use the core in a mount effect; dedicated wrappers are on the roadmap.
 
 ## Real-world examples

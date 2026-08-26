@@ -1,0 +1,48 @@
+import { Canvas, Meta, Controls } from '@storybook/addon-docs/blocks';
+import { Anatomy } from '@component-anatomy/storybook/blocks';
+
+import * as ButtonStories from './Button.stories';
+
+{/*
+  An *attached* docs page: `<Meta of={...} />` binds it to Button.stories,
+  which is what lets `<Anatomy />` below resolve without an `of` prop.
+*/}
+
+<Meta of={ButtonStories} />
+
+# Button
+
+The anatomy table below is the same one the **Anatomy** addon panel renders —
+here it sits in the page, next to the preview, instead of in the panel.
+
+Hover a row and the matching element lights up in the canvas above it. Hover a
+`data-part` element in the canvas and the row activates. It works in both
+directions, exactly as it does in story view.
+
+<Canvas of={ButtonStories.Anatomy} />
+
+<Anatomy of={ButtonStories.Anatomy} />
+
+## Without an `of` prop
+
+On an attached page, `<Anatomy />` falls back to the page's primary story —
+the same resolution the built-in `<Controls>` and `<Story>` blocks use.
+
+<Anatomy />
+
+## Side by side
+
+`<Anatomy>` is a plain block, so ordinary layout works around it.
+
+<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', alignItems: 'start' }}>
+  <Canvas of={ButtonStories.CustomTheme} />
+  <Anatomy of={ButtonStories.CustomTheme} />
+</div>
+
+The `CustomTheme` story sets `preset: 'blueprint'` — the canvas overlays pick
+that up, and its two tables stay independent of the ones above even though all
+four are on the same page.
+
+## Controls
+
+<Controls />

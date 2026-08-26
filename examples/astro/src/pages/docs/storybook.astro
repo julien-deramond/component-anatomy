@@ -68,11 +68,50 @@ export const Anatomy: Story = {
   },
 };</code></pre>
 
+    <h2>In MDX docs pages</h2>
+    <p>
+      The same table renders inside an MDX page with the <code>&lt;Anatomy&gt;</code>
+      block, so component anatomy can sit in the prose next to the preview
+      rather than only in the panel. It needs
+      <code>@storybook/addon-docs</code>, which is what renders MDX:
+    </p>
+    <pre is:raw><code>import &lbrace; Canvas, Meta &rbrace; from '@storybook/addon-docs/blocks';
+import &lbrace; Anatomy &rbrace; from '@component-anatomy/storybook/blocks';
+import * as ButtonStories from './Button.stories';
+
+&lt;Meta of=&lbrace;ButtonStories&rbrace; /&gt;
+
+&lt;Canvas of=&lbrace;ButtonStories.Anatomy&rbrace; /&gt;
+&lt;Anatomy of=&lbrace;ButtonStories.Anatomy&rbrace; /&gt;</code></pre>
+    <p>
+      Hover sync works both ways, exactly as it does in the panel. Point
+      <code>of</code> at a story to read its <code>parameters.anatomy</code>, at
+      a whole CSF module to read the meta's, or omit it on an attached docs page
+      to fall back to the page's current story.
+    </p>
+    <table>
+      <thead><tr><th>Prop</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>of</code></td><td><code>CSF export</code></td><td>Story or meta to document. Omit on an attached page for the current story.</td></tr>
+        <tr><td><code>parts</code></td><td><code>AnatomyPartDefinition[]</code></td><td>Curated list, overriding the parameter and auto-discovery.</td></tr>
+        <tr><td><code>sync</code></td><td><code>boolean</code></td><td>Two-way hover sync with the canvas. Default true.</td></tr>
+      </tbody>
+    </table>
+    <p>
+      Auto-discovery reads the story as it renders, so a block relying on it
+      needs the story on the same page — a <code>&lt;Canvas&gt;</code> or
+      <code>&lt;Story&gt;</code> block above it. A block with an explicit
+      <code>parts</code> list stands on its own. Several blocks can share one
+      page: each talks only to the story it names.
+    </p>
+
     <h2>Live examples</h2>
     <p>
       The <a href={`${base}storybook/`}>deployed Storybook</a> shows Button
       (default + blueprint theme), Slider (accent theme) and Tabs
-      (auto-discovery + high-contrast preset). Sources live in
+      (auto-discovery + high-contrast preset), plus two MDX pages —
+      <em>Docs → Anatomy in MDX</em> and the Button docs page — using the
+      <code>&lt;Anatomy&gt;</code> block. Sources live in
       <code>examples/storybook</code> in the repo.
     </p>
   </div>

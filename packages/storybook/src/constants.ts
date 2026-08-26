@@ -4,18 +4,24 @@ export const PANEL_ID = `${ADDON_ID}/panel`;
 /** Story parameter key: `parameters.anatomy = { ... }` */
 export const PARAM_KEY = 'anatomy';
 
-/** Channel events used to sync the manager panel with the preview iframe. */
+/**
+ * Channel events used to sync the manager panel — and the `<Anatomy>` MDX doc
+ * block, which runs in the preview iframe — with the story canvas.
+ *
+ * Every payload carries the `storyId` it concerns; see `channel.ts` for the
+ * payload types and the `matchesStory` filter each listener applies.
+ */
 export const EVENTS = {
-  /** preview → manager: a part became active in the canvas (hover/programmatic). */
+  /** preview → consumers: a part became active in the canvas (hover/programmatic). */
   PART_ENTER: `${ADDON_ID}/part-enter`,
-  /** preview → manager: no part is active anymore. */
+  /** preview → consumers: no part is active anymore. */
   PART_LEAVE: `${ADDON_ID}/part-leave`,
-  /** preview → manager: resolved part list for the current story. */
+  /** preview → consumers: resolved part list for a story. */
   PARTS: `${ADDON_ID}/parts`,
-  /** manager → preview: the user hovers/focuses a panel entry. */
+  /** consumers → preview: the user hovers/focuses a panel entry. */
   HOVER_ITEM: `${ADDON_ID}/hover-item`,
-  /** manager → preview: the user left a panel entry. */
+  /** consumers → preview: the user left a panel entry. */
   LEAVE_ITEM: `${ADDON_ID}/leave-item`,
-  /** manager → preview: the panel mounted and wants the current part list. */
+  /** consumers → preview: a panel/block mounted and wants the current part list. */
   PARTS_REQUEST: `${ADDON_ID}/parts-request`,
 } as const;

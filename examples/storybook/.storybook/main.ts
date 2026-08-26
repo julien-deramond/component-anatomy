@@ -1,8 +1,13 @@
 import type { StorybookConfig } from '@storybook/html-vite';
 
 const config: StorybookConfig = {
-  stories: ['../src/**/*.stories.@(ts|js)'],
-  addons: ['@component-anatomy/storybook'],
+  stories: ['../src/**/*.mdx', '../src/**/*.stories.@(ts|js)'],
+  addons: [
+    // `@storybook/addon-docs` is what renders MDX pages — it is what the
+    // `<Anatomy>` doc block needs to resolve `of={...}`.
+    '@storybook/addon-docs',
+    '@component-anatomy/storybook',
+  ],
   framework: {
     name: '@storybook/html-vite',
     options: {},
