@@ -1,8 +1,8 @@
 # Releasing
 
 This repo publishes each package under `packages/*` (`@component-anatomy/core`,
-`@component-anatomy/astro`, and any future `@component-anatomy/*` package)
-**independently**, using [Changesets](https://github.com/changesets/changesets).
+`@component-anatomy/astro`, `@component-anatomy/storybook`, and any future
+`@component-anatomy/*` package) **independently**, using [Changesets](https://github.com/changesets/changesets).
 
 Releasing is a **manual, local process** — there is no CI automation that
 versions or publishes packages for you. `.github/workflows/` only runs CI
@@ -74,7 +74,12 @@ This is controlled by `.changeset/config.json`:
   "fixed": [],
   "linked": [],
   "updateInternalDependencies": "patch",
-  "ignore": ["examples-astro", "examples-plain-html"]
+  "ignore": [
+    "examples-astro",
+    "examples-plain-html",
+    "examples-sandbox",
+    "examples-storybook"
+  ]
 }
 ```
 
@@ -127,13 +132,23 @@ on `main`:
 # 1. Pull the latest main
 git checkout main && git pull
 
-# 2. Apply pending changesets: bumps every changed package's version
+# 2. Put a GitHub token in the environment. `pnpm run version` calls the
+#    GitHub API to build the changelog entries and fails outright without
+#    one — see "Why `version` needs a GitHub token" below. Reuse your
+#    `gh auth login` token rather than minting a new one:
+GITHUB_TOKEN=$(gh auth token) pnpm run version
+
+#    Or export it once for the whole session (fish):
+#      set -x GITHUB_TOKEN (gh auth token)
+#    …then just `pnpm run version`.
+#
+#    This applies pending changesets: bumps every changed package's version
 #    (+ cascades patch bumps to dependents), updates each CHANGELOG.md,
 #    and deletes the consumed changeset files.
-pnpm run version
 
-# 3. Review the diff — check versions and changelog entries look right.
-git diff
+# 3. Review the diff — check versions and changelog entries look right,
+#    and that the changeset files you expected were consumed.
+git diff --stat && git status --short .changeset
 
 # 4. Commit the version bump.
 git add -A
@@ -145,6 +160,7 @@ git commit -m "chore: version packages"
 #    to npm. This is also the step where `workspace:^` gets rewritten to a
 #    real semver range in the published package.json — your local
 #    package.json files still show `workspace:^` afterward, that's expected.
+#    No GitHub token needed here; this step authenticates against npm.
 pnpm run release
 
 # 6. Push the commit and the git tags changeset publish created.
@@ -155,6 +171,38 @@ You'll need to be logged into npm (`npm whoami`) with publish rights on the
 `@component-anatomy` scope before step 5 — `pnpm publish` (used internally
 by `changeset publish`) still publishes to the npm registry regardless of
 pnpm being your workspace tool.
+
+### Why `version` needs a GitHub token
+
+`.changeset/config.json` uses `@changesets/changelog-github`, which turns each
+changeset into a changelog line crediting the PR and its author. That lookup is
+a GitHub API call, so `changeset version` refuses to run without a token —
+it aborts before touching anything:
+
+```
+🦋  error Error: Please create a GitHub personal access token … and add it as
+the GITHUB_TOKEN environment variable
+```
+
+Nothing is half-applied when this happens; set the token and re-run.
+
+A few things worth knowing:
+
+- **The scopes the error names are boilerplate.** It suggests `read:user` and
+  `repo:status`, but `read:user` reads *your own* profile, which the changelog
+  never needs. A token carrying `repo` is enough — that's what `gh auth token`
+  hands you, and it resolves the commit → PR → author lookup fine.
+- **This only affects `version`.** `pnpm run release` and CI don't need it.
+  GitHub Actions injects `GITHUB_TOKEN` automatically anyway.
+- **Don't persist it.** `set -Ux GITHUB_TOKEN …` would write it to fish's
+  universal variables in plaintext. Re-running the one-liner per release is
+  cheaper than storing a credential.
+- **No `gh`?** Create a token at <https://github.com/settings/tokens/new> with
+  `repo`, and export it as `GITHUB_TOKEN`.
+- **Rather not deal with a token at all?** Switching `.changeset/config.json`
+  to `"changelog": "@changesets/cli/changelog"` drops the API dependency, at
+  the cost of losing PR and author attribution in every future changelog entry.
+  Not recommended.
 
 `pnpm run version` and `pnpm run release` are just aliases:
 
@@ -195,22 +243,16 @@ git push --follow-tags
 - Scoped packages (`@component-anatomy/*`) default to *restricted* on npm.
   Each publishable package sets `"publishConfig": { "access": "public" }`
   in its `package.json` so publishing doesn't fail on a free npm account.
-- No GitHub secrets are needed — nothing in CI touches npm.
-- `pnpm run version` (`changeset version`) needs a `GITHUB_TOKEN` env var.
-  `.changeset/config.json` uses `@changesets/changelog-github` to link PRs
-  and authors in each `CHANGELOG.md`, and that lookup calls the GitHub API.
-  The first release skipped this — it went straight to `pnpm run release`
-  with no prior changesets to version (see "First release: 0.0.1" above) —
-  so the missing token went unnoticed until the second release. If you're
-  logged in via `gh auth login`, reuse that token instead of minting a new
-  one:
+- No GitHub secrets are needed in CI — nothing in CI versions or publishes.
+- `pnpm run version` needs a `GITHUB_TOKEN` in your environment. It's part
+  of the release steps above (step 2); the reasoning is in
+  ["Why `version` needs a GitHub token"](#why-version-needs-a-github-token).
+  The short version: `GITHUB_TOKEN=$(gh auth token) pnpm run version`.
 
-  ```bash
-  GITHUB_TOKEN=$(gh auth token) pnpm run version
-  ```
-
-  Otherwise, create a token with `read:user` and `repo:status` scopes at
-  <https://github.com/settings/tokens/new> and export it as `GITHUB_TOKEN`.
+  This went unnoticed for a while because the very first release skipped
+  `version` entirely — it went straight to `pnpm run release` with no prior
+  changesets to apply (see "First release: 0.0.1" above), so the missing
+  token didn't surface until the first changeset-driven release.
 
 ## Adding a new package later (React, …)
 
