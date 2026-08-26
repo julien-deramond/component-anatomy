@@ -2,7 +2,7 @@
   "name": "examples-storybook",
   "private": true,
   "version": "0.0.0",
-  "description": "Storybook 10 example using the @component-anatomy/storybook addon with HTML components",
+  "description": "Storybook 10 example using the @component-anatomy/storybook addon with HTML components, including the MDX <Anatomy> doc block",
   "type": "module",
   "scripts": {
     "dev": "storybook dev -p 6006 --no-open",
@@ -12,8 +12,11 @@
     "@component-anatomy/storybook": "workspace:^"
   },
   "devDependencies": {
-    "@storybook/html-vite": "^10.5.2",
-    "storybook": "^10.5.2",
+    "@storybook/addon-docs": "^10.5.2",
+    "@storybook/html-vite": "^10.5.10",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "storybook": "^10.5.10",
     "vite": "^8.1.5"
   }
 }
