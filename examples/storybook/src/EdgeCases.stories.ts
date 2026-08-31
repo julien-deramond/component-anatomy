@@ -9,7 +9,7 @@ import type { AnatomyParameters } from '@component-anatomy/storybook';
  * any visual-regression run that walks this Storybook.
  */
 const meta: Meta = {
-  title: 'Edge cases',
+  title: 'Edge cases/Empty states',
 };
 
 export default meta;
