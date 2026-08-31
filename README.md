@@ -2,7 +2,9 @@
 
 > Interactive anatomy documentation for design system components — live, in-browser, framework-agnostic.
 
-[![npm](https://img.shields.io/npm/v/@component-anatomy/core)](https://www.npmjs.com/package/@component-anatomy/core)
+[![@component-anatomy/core on npm](https://img.shields.io/npm/v/@component-anatomy/core?label=%40component-anatomy%2Fcore)](https://www.npmjs.com/package/@component-anatomy/core)
+[![@component-anatomy/astro on npm](https://img.shields.io/npm/v/@component-anatomy/astro?label=%40component-anatomy%2Fastro)](https://www.npmjs.com/package/@component-anatomy/astro)
+[![@component-anatomy/storybook on npm](https://img.shields.io/npm/v/@component-anatomy/storybook?label=%40component-anatomy%2Fstorybook)](https://www.npmjs.com/package/@component-anatomy/storybook)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](./CONTRIBUTING.md)
 
