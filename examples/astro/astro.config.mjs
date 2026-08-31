@@ -9,4 +9,10 @@ export default defineConfig({
   site,
   base,
   server: { port: 4321 },
+  // Astro 7 defaults to compressHTML: 'jsx', which applies React's whitespace
+  // rules and *drops* the line break between text and a following inline
+  // element instead of collapsing it to a space — so prose wrapped before an
+  // <a>/<code> renders as "Full guide inRendering customization". 'true' is
+  // still lossless whitespace compression and keeps that space.
+  compressHTML: true,
 });
