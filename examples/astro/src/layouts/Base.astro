@@ -1,6 +1,4 @@
 ---
-import { version } from '@component-anatomy/core/package.json';
-
 export interface Props {
   title: string;
   description?: string;
@@ -145,17 +143,6 @@ const NPM = 'https://www.npmjs.com/package/@component-anatomy/core';
         letter-spacing: -0.01em;
         color: var(--site-ink);
         line-height: 1.2;
-      }
-      .brand-version {
-        font-size: 0.62rem;
-        font-weight: 600;
-        font-family: var(--font-mono);
-        color: var(--site-accent);
-        background: var(--site-accent-soft);
-        border: 1px solid #e0e7ff;
-        padding: 0.05rem 0.4rem;
-        border-radius: 99px;
-        margin-left: auto;
       }
 
       .sidebar-nav {
@@ -464,7 +451,6 @@ const NPM = 'https://www.npmjs.com/package/@component-anatomy/core';
               </svg>
             </span>
             <span class="brand-name">Component<br/>Anatomy</span>
-            <span class="brand-version">v{version}</span>
           </a>
 
           <nav class="sidebar-nav" aria-label="Site navigation">
