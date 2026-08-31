@@ -136,22 +136,21 @@ export type PanelSurface = {
 /**
  * The accent a documentation panel should use for a given `{ preset, theme }`.
  *
- * Overlays get their look from the CSS variables `resolveThemeVars()` emits.
- * A panel rendered in JS (the Storybook table) has no cascade to inherit them
- * from, so it resolves the same tokens through here and gets the *one* color
- * it needs — keeping panel and canvas in agreement whichever preset is set.
- * `--ca-label-bg` leads the list because that is the variable the Astro
- * panel's CSS already uses for its own accents.
+ * A panel styled in CSS reads `var(--ca-label-bg)` and needs none of this. One
+ * rendered in JS has no cascade to inherit the controller's inline variables
+ * from, so it asks here instead and gets the *one* color it needs — the same
+ * token, so panel and canvas agree whichever preset is set.
  *
  * Pass a `surface` and the result is also checked for legibility *on that
- * surface*: presets are designed against the user's component, not against a
- * panel, and `contrast` — black on yellow — is illegible on a dark manager
- * panel, which is precisely the audience it exists for.
+ * surface*. Presets are designed against the user's component, not against a
+ * panel: `contrast` is black on yellow, and a panel with a dark background
+ * turns it into 1.3:1 text — failing precisely the readers that preset exists
+ * for.
  *
  * When the preferred token is illegible there, two fallbacks compete: another
  * color from the same preset, and the preferred one blended toward the panel's
  * own text until it passes. The more colorful of the two wins, because a
- * near-neutral fallback (`blueprint`'s white label text on a dark panel) is
+ * near-neutral fallback (`blueprint`'s white label text, on a dark surface) is
  * legible and yet indistinguishable from the panel's ordinary text — it stops
  * reading as an accent at all. `contrast` keeps its yellow; `blueprint` keeps
  * a blue. A color that cannot be parsed (`color-mix()`, `currentColor`, a

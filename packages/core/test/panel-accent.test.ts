@@ -2,9 +2,13 @@ import { describe, it, expect } from 'vitest';
 import { contrastRatio, parseColor, mix } from '../src/contrast.js';
 import { DEFAULT_ACCENT, resolvePanelAccent, resolveThemeVars } from '../src/theme.js';
 
-/** Storybook's own panel surfaces — the two backgrounds the table renders on. */
-const LIGHT = { background: '#ffffff', foreground: '#2e3438' };
-const DARK = { background: '#222325', foreground: '#c9cccf' };
+/**
+ * Two ordinary panel surfaces. Deliberately not any integration's real tokens:
+ * what is being asserted is that the resolution holds on a light and a dark
+ * surface, not that it agrees with one downstream design system this week.
+ */
+const LIGHT = { background: '#ffffff', foreground: '#333333' };
+const DARK = { background: '#1e1e1e', foreground: '#cccccc' };
 
 const ratioOn = (color: string, surface: { background: string }) =>
   contrastRatio(color, surface.background) ?? 0;
@@ -137,6 +141,8 @@ describe('resolvePanelAccent', () => {
   });
 
   it('skips the legibility check entirely without a background', () => {
-    expect(resolvePanelAccent('contrast', undefined, { foreground: '#c9cccf' })).toBe('#000000');
+    expect(resolvePanelAccent('contrast', undefined, { foreground: DARK.foreground })).toBe(
+      '#000000'
+    );
   });
 });

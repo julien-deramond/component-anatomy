@@ -3,10 +3,10 @@
  *
  * Overlays sit on top of the user's own component, where any accent reads as
  * intended. A documentation panel does not: it paints the accent as *text* on
- * its own surface, and that surface is not always the one a preset was
- * designed against (the Storybook manager panel is dark by default). These
- * helpers let an integration check an accent against the surface it is about
- * to paint it on, and lift it when it falls short.
+ * its own surface, and a preset knows nothing about that surface — it may well
+ * be dark while the preset was drawn for light. These helpers let an
+ * integration check an accent against the surface it is about to paint it on,
+ * and lift it when it falls short.
  *
  * Only the color notations the presets and `AnatomyTheme` realistically carry
  * are parsed: hex (3/4/6/8) and `rgb()` / `rgba()`. Anything else — named
