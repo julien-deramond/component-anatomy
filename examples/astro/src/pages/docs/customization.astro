@@ -40,6 +40,16 @@ createAnatomy({ root, theme: { ...presets.blueprint, labelBg: '#0f172a' } });</c
       wash, and the label background from a single brand color:
     </p>
     <pre is:raw><code>createAnatomy({ root, panel, theme: { accent: '#0d9488' } });</code></pre>
+    <p>
+      Because it is a theme token, <code>accent</code> outranks a preset: combine the
+      two and the accent wins for the three tokens it derives, while the rest of the
+      preset stays. A token you spell out yourself beats the shorthand, as always.
+    </p>
+    <pre is:raw><code>createAnatomy({
+  root,
+  preset: 'contrast',              // thick square border, yellow label text…
+  theme: { accent: '#0d9488' },    // …but teal border, wash and label background
+});</code></pre>
     <table>
       <thead><tr><th>Token</th><th>Type</th><th>Maps to</th></tr></thead>
       <tbody>
