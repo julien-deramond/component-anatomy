@@ -73,47 +73,60 @@ export const presets: Record<AnatomyPresetName, AnatomyTheme> = {
   },
 };
 
+/** Formats one token value for CSS: bare numbers carry the unit the token implies. */
+function tokenValue(token: string, value: string | number): string {
+  if (typeof value !== 'number') return String(value);
+  if (token === 'zIndex') return String(value);
+  if (token === 'transitionMs') return `${value}ms`;
+  return `${value}px`;
+}
+
+/**
+ * Write one layer of tokens into `vars`, later layers overwriting earlier ones.
+ *
+ * `accent` is applied *before* the layer's own explicit tokens, so a layer that
+ * sets both keeps the explicit one — while still overriding whatever a lower
+ * layer had derived.
+ */
+function applyLayer(vars: Record<string, string>, tokens: AnatomyTheme | undefined): void {
+  if (!tokens) return;
+
+  if (tokens.accent) {
+    vars['--ca-overlay-border'] = tokens.accent;
+    vars['--ca-overlay-bg'] = `color-mix(in srgb, ${tokens.accent} 15%, transparent)`;
+    vars['--ca-label-bg'] = tokens.accent;
+  }
+
+  for (const [token, cssVar] of Object.entries(TOKEN_TO_VAR)) {
+    const value = tokens[token as keyof AnatomyTheme];
+    if (value !== undefined) vars[cssVar] = tokenValue(token, value);
+  }
+
+  if (tokens.overlayBorderStyle) {
+    vars['--ca-overlay-border-style'] = tokens.overlayBorderStyle;
+  }
+}
+
 /**
  * Resolve a { preset, theme } pair into a flat CSS-variable map.
  * Only *customized* tokens are returned — an empty result means
  * "use the stylesheet defaults", which keeps global `--ca-*` variables
  * set by users fully functional (backward compatible).
+ *
+ * The two arguments are two of the four resolution layers documented at the
+ * top of this file, and they are applied in that order rather than merged into
+ * one object. Merging first would let a preset's `labelBg` outrank a theme's
+ * `accent`, which inverts layers 3 and 4 — the accent is a *theme* token, so
+ * `{ preset: 'contrast', theme: { accent } }` must honour the accent.
  */
 export function resolveThemeVars(
   preset?: AnatomyPresetName,
   theme?: AnatomyTheme
 ): Record<string, string> {
-  const merged: AnatomyTheme = {
-    ...(preset ? presets[preset] : undefined),
-    ...theme,
-  };
-
   const vars: Record<string, string> = {};
 
-  // Accent shorthand — derive dependent tokens unless explicitly overridden.
-  if (merged.accent) {
-    vars['--ca-overlay-border'] = merged.accent;
-    vars['--ca-overlay-bg'] = `color-mix(in srgb, ${merged.accent} 15%, transparent)`;
-    vars['--ca-label-bg'] = merged.accent;
-  }
-
-  for (const [token, cssVar] of Object.entries(TOKEN_TO_VAR)) {
-    const value = merged[token as keyof AnatomyTheme];
-    if (value !== undefined) {
-      vars[cssVar] =
-        typeof value === 'number'
-          ? token === 'zIndex'
-            ? String(value)
-            : token === 'transitionMs'
-              ? `${value}ms`
-              : `${value}px`
-          : String(value);
-    }
-  }
-
-  if (merged.overlayBorderStyle) {
-    vars['--ca-overlay-border-style'] = merged.overlayBorderStyle;
-  }
+  applyLayer(vars, preset ? presets[preset] : undefined);
+  applyLayer(vars, theme);
 
   return vars;
 }

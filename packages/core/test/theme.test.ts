@@ -37,6 +37,38 @@ describe('resolveThemeVars', () => {
     expect(vars['--ca-overlay-border']).toBe('#000000'); // still from preset
   });
 
+  it('lets a theme accent win over a preset that sets the same tokens', () => {
+    // The accent is a *theme* token, so it sits in layer 4 and outranks the
+    // preset in layer 3 — including the tokens the preset spells out and the
+    // accent only derives. `contrast` sets labelBg/overlayBorder to black.
+    const vars = resolveThemeVars('contrast', { accent: '#0d9488' });
+    expect(vars['--ca-label-bg']).toBe('#0d9488');
+    expect(vars['--ca-overlay-border']).toBe('#0d9488');
+    expect(vars['--ca-overlay-bg']).toContain('#0d9488');
+  });
+
+  it('keeps the preset tokens the accent says nothing about', () => {
+    const vars = resolveThemeVars('contrast', { accent: '#0d9488' });
+    expect(vars['--ca-overlay-border-width']).toBe('3px'); // still from preset
+    expect(vars['--ca-label-fg']).toBe('#facc15');
+  });
+
+  it('lets an explicit theme token win over a theme accent, preset or not', () => {
+    for (const preset of [undefined, 'contrast'] as const) {
+      const vars = resolveThemeVars(preset, { accent: '#0d9488', overlayBorder: '#00ff00' });
+      expect(vars['--ca-overlay-border']).toBe('#00ff00');
+      expect(vars['--ca-label-bg']).toBe('#0d9488');
+    }
+  });
+
+  it('applies a preset accent below the theme layer', () => {
+    // No built-in preset sets `accent`, but presets are plain AnatomyTheme
+    // objects and users spread them — the layering has to hold either way.
+    const spread = { ...presets.blueprint, accent: '#ff0000' };
+    expect(resolveThemeVars(undefined, spread)['--ca-label-bg']).toBe('#1d4ed8');
+    expect(resolveThemeVars(undefined, { accent: '#ff0000' })['--ca-label-bg']).toBe('#ff0000');
+  });
+
   it('converts numeric tokens to the right units', () => {
     const vars = resolveThemeVars(undefined, {
       overlayRadius: 8,
