@@ -45,7 +45,7 @@
     "marked": "^18.0.10"
   },
   "devDependencies": {
-    "astro": "^7.2.3",
+    "astro": "^7.2.4",
     "typescript": "^7.0.2"
   },
   "peerDependencies": {
