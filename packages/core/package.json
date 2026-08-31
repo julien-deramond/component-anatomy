@@ -1,6 +1,6 @@
 {
   "name": "@component-anatomy/core",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Framework-agnostic runtime for interactive component anatomy documentation",
   "license": "MIT",
   "author": "Julien Déramond",
