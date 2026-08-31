@@ -28,7 +28,7 @@ import type { AnatomyPartDefinition } from '@component-anatomy/core';
 import { EVENTS, PARAM_KEY } from './constants.js';
 import { matchesStory } from './channel.js';
 import type { PartEnterEvent, PartsEvent, StoryScopedEvent } from './channel.js';
-import { ACCENT_FALLBACK, AnatomyCode, AnatomyMessage, AnatomyTable } from './AnatomyTable.js';
+import { AnatomyCode, AnatomyMessage, AnatomyTable } from './AnatomyTable.js';
 import type { AnatomyParameters } from './types.js';
 
 export type AnatomyBlockProps = {
@@ -126,7 +126,6 @@ export const Anatomy: React.FC<AnatomyBlockProps> = ({ of, parts: partsProp, syn
   }, [wired, storyId]);
 
   const parts = staticParts ?? discovered;
-  const accent = params?.theme?.accent ?? ACCENT_FALLBACK;
 
   const emitHover = (partId: string) => {
     if (!wired) return;
@@ -178,7 +177,8 @@ export const Anatomy: React.FC<AnatomyBlockProps> = ({ of, parts: partsProp, syn
       <AnatomyTable
         parts={parts}
         activeId={activeId}
-        accent={accent}
+        preset={params?.preset}
+        theme={params?.theme}
         onItemEnter={emitHover}
         onItemLeave={emitLeave}
       />

@@ -5,7 +5,7 @@ import type { AnatomyPartDefinition } from '@component-anatomy/core';
 import { EVENTS, PARAM_KEY } from './constants.js';
 import { matchesStory } from './channel.js';
 import type { PartEnterEvent, PartsEvent, StoryScopedEvent } from './channel.js';
-import { ACCENT_FALLBACK, AnatomyCode, AnatomyMessage, AnatomyTable } from './AnatomyTable.js';
+import { AnatomyCode, AnatomyMessage, AnatomyTable } from './AnatomyTable.js';
 import type { AnatomyParameters } from './types.js';
 
 export const Panel: React.FC = () => {
@@ -44,7 +44,6 @@ export const Panel: React.FC = () => {
   }, [storyId]);
 
   const parts = params?.parts ?? discovered;
-  const accent = params?.theme?.accent ?? ACCENT_FALLBACK;
 
   if (!params || params.disable) {
     return (
@@ -69,7 +68,8 @@ export const Panel: React.FC = () => {
     <AnatomyTable
       parts={parts}
       activeId={activeId}
-      accent={accent}
+      preset={params.preset}
+      theme={params.theme}
       onItemEnter={(partId) => emit(EVENTS.HOVER_ITEM, { storyId, partId })}
       onItemLeave={() => emit(EVENTS.LEAVE_ITEM, { storyId })}
     />

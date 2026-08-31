@@ -48,6 +48,8 @@ export const Anatomy: Story = {
 
 Omit `parts` (pass `{}`) and the panel lists parts auto-discovered from `data-part` attributes, with names derived from the ids.
 
+`preset` and `theme` reach the panel and the `<Anatomy>` block too, not just the canvas overlays: the active row is accented with the same color the overlay paints. Where that color would be illegible on Storybook's own panel — `contrast` is black, the manager is dark by default — the table falls back to the most colorful alternative that meets WCAG AA, so `contrast` accents with its yellow on a dark panel and with black on a light one.
+
 Parameters follow Storybook's normal inheritance — project-wide defaults in `.storybook/preview.ts`, per-component in `meta.parameters`, per-story overrides in `story.parameters`.
 
 ## In MDX

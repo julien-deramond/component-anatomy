@@ -9,10 +9,12 @@
  */
 import React from 'react';
 import { useTheme } from 'storybook/theming';
-import type { AnatomyPartDefinition } from '@component-anatomy/core';
-
-/** Fallback accent when the story sets no `anatomy.theme.accent`. */
-export const ACCENT_FALLBACK = '#4f46e5';
+import { resolvePanelAccent } from '@component-anatomy/core';
+import type {
+  AnatomyPartDefinition,
+  AnatomyPresetName,
+  AnatomyTheme,
+} from '@component-anatomy/core';
 
 /**
  * The subset of Storybook's theme this table reads. Typed loosely on purpose:
@@ -22,7 +24,7 @@ export const ACCENT_FALLBACK = '#4f46e5';
  */
 type PartialStorybookTheme = {
   fgColor?: { default?: string; muted?: string };
-  bgColor?: { muted?: string };
+  bgColor?: { default?: string; muted?: string };
   borderColor?: { default?: string };
   typography?: { fonts?: { base?: string; mono?: string } };
 };
@@ -34,8 +36,12 @@ const FONT_MONO_FALLBACK = 'ui-monospace, "Cascadia Code", "Fira Mono", monospac
 /**
  * Resolves the table's chrome colors from Storybook's theme so the same
  * markup reads correctly in the manager panel *and* in a docs page under a
- * dark theme. The accent is intentionally not theme-derived — it is the
- * addon's identity color and stays stable unless a story overrides it.
+ * dark theme.
+ *
+ * `surfaceBg`/`surfaceFg` are not painted anywhere — they are what the accent
+ * is measured against in {@link useAccent}. They carry Storybook's own light
+ * defaults as fallbacks so the measurement stays meaningful outside a
+ * ThemeProvider, where `useTheme()` returns `{}`.
  */
 function usePalette() {
   const theme = useTheme() as PartialStorybookTheme;
@@ -44,12 +50,30 @@ function usePalette() {
     muted: theme.fgColor?.muted ?? '#6b7280',
     mutedBg: theme.bgColor?.muted ?? 'rgba(0,0,0,0.06)',
     border: theme.borderColor?.default ?? 'rgba(0,0,0,0.08)',
+    surfaceBg: theme.bgColor?.default ?? '#ffffff',
+    surfaceFg: theme.fgColor?.default ?? '#2e3438',
     fontBase: theme.typography?.fonts?.base ?? FONT_BASE_FALLBACK,
     fontMono: theme.typography?.fonts?.mono ?? FONT_MONO_FALLBACK,
   };
 }
 
 type Palette = ReturnType<typeof usePalette>;
+
+/**
+ * The accent for the active row — the story's own `{ preset, theme }`, so the
+ * table agrees with the overlays it describes, lifted to WCAG AA against the
+ * surface it is painted on when the two disagree.
+ *
+ * The check is not optional polish: `preset: 'contrast'` is black on yellow
+ * and the Storybook manager is dark by default, so the preset that exists for
+ * users who need contrast is exactly the one that would land at 1.3:1 here.
+ */
+function useAccent(palette: Palette, preset?: AnatomyPresetName, theme?: AnatomyTheme): string {
+  return resolvePanelAccent(preset, theme, {
+    background: palette.surfaceBg,
+    foreground: palette.surfaceFg,
+  });
+}
 
 const makeStyles = (p: Palette): Record<string, React.CSSProperties> => ({
   container: {
@@ -145,8 +169,10 @@ export type AnatomyTableProps = {
   parts: AnatomyPartDefinition[];
   /** Id of the part currently highlighted in the canvas, if any. */
   activeId?: string | null;
-  /** Accent color for the active state. Defaults to {@link ACCENT_FALLBACK}. */
-  accent?: string;
+  /** The story's `anatomy.preset` — the active row follows it. */
+  preset?: AnatomyPresetName;
+  /** The story's `anatomy.theme` — token overrides on top of the preset. */
+  theme?: AnatomyTheme;
   /** Called when the user hovers or focuses an entry. */
   onItemEnter?: (partId: string) => void;
   /** Called when the user leaves or blurs an entry. */
@@ -156,12 +182,14 @@ export type AnatomyTableProps = {
 export const AnatomyTable: React.FC<AnatomyTableProps> = ({
   parts,
   activeId = null,
-  accent = ACCENT_FALLBACK,
+  preset,
+  theme,
   onItemEnter,
   onItemLeave,
 }) => {
   const palette = usePalette();
   const styles = makeStyles(palette);
+  const accent = useAccent(palette, preset, theme);
 
   return (
     <div style={styles.container}>
