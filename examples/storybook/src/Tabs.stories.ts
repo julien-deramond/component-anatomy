@@ -32,16 +32,30 @@ export const AutoDiscovered: Story = {
   },
 };
 
+const parts = [
+  { id: 'tablist', name: 'Tab list', description: 'Container for the tab buttons.' },
+  { id: 'tab', name: 'Tab', description: 'One selector per panel — all three highlight together.' },
+  { id: 'indicator', name: 'Indicator', description: 'Underline marking the active tab.' },
+  { id: 'tabpanel', name: 'Tab panel', description: 'Content region controlled by the active tab.' },
+];
+
 export const HighContrast: Story = {
+  parameters: {
+    anatomy: { preset: 'contrast', parts } satisfies AnatomyParameters,
+  },
+};
+
+/**
+ * The same preset with a brand `accent` on top. The accent takes the three
+ * tokens it derives — overlay border, background wash and label chip — while
+ * the rest of `contrast` stays: the 3px square border, the yellow label text.
+ */
+export const HighContrastBranded: Story = {
   parameters: {
     anatomy: {
       preset: 'contrast',
-      parts: [
-        { id: 'tablist', name: 'Tab list', description: 'Container for the tab buttons.' },
-        { id: 'tab', name: 'Tab', description: 'One selector per panel — all three highlight together.' },
-        { id: 'indicator', name: 'Indicator', description: 'Underline marking the active tab.' },
-        { id: 'tabpanel', name: 'Tab panel', description: 'Content region controlled by the active tab.' },
-      ],
+      theme: { accent: '#0d9488' },
+      parts,
     } satisfies AnatomyParameters,
   },
 };

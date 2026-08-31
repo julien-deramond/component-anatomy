@@ -164,9 +164,18 @@ export const Anatomy: React.FC<AnatomyBlockProps> = ({ of, parts: partsProp, syn
     return (
       <Unstyled>
         <AnatomyMessage>
-          {resolved.type === 'meta'
-            ? 'No parts found. A meta has no canvas to discover parts from — pass a story to `of`, or list `parts` explicitly.'
-            : 'No parts found. Auto-discovery reads the rendered story, so make sure it is on this page (e.g. with a `<Canvas of={…} />` block above), or list `parts` explicitly.'}
+          {resolved.type === 'meta' ? (
+            <>
+              No parts found. A meta has no canvas to discover parts from — pass a story to{' '}
+              <AnatomyCode>of</AnatomyCode>, or list <AnatomyCode>parts</AnatomyCode> explicitly.
+            </>
+          ) : (
+            <>
+              No parts found. Auto-discovery reads the rendered story, so make sure it is on this
+              page (e.g. with a <AnatomyCode>{'<Canvas of={…} />'}</AnatomyCode> block above), or
+              list <AnatomyCode>parts</AnatomyCode> explicitly.
+            </>
+          )}
         </AnatomyMessage>
       </Unstyled>
     );
