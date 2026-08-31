@@ -45,11 +45,23 @@ export const Panel: React.FC = () => {
 
   const parts = params?.parts ?? discovered;
 
-  if (!params || params.disable) {
+  if (!params) {
     return (
       <AnatomyMessage>
         No anatomy configured for this story. Add <AnatomyCode>parameters.anatomy</AnatomyCode> and
         annotate elements with <AnatomyCode>data-part="name"</AnatomyCode>.
+      </AnatomyMessage>
+    );
+  }
+
+  // Defence in depth: Storybook removes a panel from the tab bar entirely when
+  // `parameters[paramKey].disable` is set, so this normally never renders. If
+  // it ever does, say the right thing — a disabled story *has* an anatomy, and
+  // telling its author to add one sends them the wrong way.
+  if (params.disable) {
+    return (
+      <AnatomyMessage>
+        Anatomy is disabled for this story (<AnatomyCode>anatomy.disable</AnatomyCode>).
       </AnatomyMessage>
     );
   }

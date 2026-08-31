@@ -2,6 +2,7 @@ import { Canvas, Meta } from '@storybook/addon-docs/blocks';
 import { Anatomy } from '@component-anatomy/storybook/blocks';
 
 import * as ButtonStories from './Button.stories';
+import * as EdgeCaseStories from './EdgeCases.stories';
 import * as SliderStories from './Slider.stories';
 import * as TabsStories from './Tabs.stories';
 
@@ -59,11 +60,15 @@ too, as long as the story is on the page.
 
 Pass the whole CSF module to document the component rather than one story. The
 meta's `parameters.anatomy` is used; there is no canvas to discover parts from
-or to sync hover with, so this form needs an explicit `parts` list.
+or to sync hover with, so this form needs an explicit `parts` list. `Button`'s
+meta sets no `anatomy` parameter, so the block below says what is missing
+rather than rendering nothing:
 
 ```jsx
 <Anatomy of={ButtonStories} />
 ```
+
+<Anatomy of={ButtonStories} />
 
 ## A curated subset
 
@@ -85,3 +90,51 @@ prose needs to focus on two rows out of ten. Hover sync still works.
 auto-discovery, just the rows.
 
 <Anatomy of={SliderStories.Anatomy} sync={false} />
+
+## When there is nothing to show
+
+Three stories in **Edge cases → Empty states** cover the states a real Storybook runs into.
+Each renders here exactly as it does in the addon panel — the block and the
+panel share the same component.
+
+### No parts
+
+`Edge cases → Empty states → No Parts` asks for auto-discovery with `anatomy: {}`, but nothing
+in its markup carries a `data-part` attribute. Rather than an empty list, both
+surfaces explain what to add.
+
+<Canvas of={EdgeCaseStories.NoParts} />
+
+<Anatomy of={EdgeCaseStories.NoParts} />
+
+### Disabled for a story
+
+`anatomy: { disable: true }` turns the addon off for one story — no overlays,
+no controller over the canvas. Its `parts` are still declared, and are
+deliberately not rendered.
+
+In story view you never see this message: Storybook drops the whole **Anatomy**
+tab for a story whose `anatomy` parameter is disabled, which is its own
+behaviour for every addon panel. A docs page has no tab to drop, so the block
+says it instead.
+
+<Canvas of={EdgeCaseStories.Disabled} />
+
+<Anatomy of={EdgeCaseStories.Disabled} />
+
+### Not configured
+
+A story with no `anatomy` parameter at all. Its canvas *is* annotated, so
+`anatomy: {}` is all it would take.
+
+<Canvas of={EdgeCaseStories.NotConfigured} />
+
+<Anatomy of={EdgeCaseStories.NotConfigured} />
+
+Passing `parts` explicitly overrides all three: the block renders the list you
+give it whatever the story's parameters say.
+
+<Anatomy
+  of={EdgeCaseStories.NotConfigured}
+  parts={[{ id: 'label', name: 'Label', description: 'Curated here, not in the story.' }]}
+/>

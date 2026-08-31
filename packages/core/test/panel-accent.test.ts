@@ -111,6 +111,26 @@ describe('resolvePanelAccent', () => {
     expect(ratioOn(accent, DARK)).toBeGreaterThanOrEqual(4.5);
   });
 
+  it('never hands back the built-in indigo to a story that chose its own colors', () => {
+    // A teal accent is under 4.5:1 on white. The fix for it is a darker teal —
+    // not the addon's default, however well that default scores.
+    const accent = resolvePanelAccent('contrast', { accent: '#0d9488' }, LIGHT);
+    expect(accent).not.toBe(DEFAULT_ACCENT);
+    expect(ratioOn(accent, LIGHT)).toBeGreaterThanOrEqual(4.5);
+    const { g, b, r } = parseColor(accent)!;
+    expect(Math.min(g, b)).toBeGreaterThan(r); // still teal
+  });
+
+  it('adjusts a caller-chosen accent rather than borrowing a preset color', () => {
+    // Teal is 4.0:1 on this dark surface — under the bar. `contrast`'s yellow
+    // would clear it easily, but the story asked for teal, so teal it stays.
+    const accent = resolvePanelAccent('contrast', { accent: '#0d9488' }, DARK);
+    expect(accent).not.toBe('#facc15');
+    expect(ratioOn(accent, DARK)).toBeGreaterThanOrEqual(4.5);
+    const { r, g, b } = parseColor(accent)!;
+    expect(Math.min(g, b)).toBeGreaterThan(r); // still teal
+  });
+
   it('lifts the accent toward the panel text when no preset color works', () => {
     const accent = resolvePanelAccent(undefined, undefined, DARK);
     expect(accent).not.toBe(DEFAULT_ACCENT);

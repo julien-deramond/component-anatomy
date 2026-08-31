@@ -160,14 +160,21 @@ export type PanelSurface = {
  * turns it into 1.3:1 text — failing precisely the readers that preset exists
  * for.
  *
- * When the preferred token is illegible there, two fallbacks compete: another
- * color from the same preset, and the preferred one blended toward the panel's
- * own text until it passes. The more colorful of the two wins, because a
- * near-neutral fallback (`blueprint`'s white label text, on a dark surface) is
- * legible and yet indistinguishable from the panel's ordinary text — it stops
- * reading as an accent at all. `contrast` keeps its yellow; `blueprint` keeps
- * a blue. A color that cannot be parsed (`color-mix()`, `currentColor`, a
- * named color) is left untouched rather than guessed at.
+ * The rule when it is illegible: **a color the caller chose is adjusted, never
+ * swapped for one they did not choose.** So an accent that came from `theme`
+ * is only ever darkened or lightened toward the panel's own text, and the
+ * built-in indigo is a stand-in for callers who customized nothing rather than
+ * a candidate that could beat someone's brand color.
+ *
+ * A color that came from a *preset* is not the caller's in the same sense, so
+ * there the preset's other colors compete with the blended version, and the
+ * more colorful one wins: a near-neutral fallback (`blueprint`'s white label
+ * text, on a dark surface) is legible and yet indistinguishable from the
+ * panel's ordinary text, which stops it reading as an accent at all. `contrast`
+ * keeps its yellow; `blueprint` keeps a blue.
+ *
+ * A color that cannot be parsed (`color-mix()`, `currentColor`, a named color)
+ * is left untouched rather than guessed at.
  */
 export function resolvePanelAccent(
   preset?: AnatomyPresetName,
@@ -175,17 +182,21 @@ export function resolvePanelAccent(
   surface: PanelSurface = {}
 ): string {
   const vars = resolveThemeVars(preset, theme);
+  const slots = ['--ca-label-bg', '--ca-overlay-border', '--ca-label-fg'] as const;
 
-  const candidates = [
+  const customized = [
     ...new Set(
-      [
-        vars['--ca-label-bg'],
-        vars['--ca-overlay-border'],
-        vars['--ca-label-fg'],
-        DEFAULT_ACCENT,
-      ].filter((color): color is string => !!color && color !== 'transparent')
+      slots
+        .map((slot) => vars[slot])
+        .filter((color): color is string => !!color && color !== 'transparent')
     ),
   ];
+
+  // The built-in indigo stands in when the caller customized *nothing*. It is
+  // deliberately not one candidate among many: a story that chose its own
+  // colors must never be handed the addon's default back, however well that
+  // default happens to score against the panel.
+  const candidates = customized.length > 0 ? customized : [DEFAULT_ACCENT];
 
   const preferred = candidates[0];
   const { background, foreground, minRatio = 4.5 } = surface;
@@ -200,7 +211,14 @@ export function resolvePanelAccent(
 
   if (legible(preferred)) return preferred;
 
-  const fallbacks = candidates.slice(1).filter(legible);
+  // Did the caller's own `theme` produce the color we are about to replace, or
+  // did it come from the preset? Only in the second case may a sibling color
+  // stand in for it.
+  const preferredSlot = slots.find((slot) => vars[slot] === preferred);
+  const themeVars = resolveThemeVars(undefined, theme);
+  const authoredByCaller = !!preferredSlot && themeVars[preferredSlot] !== undefined;
+
+  const fallbacks = authoredByCaller ? [] : candidates.slice(1).filter(legible);
 
   // Keep as much of the preferred accent as the surface allows: walk down from
   // 90% accent, stopping at the first legible blend.
