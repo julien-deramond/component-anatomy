@@ -175,6 +175,16 @@ Or theme site-wide with CSS only:
 }
 ```
 
+The panel follows the same tokens as the overlays, so a preset themes both. Panels rendered in CSS pick that up through `var(--ca-label-bg)`; panels rendered in JS ask for it:
+
+```js
+import { resolvePanelAccent } from '@component-anatomy/core';
+
+// The accent for a panel — checked against the surface it is drawn on, so
+// `contrast`'s black does not end up at 1.3:1 on a dark panel.
+resolvePanelAccent('contrast', theme, { background: '#222325', foreground: '#c9cccf' });
+```
+
 Full token table and recipes: [customization guide](https://julien-deramond.github.io/component-anatomy/docs/customization).
 
 ## Framework integrations

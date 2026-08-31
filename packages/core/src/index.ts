@@ -10,5 +10,8 @@ export type {
   OverlayRenderContext,
 } from './types.js';
 
+export type { PanelSurface } from './theme.js';
+
 export { createController as createAnatomy } from './controller.js';
-export { presets, resolveThemeVars } from './theme.js';
+export { presets, resolveThemeVars, resolvePanelAccent, DEFAULT_ACCENT } from './theme.js';
+export { contrastRatio } from './contrast.js';
