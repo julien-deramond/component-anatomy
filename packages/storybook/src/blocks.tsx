@@ -1,5 +1,6 @@
 /**
- * Docs blocks entry — the `<Anatomy>` block for MDX pages.
+ * Docs blocks entry — the `<Anatomy>` and `<AnatomyTable>` blocks for MDX
+ * pages.
  *
  * Unlike the addon panel, this runs in the **preview iframe**, where
  * `storybook/manager-api` does not exist. It reaches the story's controller
@@ -8,30 +9,46 @@
  * mounted the story talk to each other directly, in-frame, with no extra
  * plumbing.
  *
+ * `<Anatomy>` is the batteries-included block — canvas and table together,
+ * laid out for that pairing specifically ([#13](https://github.com/julien-deramond/component-anatomy/issues/13#issuecomment-5475936860)):
+ *
  * ```mdx
- * import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+ * import { Meta } from '@storybook/addon-docs/blocks';
  * import { Anatomy } from '@component-anatomy/storybook/blocks';
  * import * as ButtonStories from './Button.stories';
  *
  * <Meta of={ButtonStories} />
  *
- * <Canvas of={ButtonStories.Anatomy} />
  * <Anatomy of={ButtonStories.Anatomy} />
+ * ```
+ *
+ * `<AnatomyTable>` is the table alone, for a hand-placed `<Canvas>` or a
+ * custom layout:
+ *
+ * ```mdx
+ * import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+ * import { AnatomyTable } from '@component-anatomy/storybook/blocks';
+ * import * as ButtonStories from './Button.stories';
+ *
+ * <Meta of={ButtonStories} />
+ *
+ * <Canvas of={ButtonStories.Anatomy} />
+ * <AnatomyTable of={ButtonStories.Anatomy} />
  * ```
  */
 import React, { useEffect, useState } from 'react';
 import { addons } from 'storybook/preview-api';
-import { Unstyled, useOf } from '@storybook/addon-docs/blocks';
+import { Canvas, Unstyled, useOf } from '@storybook/addon-docs/blocks';
 import type { Of } from '@storybook/addon-docs/blocks';
 import type { AnatomyPartDefinition } from '@component-anatomy/core';
 
 import { EVENTS, PARAM_KEY } from './constants.js';
 import { matchesStory } from './channel.js';
 import type { PartEnterEvent, PartsEvent, StoryScopedEvent } from './channel.js';
-import { AnatomyCode, AnatomyMessage, AnatomyTable } from './AnatomyTable.js';
+import { AnatomyCode, AnatomyMessage, AnatomyTable as AnatomyTablePrimitive } from './AnatomyTable.js';
 import type { AnatomyParameters } from './types.js';
 
-export type AnatomyBlockProps = {
+export type AnatomyTableProps = {
   /**
    * The CSF export to document — a story export, or the whole module export
    * of a CSF file to read the meta's parameters.
@@ -68,7 +85,7 @@ function getChannelSafely() {
   }
 }
 
-export const Anatomy: React.FC<AnatomyBlockProps> = ({ of, parts: partsProp, sync = true }) => {
+export const AnatomyTable: React.FC<AnatomyTableProps> = ({ of, parts: partsProp, sync = true }) => {
   const resolved = useOf(of ?? 'story', ['story', 'meta']);
 
   const params = (
@@ -183,7 +200,7 @@ export const Anatomy: React.FC<AnatomyBlockProps> = ({ of, parts: partsProp, syn
 
   return (
     <Unstyled>
-      <AnatomyTable
+      <AnatomyTablePrimitive
         parts={parts}
         activeId={activeId}
         preset={params?.preset}
@@ -192,5 +209,59 @@ export const Anatomy: React.FC<AnatomyBlockProps> = ({ of, parts: partsProp, syn
         onItemLeave={emitLeave}
       />
     </Unstyled>
+  );
+};
+
+/**
+ * Injects the rule that tightens `<Anatomy>`'s canvas-to-table gap, once per
+ * page — a module-level flag rather than `useState`, so mounting a second
+ * `<Anatomy>` block doesn't append the rule again. Scoped under
+ * `.ca-anatomy` so it never touches a bare `<Canvas>` placed by the consumer.
+ *
+ * Self-injected rather than asked of the consumer's `preview-head.html`: the
+ * block owns both elements it is bridging, so the gap between them is its
+ * concern, not config the consumer should have to wire up.
+ */
+let canvasGapStyleInjected = false;
+function useCanvasGapStyle() {
+  useEffect(() => {
+    if (canvasGapStyleInjected || typeof document === 'undefined') return;
+    canvasGapStyleInjected = true;
+    const style = document.createElement('style');
+    style.dataset.componentAnatomy = 'anatomy-block';
+    style.textContent = '.ca-anatomy .sbdocs-preview { margin-bottom: 8px; }';
+    document.head.appendChild(style);
+  }, []);
+}
+
+export type AnatomyProps = AnatomyTableProps & {
+  /**
+   * Passed straight to the underlying `<Canvas>`. `'none'` (the default)
+   * drops the show-code button along with the panel it opens — chrome that
+   * mostly restates what the anatomy table already documents. Set explicitly
+   * to keep it, e.g. for a consumer relying on that source elsewhere.
+   */
+  sourceState?: 'hidden' | 'shown' | 'none';
+};
+
+/**
+ * The canvas and its anatomy table, paired and tightened for that specific
+ * combination ([#13](https://github.com/julien-deramond/component-anatomy/issues/13#issuecomment-5475936860)).
+ * For a hand-placed `<Canvas>` — a custom layout, or a source panel this
+ * block would otherwise hide — use `<AnatomyTable>` next to your own
+ * `<Canvas>` instead.
+ */
+export const Anatomy: React.FC<AnatomyProps> = ({
+  of,
+  parts,
+  sync,
+  sourceState = 'none',
+}) => {
+  useCanvasGapStyle();
+  return (
+    <div className="ca-anatomy">
+      <Canvas of={of} sourceState={sourceState} />
+      <AnatomyTable of={of} parts={parts} sync={sync} />
+    </div>
   );
 };

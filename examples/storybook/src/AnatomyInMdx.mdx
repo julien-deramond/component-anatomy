@@ -1,5 +1,5 @@
-import { Canvas, Meta } from '@storybook/addon-docs/blocks';
-import { Anatomy } from '@component-anatomy/storybook/blocks';
+import { Meta } from '@storybook/addon-docs/blocks';
+import { Anatomy, AnatomyTable } from '@component-anatomy/storybook/blocks';
 
 import * as ButtonStories from './Button.stories';
 import * as EdgeCaseStories from './EdgeCases.stories';
@@ -15,7 +15,7 @@ import * as TabsStories from './Tabs.stories';
 
 # Anatomy in MDX
 
-`@component-anatomy/storybook/blocks` exports one block:
+`@component-anatomy/storybook/blocks` exports two blocks:
 
 ```jsx
 import { Anatomy } from '@component-anatomy/storybook/blocks';
@@ -23,9 +23,21 @@ import { Anatomy } from '@component-anatomy/storybook/blocks';
 <Anatomy of={ButtonStories.Anatomy} />
 ```
 
-It renders the addon panel's table inline, wired to the story you point it at.
-The addon panel itself is unchanged — it still shows in story view for every
-story in this Storybook.
+`<Anatomy>` renders the canvas and the addon panel's table together, tightened
+into one pairing and with the canvas's show-code button dropped — chrome that
+mostly restates what the table already documents. The addon panel itself is
+unchanged — it still shows in story view for every story in this Storybook.
+
+For a hand-placed canvas — a custom layout, or one that keeps its source panel
+— use `<AnatomyTable>` next to your own `<Canvas>` instead:
+
+```jsx
+import { Canvas } from '@storybook/addon-docs/blocks';
+import { AnatomyTable } from '@component-anatomy/storybook/blocks';
+
+<Canvas of={ButtonStories.Anatomy} />
+<AnatomyTable of={ButtonStories.Anatomy} />
+```
 
 ## Several components on one page
 
@@ -34,8 +46,6 @@ parts in *that* canvas and no other, even though three independent anatomies
 share this page.
 
 ### Slider
-
-<Canvas of={SliderStories.Anatomy} />
 
 <Anatomy of={SliderStories.Anatomy} />
 
@@ -46,13 +56,9 @@ part list is read from the `data-part` attributes of the story as it renders,
 and reaches this block over the addon channel — so auto-discovery works in MDX
 too, as long as the story is on the page.
 
-<Canvas of={TabsStories.AutoDiscovered} />
-
 <Anatomy of={TabsStories.AutoDiscovered} />
 
 ### Tabs — high contrast
-
-<Canvas of={TabsStories.HighContrast} />
 
 <Anatomy of={TabsStories.HighContrast} />
 
@@ -65,17 +71,15 @@ meta sets no `anatomy` parameter, so the block below says what is missing
 rather than rendering nothing:
 
 ```jsx
-<Anatomy of={ButtonStories} />
+<AnatomyTable of={ButtonStories} />
 ```
 
-<Anatomy of={ButtonStories} />
+<AnatomyTable of={ButtonStories} />
 
 ## A curated subset
 
 `parts` overrides both `parameters.anatomy.parts` and auto-discovery, for when
 prose needs to focus on two rows out of ten. Hover sync still works.
-
-<Canvas of={ButtonStories.Anatomy} />
 
 <Anatomy
   of={ButtonStories.Anatomy}
@@ -87,9 +91,10 @@ prose needs to focus on two rows out of ten. Hover sync still works.
 ## Static table
 
 `sync={false}` drops the channel wiring entirely — no hover sync, no
-auto-discovery, just the rows.
+auto-discovery, just the rows. `<AnatomyTable>` on its own, with no `<Canvas>`
+next to it, since there's nothing here to sync with.
 
-<Anatomy of={SliderStories.Anatomy} sync={false} />
+<AnatomyTable of={SliderStories.Anatomy} sync={false} />
 
 ## When there is nothing to show
 
@@ -102,8 +107,6 @@ panel share the same component.
 `Edge cases → Empty states → No Parts` asks for auto-discovery with `anatomy: {}`, but nothing
 in its markup carries a `data-part` attribute. Rather than an empty list, both
 surfaces explain what to add.
-
-<Canvas of={EdgeCaseStories.NoParts} />
 
 <Anatomy of={EdgeCaseStories.NoParts} />
 
@@ -118,8 +121,6 @@ tab for a story whose `anatomy` parameter is disabled, which is its own
 behaviour for every addon panel. A docs page has no tab to drop, so the block
 says it instead.
 
-<Canvas of={EdgeCaseStories.Disabled} />
-
 <Anatomy of={EdgeCaseStories.Disabled} />
 
 ### Not configured
@@ -127,14 +128,13 @@ says it instead.
 A story with no `anatomy` parameter at all. Its canvas *is* annotated, so
 `anatomy: {}` is all it would take.
 
-<Canvas of={EdgeCaseStories.NotConfigured} />
-
 <Anatomy of={EdgeCaseStories.NotConfigured} />
 
 Passing `parts` explicitly overrides all three: the block renders the list you
-give it whatever the story's parameters say.
+give it whatever the story's parameters say. `<AnatomyTable>` alone here — the
+canvas above already covers this story.
 
-<Anatomy
+<AnatomyTable
   of={EdgeCaseStories.NotConfigured}
   parts={[{ id: 'label', name: 'Label', description: 'Curated here, not in the story.' }]}
 />
