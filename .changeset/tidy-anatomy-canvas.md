@@ -22,4 +22,4 @@ import { AnatomyTable } from '@component-anatomy/storybook/blocks';
 <AnatomyTable of={ButtonStories.Anatomy} />
 ```
 
-This is a breaking rename for anyone already importing `<Anatomy>` for the table-only behavior — switch that usage to `<AnatomyTable>`.
+**Breaking:** anyone already importing `<Anatomy>` for the table-only behavior needs to switch that usage to `<AnatomyTable>` — `<Anatomy>` now always renders a canvas too. The package is still pre-1.0, where semver itself treats a minor bump as license to break: nothing here has a stability guarantee yet, so the rename ships as the change it actually is rather than routing around it with a second, differently-named export.
