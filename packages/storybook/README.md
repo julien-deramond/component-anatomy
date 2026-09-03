@@ -60,34 +60,56 @@ renders MDX), which stays an optional peer dependency — the panel above works
 without it.
 
 ```mdx
-import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import { Meta } from '@storybook/addon-docs/blocks';
 import { Anatomy } from '@component-anatomy/storybook/blocks';
 
 import * as ButtonStories from './Button.stories';
 
 <Meta of={ButtonStories} />
 
-<Canvas of={ButtonStories.Anatomy} />
 <Anatomy of={ButtonStories.Anatomy} />
 ```
 
-Hover sync works both ways, exactly as in the panel.
+`<Anatomy>` renders the canvas and the table together, tightened into one
+pairing, with the canvas's show-code button dropped by default (chrome that
+mostly restates what the table already documents). Hover sync works both ways,
+exactly as in the panel.
 
 | Prop | Type | Description |
 |---|---|---|
 | `of` | CSF export | The story to document, or a whole CSF module to read the meta's parameters. Omit on an attached docs page (one with `<Meta of={…} />`) to fall back to the page's current story. |
 | `parts` | `AnatomyPartDefinition[]` | Curated list, overriding both `parameters.anatomy.parts` and auto-discovery. |
 | `sync` | `boolean` | Two-way hover sync with the rendered story. Default `true`. `false` gives a purely static table. |
+| `sourceState` | `'hidden' \| 'shown' \| 'none'` | Passed to the underlying `<Canvas>`. Default `'none'` — set it to keep the show-code button. |
 
-Two things worth knowing:
+For a hand-placed canvas — a custom layout, or one that keeps its source panel
+some other way — use `<AnatomyTable>` next to your own `<Canvas>` instead. It
+takes the same `of`, `parts` and `sync` props, minus `sourceState`, which is
+`<Canvas>`'s concern:
 
-- **Auto-discovery needs the story on the page.** Parts are read from the story's
-  `data-part` attributes as it renders, so a block that relies on discovery needs
-  a `<Canvas of={…} />` (or `<Story of={…} />`) on the same page. A block with an
-  explicit `parts` list stands on its own.
+```mdx
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import { AnatomyTable } from '@component-anatomy/storybook/blocks';
+
+import * as ButtonStories from './Button.stories';
+
+<Meta of={ButtonStories} />
+
+<Canvas of={ButtonStories.Anatomy} />
+<AnatomyTable of={ButtonStories.Anatomy} />
+```
+
+Two things worth knowing, for either block:
+
+- **Auto-discovery needs the story's canvas on the page.** Parts are read from
+  the story's `data-part` attributes as it renders, so a block that relies on
+  discovery needs a canvas on the same page — `<Anatomy>` brings its own,
+  `<AnatomyTable>` needs a `<Canvas of={…} />` (or `<Story of={…} />`) next to
+  it. A block with an explicit `parts` list stands on its own.
 - **A meta has no canvas.** `of={ButtonStories}` reads `meta.parameters.anatomy`,
   but there is nothing to discover parts from or to sync hover with — give it
-  `parts` explicitly.
+  `parts` explicitly, and use `<AnatomyTable>` rather than `<Anatomy>` since
+  there is no story to draw a canvas from.
 
 Several blocks can share one page; each talks only to the story it names.
 

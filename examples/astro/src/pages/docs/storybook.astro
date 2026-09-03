@@ -75,19 +75,20 @@ export const Anatomy: Story = {
       rather than only in the panel. It needs
       <code>@storybook/addon-docs</code>, which is what renders MDX:
     </p>
-    <pre is:raw><code>import &lbrace; Canvas, Meta &rbrace; from '@storybook/addon-docs/blocks';
+    <pre is:raw><code>import &lbrace; Meta &rbrace; from '@storybook/addon-docs/blocks';
 import &lbrace; Anatomy &rbrace; from '@component-anatomy/storybook/blocks';
 import * as ButtonStories from './Button.stories';
 
 &lt;Meta of=&lbrace;ButtonStories&rbrace; /&gt;
 
-&lt;Canvas of=&lbrace;ButtonStories.Anatomy&rbrace; /&gt;
 &lt;Anatomy of=&lbrace;ButtonStories.Anatomy&rbrace; /&gt;</code></pre>
     <p>
-      Hover sync works both ways, exactly as it does in the panel. Point
-      <code>of</code> at a story to read its <code>parameters.anatomy</code>, at
-      a whole CSF module to read the meta's, or omit it on an attached docs page
-      to fall back to the page's current story.
+      <code>&lt;Anatomy&gt;</code> renders the canvas and the table together,
+      tightened into one pairing, with the canvas's show-code button dropped by
+      default. Hover sync works both ways, exactly as it does in the panel.
+      Point <code>of</code> at a story to read its <code>parameters.anatomy</code>,
+      at a whole CSF module to read the meta's, or omit it on an attached docs
+      page to fall back to the page's current story.
     </p>
     <table>
       <thead><tr><th>Prop</th><th>Type</th><th>Description</th></tr></thead>
@@ -95,12 +96,29 @@ import * as ButtonStories from './Button.stories';
         <tr><td><code>of</code></td><td><code>CSF export</code></td><td>Story or meta to document. Omit on an attached page for the current story.</td></tr>
         <tr><td><code>parts</code></td><td><code>AnatomyPartDefinition[]</code></td><td>Curated list, overriding the parameter and auto-discovery.</td></tr>
         <tr><td><code>sync</code></td><td><code>boolean</code></td><td>Two-way hover sync with the canvas. Default true.</td></tr>
+        <tr><td><code>sourceState</code></td><td><code>'hidden' | 'shown' | 'none'</code></td><td>Passed to the internal <code>&lt;Canvas&gt;</code>. Default <code>'none'</code> — set it to keep the show-code button.</td></tr>
       </tbody>
     </table>
     <p>
+      For a hand-placed canvas — a custom layout, or one that keeps its source
+      panel some other way — use <code>&lt;AnatomyTable&gt;</code> next to your
+      own <code>&lt;Canvas&gt;</code> instead. It takes the same <code>of</code>,
+      <code>parts</code> and <code>sync</code> props, minus <code>sourceState</code>,
+      which is <code>&lt;Canvas&gt;</code>'s concern:
+    </p>
+    <pre is:raw><code>import &lbrace; Canvas, Meta &rbrace; from '@storybook/addon-docs/blocks';
+import &lbrace; AnatomyTable &rbrace; from '@component-anatomy/storybook/blocks';
+import * as ButtonStories from './Button.stories';
+
+&lt;Meta of=&lbrace;ButtonStories&rbrace; /&gt;
+
+&lt;Canvas of=&lbrace;ButtonStories.Anatomy&rbrace; /&gt;
+&lt;AnatomyTable of=&lbrace;ButtonStories.Anatomy&rbrace; /&gt;</code></pre>
+    <p>
       Auto-discovery reads the story as it renders, so a block relying on it
-      needs the story on the same page — a <code>&lt;Canvas&gt;</code> or
-      <code>&lt;Story&gt;</code> block above it. A block with an explicit
+      needs a canvas on the same page — <code>&lt;Anatomy&gt;</code> brings its
+      own, <code>&lt;AnatomyTable&gt;</code> needs a <code>&lt;Canvas&gt;</code>
+      or <code>&lt;Story&gt;</code> block next to it. A block with an explicit
       <code>parts</code> list stands on its own. Several blocks can share one
       page: each talks only to the story it names.
     </p>

@@ -115,13 +115,11 @@ export const Anatomy: Story = {
 };
 ```
 
-The same table renders inside an MDX docs page, next to the preview:
+The same canvas-and-table pairing renders inside an MDX docs page, next to the preview:
 
 ```mdx
-import { Canvas } from '@storybook/addon-docs/blocks';
 import { Anatomy } from '@component-anatomy/storybook/blocks';
 
-<Canvas of={ButtonStories.Anatomy} />
 <Anatomy of={ButtonStories.Anatomy} />
 ```
 
