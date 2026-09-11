@@ -41,6 +41,28 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
       <li>The addon must be listed in <code>.storybook/main.ts</code> under <code>addons</code>.</li>
     </ul>
 
+    <h3>Storybook: the panel lists parts but the canvas never highlights</h3>
+    <p>
+      Check whether <code>.storybook/preview.ts</code> uses
+      <code>definePreview</code> — CSF Next, the default in Storybook 11. Such a
+      preview composes <em>only</em> its own <code>addons</code> array, and
+      Storybook drops the preview annotations <code>main.ts</code> contributes,
+      so the panel loads (that half comes from <code>main.ts</code>) while the
+      canvas decorator never mounts. Add the addon there too:
+    </p>
+    <pre is:raw><code>// .storybook/preview.ts
+import { definePreview } from '@storybook/your-framework';
+import componentAnatomy from '@component-anatomy/storybook';
+
+export default definePreview({
+  addons: [componentAnatomy()],
+});</code></pre>
+    <p>
+      Same cause when a story with <code>anatomy: {'{}'}</code> reports "No parts
+      found": auto-discovery reads the rendered canvas, and without the
+      decorator there is nothing reading it.
+    </p>
+
     <h2>FAQ</h2>
 
     <h3>Does it work without a bundler?</h3>

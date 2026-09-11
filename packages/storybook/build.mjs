@@ -1,9 +1,13 @@
 /**
  * Build script for @component-anatomy/storybook
  *
- * Manager, preview and blocks entries stay ESM with `storybook/*`, `react`
- * and `@storybook/addon-docs` left external — Storybook's builders alias
- * those to its own runtime when the user's Storybook compiles the addon.
+ * Every entry is ESM with `storybook/*`, `react` and `@storybook/addon-docs`
+ * left external — Storybook's builders alias those to its own runtime when the
+ * user's Storybook compiles the addon.
+ *
+ * There is no CJS output: `storybook` has been ESM-only since 9, and the main
+ * entry now pulls in the preview annotations (for `definePreviewAddon`), so a
+ * `.cjs` build would `require()` `storybook/preview-api` and throw on load.
  */
 import { build } from 'esbuild';
 import { execSync } from 'child_process';
@@ -38,7 +42,6 @@ const shared = {
 
 await Promise.all([
   build({ ...shared, entryPoints: ['src/index.ts'], format: 'esm', outfile: `${outDir}/index.js` }),
-  build({ ...shared, entryPoints: ['src/index.ts'], format: 'cjs', outfile: `${outDir}/index.cjs` }),
   build({ ...shared, entryPoints: ['src/manager.tsx'], format: 'esm', outfile: `${outDir}/manager.js` }),
   build({ ...shared, entryPoints: ['src/preview.ts'], format: 'esm', outfile: `${outDir}/preview.js` }),
   build({ ...shared, entryPoints: ['src/blocks.tsx'], format: 'esm', outfile: `${outDir}/blocks.js` }),
