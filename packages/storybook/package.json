@@ -33,7 +33,10 @@
       "require": "./dist/index.cjs"
     },
     "./manager": "./dist/manager.js",
-    "./preview": "./dist/preview.js",
+    "./preview": {
+      "types": "./dist/preview.d.ts",
+      "default": "./dist/preview.js"
+    },
     "./package.json": "./package.json"
   },
   "main": "./dist/index.cjs",
@@ -58,11 +61,11 @@
     "@types/react": "^19.2.17",
     "esbuild": "^0.28.1",
     "react": "^19.2.7",
-    "storybook": "^10.0.0",
+    "storybook": ">=11.0.0-0 <12.0.0-0",
     "typescript": "^7.0.2"
   },
   "peerDependencies": {
-    "storybook": ">=9.0.0"
+    "storybook": "^10.0.0 || ^11.0.0"
   },
   "engines": {
     "node": ">=22.12.0"

@@ -2,7 +2,7 @@
   "name": "examples-storybook",
   "private": true,
   "version": "0.0.0",
-  "description": "Storybook 10 example using the @component-anatomy/storybook addon with HTML components",
+  "description": "Storybook 11 example using the @component-anatomy/storybook addon with HTML components",
   "type": "module",
   "scripts": {
     "dev": "storybook dev -p 6006 --no-open",
@@ -12,8 +12,9 @@
     "@component-anatomy/storybook": "workspace:^"
   },
   "devDependencies": {
-    "@storybook/html-vite": "^10.5.2",
-    "storybook": "^10.5.2",
+    "@storybook/addon-mcp": "^11.0.0-alpha.0",
+    "@storybook/html-vite": "^11.0.0-alpha.0",
+    "storybook": "^11.0.0-alpha.0",
     "vite": "^8.1.5"
   }
 }

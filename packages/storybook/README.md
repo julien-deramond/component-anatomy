@@ -4,7 +4,7 @@ Storybook addon that adds an **Anatomy** panel — an interactive part list sync
 
 - Hover a part in the panel → the element is highlighted in the canvas
 - Hover a `data-part` element in the canvas → the panel entry activates
-- Works with **Storybook 9 and 10**, any renderer (React, Vue, HTML, Web Components…)
+- Works with **Storybook 10 and 11**, any renderer (React, Vue, HTML, Web Components…)
 
 ## Install
 
@@ -12,11 +12,29 @@ Storybook addon that adds an **Anatomy** panel — an interactive part list sync
 npm install --save-dev @component-anatomy/storybook
 ```
 
+Register the addon in `.storybook/main.ts`:
+
 ```ts
 // .storybook/main.ts
 export default {
   addons: ['@component-anatomy/storybook'],
 };
+```
+
+If your project uses [CSF Next](https://storybook.js.org/docs/api/csf/csf-next) (the default in Storybook 11), also register the addon's preview annotations in `.storybook/preview.ts`:
+
+```ts
+// .storybook/preview.ts
+
+// Replace your-framework with the framework you are using (e.g., react-vite, nextjs-vite)
+import { definePreview } from '@storybook/your-framework';
+
+import componentAnatomy from '@component-anatomy/storybook';
+
+export default definePreview({
+  // ...rest of preview
+  addons: [componentAnatomy()], // 👈 register the addon here
+});
 ```
 
 ## Use
@@ -51,7 +69,7 @@ Parameters follow Storybook's normal inheritance — project-wide defaults in `.
 
 ## Example
 
-A complete Storybook 10 setup with Button/Slider/Tabs stories lives in [`examples/storybook`](https://github.com/julien-deramond/component-anatomy/tree/main/examples/storybook), deployed at https://julien-deramond.github.io/component-anatomy/storybook/.
+A complete Storybook 11 setup with Button/Slider/Tabs stories lives in [`examples/storybook`](https://github.com/julien-deramond/component-anatomy/tree/main/examples/storybook), deployed at https://julien-deramond.github.io/component-anatomy/storybook/.
 
 ## Docs
 

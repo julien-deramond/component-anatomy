@@ -39,8 +39,13 @@ await Promise.all([
   build({ ...shared, entryPoints: ['src/preview.ts'], format: 'esm', outfile: `${outDir}/preview.js` }),
 ]);
 
-execSync('../../node_modules/.bin/tsc --emitDeclarationOnly --declaration --outDir dist', {
-  stdio: 'inherit',
-});
+// `--noEmit false` overrides the tsconfig's `noEmit: true` (set for typechecks);
+// without it tsc silently emits nothing.
+execSync(
+  '../../node_modules/.bin/tsc --emitDeclarationOnly --declaration --noEmit false --rootDir src --outDir dist',
+  {
+    stdio: 'inherit',
+  }
+);
 
 console.log('✓ @component-anatomy/storybook built');

@@ -4,13 +4,19 @@
  * with the manager panel over the addon channel.
  */
 import { addons, useEffect } from 'storybook/preview-api';
-import type { Renderer, PartialStoryFn, StoryContext } from 'storybook/internal/types';
+import type {
+  DecoratorFunction,
+  ProjectAnnotations,
+  Renderer,
+  PartialStoryFn,
+  StoryContext,
+} from 'storybook/internal/types';
 import { createAnatomy } from '@component-anatomy/core';
 
 import { EVENTS, PARAM_KEY } from './constants.js';
 import type { AnatomyParameters } from './types.js';
 
-export const withComponentAnatomy = (
+const withComponentAnatomy: DecoratorFunction<Renderer> = (
   storyFn: PartialStoryFn<Renderer>,
   context: StoryContext<Renderer>
 ) => {
@@ -71,4 +77,8 @@ export const withComponentAnatomy = (
   return storyFn();
 };
 
-export const decorators = [withComponentAnatomy];
+const preview: ProjectAnnotations<Renderer> = {
+  decorators: [withComponentAnatomy],
+};
+
+export default preview;
