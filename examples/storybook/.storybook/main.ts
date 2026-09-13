@@ -1,6 +1,6 @@
-import type { StorybookConfig } from '@storybook/html-vite';
+import { defineMain } from '@storybook/html-vite/node';
 
-const config: StorybookConfig = {
+export default defineMain({
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(ts|js)'],
   addons: [
     // `@storybook/addon-docs` is what renders MDX pages — it is what the
@@ -12,6 +12,4 @@ const config: StorybookConfig = {
     name: '@storybook/html-vite',
     options: {},
   },
-};
-
-export default config;
+});

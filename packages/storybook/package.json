@@ -37,18 +37,23 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "default": "./dist/index.js"
     },
     "./blocks": {
       "types": "./dist/blocks.d.ts",
-      "import": "./dist/blocks.js"
+      "default": "./dist/blocks.js"
     },
-    "./manager": "./dist/manager.js",
-    "./preview": "./dist/preview.js",
+    "./manager": {
+      "types": "./dist/manager.d.ts",
+      "default": "./dist/manager.js"
+    },
+    "./preview": {
+      "types": "./dist/preview.d.ts",
+      "default": "./dist/preview.js"
+    },
     "./package.json": "./package.json"
   },
-  "main": "./dist/index.cjs",
+  "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
@@ -62,24 +67,24 @@
   "scripts": {
     "build": "node build.mjs",
     "typecheck": "tsc --noEmit",
-    "test": "node build.mjs && node ../../scripts/typecheck-fixture.mjs test/consumer-types.ts && node ../../scripts/typecheck-fixture.mjs test/consumer-blocks-types.tsx"
+    "test": "node build.mjs && node ../../scripts/typecheck-fixture.mjs test/consumer-types.ts && node ../../scripts/typecheck-fixture.mjs test/consumer-blocks-types.tsx && node ../../scripts/typecheck-fixture.mjs test/consumer-csf-next-types.ts"
   },
   "dependencies": {
     "@component-anatomy/core": "workspace:^"
   },
   "devDependencies": {
-    "@storybook/addon-docs": "^10.5.2",
+    "@storybook/addon-docs": "11.0.0-alpha.0",
     "@types/react": "^19.2.18",
     "esbuild": "^0.28.2",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
-    "storybook": "^10.5.10",
+    "storybook": "11.0.0-alpha.0",
     "typescript": "^7.0.2"
   },
   "peerDependencies": {
-    "@storybook/addon-docs": ">=9.0.0",
+    "@storybook/addon-docs": "^10.0.0 || ^11.0.0-0",
     "react": ">=18",
-    "storybook": ">=9.0.0"
+    "storybook": "^10.0.0 || ^11.0.0-0"
   },
   "peerDependenciesMeta": {
     "@storybook/addon-docs": {

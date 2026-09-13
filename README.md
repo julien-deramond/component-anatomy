@@ -30,7 +30,7 @@ Design systems document component anatomy as static annotated images exported fr
 |---------|-------------|
 | [`@component-anatomy/core`](./packages/core) | Framework-agnostic runtime — works anywhere a DOM exists |
 | [`@component-anatomy/astro`](./packages/astro) | Astro component with SSR Markdown panel and zero-config hover sync |
-| [`@component-anatomy/storybook`](./packages/storybook) | Storybook 9/10 addon — "Anatomy" panel synced with the story canvas, plus an `<Anatomy>` block for MDX |
+| [`@component-anatomy/storybook`](./packages/storybook) | Storybook 10/11 addon — "Anatomy" panel synced with the story canvas, plus an `<Anatomy>` block for MDX |
 
 ---
 
@@ -99,6 +99,14 @@ const parts = [
 ```ts
 // .storybook/main.ts
 export default { addons: ['@component-anatomy/storybook'] };
+```
+
+```ts
+// .storybook/preview.ts — only if you use CSF Next (the default in Storybook 11)
+import { definePreview } from '@storybook/your-framework';
+import componentAnatomy from '@component-anatomy/storybook';
+
+export default definePreview({ addons: [componentAnatomy()] });
 ```
 
 ```ts
@@ -190,7 +198,7 @@ Full token table and recipes: [customization guide](https://julien-deramond.gith
 ## Framework integrations
 
 - **Astro** — `<ComponentAnatomy parts={...} preset theme overlayLabel>` with SSR Markdown descriptions, sticky active pill, `header` slot. [Guide](https://julien-deramond.github.io/component-anatomy/docs/astro)
-- **Storybook 9/10** — `parameters.anatomy = { parts, preset, theme, root, disable }`, auto-discovery included, any renderer. Plus an `<Anatomy of={…} />` doc block for MDX pages. [Guide](https://julien-deramond.github.io/component-anatomy/docs/storybook)
+- **Storybook 10/11** — `parameters.anatomy = { parts, preset, theme, root, disable }`, auto-discovery included, any renderer. Plus an `<Anatomy of={…} />` doc block for MDX pages. [Guide](https://julien-deramond.github.io/component-anatomy/docs/storybook)
 - **React/Vue/Svelte** — use the core in a mount effect; dedicated wrappers are on the roadmap.
 
 ## Real-world examples
@@ -228,7 +236,7 @@ examples/
   plain-html/  zero-build IIFE example
   sandbox/     Vite playground: presets, live theming, overlay hooks, dynamic DOM
   astro/       the docs site + demos (deployed to GitHub Pages)
-  storybook/   Storybook 10 instance using the addon
+  storybook/   Storybook 11 instance using the addon
 ```
 
 ### Running locally

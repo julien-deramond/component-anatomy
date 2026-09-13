@@ -10,7 +10,12 @@
  * hover sync work inside MDX.
  */
 import { addons, useEffect } from 'storybook/preview-api';
-import type { Renderer, PartialStoryFn, StoryContext } from 'storybook/internal/types';
+import type {
+  ProjectAnnotations,
+  Renderer,
+  PartialStoryFn,
+  StoryContext,
+} from 'storybook/internal/types';
 import { createAnatomy } from '@component-anatomy/core';
 
 import { EVENTS, PARAM_KEY } from './constants.js';
@@ -95,3 +100,18 @@ export const withComponentAnatomy = (
 };
 
 export const decorators = [withComponentAnatomy];
+
+/**
+ * The same annotations as a default export, which is the shape
+ * `definePreviewAddon` takes in the package's main entry (see `index.ts`) and
+ * the shape a consumer gets from `@component-anatomy/storybook/preview`.
+ *
+ * Storybook reads `module.default[field] ?? module[field]`, so a preview
+ * annotation module that exports both is read exactly once — the named
+ * `decorators` above stays for anyone importing it directly.
+ */
+const annotations: ProjectAnnotations<Renderer> = {
+  decorators: [withComponentAnatomy],
+};
+
+export default annotations;

@@ -12,7 +12,12 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
     </p>
 
     <h2>Compatibility</h2>
-    <p>Storybook <strong>9 and 10</strong>, any renderer (React, Vue, HTML, Web Components…). The canvas side is framework-agnostic — it only reads the rendered DOM.</p>
+    <p>Storybook <strong>10 and 11</strong>, any renderer (React, Vue, HTML, Web Components…). The canvas side is framework-agnostic — it only reads the rendered DOM.</p>
+    <p>
+      The package is ESM-only, like Storybook itself. Storybook 9 is no longer
+      supported — CSF Next registration needs <code>definePreviewAddon</code>,
+      which Storybook only ships from 9.1 onwards.
+    </p>
 
     <h2>Installation</h2>
     <pre is:raw><code>npm install --save-dev @component-anatomy/storybook</code></pre>
@@ -21,6 +26,31 @@ export default {
   addons: ['@component-anatomy/storybook'],
 };</code></pre>
     <p>That's the whole setup — the addon registers its panel and a global decorator automatically.</p>
+
+    <h3>With CSF Next</h3>
+    <p>
+      CSF Next is the default story format in Storybook 11. A
+      <code>preview.ts</code> built with <code>definePreview</code> composes
+      <em>only</em> the addons it lists, and Storybook drops the preview
+      annotations <code>main.ts</code> would otherwise contribute — so the addon
+      has to be registered there too, or the canvas decorator never mounts and
+      the panel stays empty:
+    </p>
+    <pre is:raw><code>// .storybook/preview.ts
+import { definePreview } from '@storybook/your-framework';
+import componentAnatomy from '@component-anatomy/storybook';
+
+export default definePreview({
+  addons: [componentAnatomy()],
+});</code></pre>
+    <p>
+      Registering in both places is correct and safe: the two paths are mutually
+      exclusive, so the decorator is composed exactly once either way. A
+      <code>preview.ts</code> that is still a plain object needs only the
+      <code>main.ts</code> entry above. Registering in <code>preview.ts</code>
+      also types <code>parameters.anatomy</code> across that preview's metas and
+      stories.
+    </p>
 
     <h2>Usage</h2>
     <p>Annotate the story's DOM with <code>data-part</code> and add the <code>anatomy</code> parameter:</p>
