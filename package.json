@@ -22,8 +22,8 @@
     "test": "pnpm --filter @component-anatomy/core test && pnpm --filter @component-anatomy/storybook test"
   },
   "devDependencies": {
-    "@changesets/changelog-github": "^1.0.0",
-    "@changesets/cli": "^3.0.1",
+    "@changesets/changelog-github": "^1.0.1",
+    "@changesets/cli": "^3.0.2",
     "typescript": "^7.0.2"
   },
   "engines": {
