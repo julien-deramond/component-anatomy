@@ -7,6 +7,10 @@ export default defineMain({
     // `<Anatomy>` doc block needs to resolve `of={...}`.
     '@storybook/addon-docs',
     '@component-anatomy/storybook',
+    {
+      name: '@deramond.dev/storybook',
+      options: { brand: { title: 'component-anatomy', url: 'https://julien-deramond.github.io/component-anatomy/' } },
+    },
   ],
   framework: {
     name: '@storybook/html-vite',
