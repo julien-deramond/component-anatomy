@@ -7,11 +7,17 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "typecheck": "astro check"
   },
   "dependencies": {
     "@component-anatomy/astro": "workspace:^",
     "@component-anatomy/core": "workspace:^",
-    "astro": "^7.3.2"
+    "@deramond.dev/astro": "^0.2.1",
+    "astro": "^7.3.4"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.10",
+    "typescript": "6.0.3"
   }
 }

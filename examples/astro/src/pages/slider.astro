@@ -1,5 +1,5 @@
 ---
-import Base from '../layouts/Base.astro';
+import Demo from '../layouts/Demo.astro';
 import ComponentAnatomy from '@component-anatomy/astro/ComponentAnatomy.astro';
 import Slider from '../components/Slider.astro';
 import type { AnatomyPartDefinition } from '@component-anatomy/core';
@@ -59,12 +59,11 @@ without interrupting the user. Updates in sync with the thumb position.
 ];
 ---
 
-<Base title="Slider">
-  <h1 class="page-title">Slider</h1>
-  <p class="page-subtitle">
+<Demo title="Slider">
+  <Fragment slot="lead">
     A range input for selecting a numeric value within a defined interval.
     Hover a part name or the live component to explore the anatomy.
-  </p>
+  </Fragment>
 
   <div class="section">
     <p class="section-label">Anatomy</p>
@@ -72,4 +71,4 @@ without interrupting the user. Updates in sync with the thumb position.
       <Slider value={40} />
     </ComponentAnatomy>
   </div>
-</Base>
+</Demo>

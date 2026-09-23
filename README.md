@@ -1,12 +1,14 @@
+<p align="center"><picture><source srcset=".github/header.svg" type="image/svg+xml"><img src=".github/header.png" width="830" alt="Component Anatomy: Interactive component anatomy for design system docs."></picture></p>
+
 # Component Anatomy
 
 > Interactive anatomy documentation for design system components — live, in-browser, framework-agnostic.
 
-[![@component-anatomy/core on npm](https://img.shields.io/npm/v/@component-anatomy/core?label=%40component-anatomy%2Fcore)](https://www.npmjs.com/package/@component-anatomy/core)
-[![@component-anatomy/astro on npm](https://img.shields.io/npm/v/@component-anatomy/astro?label=%40component-anatomy%2Fastro)](https://www.npmjs.com/package/@component-anatomy/astro)
-[![@component-anatomy/storybook on npm](https://img.shields.io/npm/v/@component-anatomy/storybook?label=%40component-anatomy%2Fstorybook)](https://www.npmjs.com/package/@component-anatomy/storybook)
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](./CONTRIBUTING.md)
+[![@component-anatomy/core on npm](https://img.shields.io/npm/v/@component-anatomy/core?style=flat&label=%40component-anatomy%2Fcore&labelColor=16181E&color=3AB9BF)](https://www.npmjs.com/package/@component-anatomy/core)
+[![@component-anatomy/astro on npm](https://img.shields.io/npm/v/@component-anatomy/astro?style=flat&label=%40component-anatomy%2Fastro&labelColor=16181E&color=3AB9BF)](https://www.npmjs.com/package/@component-anatomy/astro)
+[![@component-anatomy/storybook on npm](https://img.shields.io/npm/v/@component-anatomy/storybook?style=flat&label=%40component-anatomy%2Fstorybook&labelColor=16181E&color=3AB9BF)](https://www.npmjs.com/package/@component-anatomy/storybook)
+[![License: MIT](https://img.shields.io/badge/license-MIT-2D7579?style=flat&labelColor=16181E)](./LICENSE)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-2D7579?style=flat&labelColor=16181E)](./CONTRIBUTING.md)
 
 **Docs & live demos:** https://julien-deramond.github.io/component-anatomy/ · **Live Storybook:** https://julien-deramond.github.io/component-anatomy/storybook/
 
