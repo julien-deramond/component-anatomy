@@ -1,5 +1,5 @@
 ---
-import Base from '../layouts/Base.astro';
+import Demo from '../layouts/Demo.astro';
 import ComponentAnatomy from '@component-anatomy/astro/ComponentAnatomy.astro';
 import Slider from '../components/Slider.astro';
 import type { AnatomyPartDefinition } from '@component-anatomy/core';
@@ -14,13 +14,12 @@ const parts: AnatomyPartDefinition[] = [
   { id: 'output', name: 'Output', description: 'Live value readout.' },
 ];
 ---
-<Base title="Theming">
-  <h1 class="page-title">Theming</h1>
-  <p class="page-subtitle">
+<Demo title="Theming">
+  <Fragment slot="lead">
     The same component with different presets and theme tokens — hover each
     panel to compare. Full guide in
-    <a href={`${base}docs/customization`} style="color:#4f46e5;">Rendering customization</a>.
-  </p>
+    <a href={`${base}docs/customization`}>Rendering customization</a>.
+  </Fragment>
 
   <div class="section">
     <p class="section-label">preset="default" (zero config)</p>
@@ -63,4 +62,4 @@ const parts: AnatomyPartDefinition[] = [
       <Slider />
     </ComponentAnatomy>
   </div>
-</Base>
+</Demo>

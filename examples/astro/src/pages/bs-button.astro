@@ -1,5 +1,5 @@
 ---
-import Base from '../layouts/Base.astro';
+import Demo from '../layouts/Demo.astro';
 import ComponentAnatomy from '@component-anatomy/astro/ComponentAnatomy.astro';
 import type { AnatomyPartDefinition } from '@component-anatomy/core';
 
@@ -27,11 +27,10 @@ const parts: AnatomyPartDefinition[] = [
 ];
 ---
 
-<Base title="Bootstrap Button">
-  <h1 class="page-title">Bootstrap Button</h1>
-  <p class="page-subtitle">
+<Demo title="Bootstrap Button" bootstrap>
+  <Fragment slot="lead">
     Bootstrap v5 · <code>.btn .btn-primary</code> — hover a part or the component to explore.
-  </p>
+  </Fragment>
 
   <div class="section">
     <p class="section-label">Anatomy</p>
@@ -47,4 +46,4 @@ const parts: AnatomyPartDefinition[] = [
       </button>
     </ComponentAnatomy>
   </div>
-</Base>
+</Demo>

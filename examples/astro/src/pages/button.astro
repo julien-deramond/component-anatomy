@@ -1,5 +1,5 @@
 ---
-import Base from '../layouts/Base.astro';
+import Demo from '../layouts/Demo.astro';
 import ComponentAnatomy from '@component-anatomy/astro/ComponentAnatomy.astro';
 import Button from '../components/Button.astro';
 import type { AnatomyPartDefinition } from '@component-anatomy/core';
@@ -42,12 +42,11 @@ no explicit \`aria-label\` is set.
 ];
 ---
 
-<Base title="Button">
-  <h1 class="page-title">Button</h1>
-  <p class="page-subtitle">
+<Demo title="Button">
+  <Fragment slot="lead">
     A pressable element that triggers an action. Hover a part name or the live
     component to explore the anatomy.
-  </p>
+  </Fragment>
 
   <div class="section">
     <p class="section-label">Anatomy</p>
@@ -55,4 +54,4 @@ no explicit \`aria-label\` is set.
       <Button />
     </ComponentAnatomy>
   </div>
-</Base>
+</Demo>

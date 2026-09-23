@@ -1,5 +1,5 @@
 ---
-import Base from '../layouts/Base.astro';
+import Demo from '../layouts/Demo.astro';
 import ComponentAnatomy from '@component-anatomy/astro/ComponentAnatomy.astro';
 import type { AnatomyPartDefinition } from '@component-anatomy/core';
 
@@ -37,11 +37,10 @@ const parts: AnatomyPartDefinition[] = [
 ];
 ---
 
-<Base title="Bootstrap Card">
-  <h1 class="page-title">Bootstrap Card</h1>
-  <p class="page-subtitle">
+<Demo title="Bootstrap Card" bootstrap>
+  <Fragment slot="lead">
     Bootstrap v5 · <code>.card</code> — a flexible content container.
-  </p>
+  </Fragment>
 
   <div class="section">
     <p class="section-label">Anatomy</p>
@@ -61,4 +60,4 @@ const parts: AnatomyPartDefinition[] = [
       </div>
     </ComponentAnatomy>
   </div>
-</Base>
+</Demo>

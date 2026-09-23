@@ -1,5 +1,5 @@
 ---
-import Base from '../layouts/Base.astro';
+import Demo from '../layouts/Demo.astro';
 import ComponentAnatomy from '@component-anatomy/astro/ComponentAnatomy.astro';
 import type { AnatomyPartDefinition } from '@component-anatomy/core';
 
@@ -32,11 +32,10 @@ const parts: AnatomyPartDefinition[] = [
 ];
 ---
 
-<Base title="Bootstrap Navbar">
-  <h1 class="page-title">Bootstrap Navbar</h1>
-  <p class="page-subtitle">
+<Demo title="Bootstrap Navbar" bootstrap>
+  <Fragment slot="lead">
     Bootstrap v5 · <code>.navbar</code> — responsive navigation header.
-  </p>
+  </Fragment>
 
   <div class="section">
     <p class="section-label">Anatomy</p>
@@ -73,4 +72,4 @@ const parts: AnatomyPartDefinition[] = [
       </div>
     </ComponentAnatomy>
   </div>
-</Base>
+</Demo>

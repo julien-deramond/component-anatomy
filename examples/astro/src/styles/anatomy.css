@@ -1,0 +1,31 @@
+/* The anatomy block on the site's dark theme: every --ca-* colour from the brand tokens.
+   Blocks without a preset or theme read these; the Theming demo's presets and themes still override them. */
+:root {
+  --ca-preview-bg: var(--color-panel);
+  --ca-preview-border: var(--color-line);
+  --ca-preview-dot: var(--color-line);
+  --ca-preview-radius: var(--radius-md);
+  --ca-part-name-color: var(--color-fg);
+  --ca-part-desc-color: var(--color-muted);
+  --ca-text-subtle: var(--color-muted);
+  --ca-part-id-color: var(--color-muted);
+  --ca-code-color: var(--color-fg);
+  --ca-chip-bg: var(--color-bg);
+  --ca-chip-border: var(--color-line);
+  --ca-indicator-border: var(--color-muted);
+  --ca-item-active-bg: color-mix(in srgb, var(--color-primary) 8%, transparent);
+  --ca-overlay-border: var(--color-primary);
+  --ca-overlay-bg: color-mix(in srgb, var(--color-primary) 12%, transparent);
+  --ca-label-bg: var(--color-primary);
+  --ca-label-fg: var(--color-on-primary);
+  --ca-label-font: var(--font-family-mono);
+}
+
+/* A demo section: a mono label (often code, so no uppercase) above one anatomy block. */
+.section + .section { margin-top: var(--space-10); }
+.section-label {
+  font: var(--type-mono);
+  font-size: var(--font-size-sm);
+  color: var(--color-muted);
+  margin: 0 0 var(--space-3);
+}

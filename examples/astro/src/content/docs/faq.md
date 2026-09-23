@@ -1,6 +1,10 @@
 ---
 title: "Troubleshooting & FAQ"
 description: "Common issues and how to fix them."
+# The demos come after the docs in the sidebar.
+next:
+  label: Button
+  link: ../../button/
 ---
 
 ## Troubleshooting
