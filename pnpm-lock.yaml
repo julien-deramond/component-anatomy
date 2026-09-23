@@ -61,6 +61,9 @@ importers:
         specifier: workspace:^
         version: link:../../packages/storybook
     devDependencies:
+      '@deramond.dev/storybook':
+        specifier: ^0.1.0
+        version: 0.1.0(storybook@11.0.0-alpha.0(@types/react@19.3.0)(prettier@3.9.9)(react@19.3.0))
       '@storybook/addon-docs':
         specifier: 11.0.0-alpha.0
         version: 11.0.0-alpha.0(@types/react@19.3.0)(storybook@11.0.0-alpha.0(@types/react@19.3.0)(prettier@3.9.9)(react@19.3.0))
@@ -457,6 +460,12 @@ packages:
     engines: {node: '>=22.12.0'}
     peerDependencies:
       astro: ^7.3.0
+
+  '@deramond.dev/storybook@0.1.0':
+    resolution: {integrity: sha512-W74Lbqxag0lpvIg5CxPBTqkWr4ln7hqB+gKjI+HR/iOgtK4G3bEa5Dz/uHHwiNEcW/fMNQ9nWVO6ZHWFOaOCWw==}
+    engines: {node: '>=20'}
+    peerDependencies:
+      storybook: ^10.0.0 || ^11.0.0-0
 
   '@deramond.dev/tokens@0.1.1':
     resolution: {integrity: sha512-QkGn2H7+5xWzkcBO2WG/rUeHBAojgmUdwMK3DGrP4f6JxrBQk2WOd+fJx7WA684PKenLXgIUDHH+dTfkk735Hw==}
@@ -3497,6 +3506,11 @@ snapshots:
       astro: 7.3.4(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(yaml@2.9.1)
       pagefind: 1.5.2
       satori: 0.33.5
+
+  '@deramond.dev/storybook@0.1.0(storybook@11.0.0-alpha.0(@types/react@19.3.0)(prettier@3.9.9)(react@19.3.0))':
+    dependencies:
+      '@deramond.dev/tokens': 0.1.1
+      storybook: 11.0.0-alpha.0(@types/react@19.3.0)(prettier@3.9.9)(react@19.3.0)
 
   '@deramond.dev/tokens@0.1.1': {}
 

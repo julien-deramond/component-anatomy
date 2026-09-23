@@ -12,6 +12,7 @@
     "@component-anatomy/storybook": "workspace:^"
   },
   "devDependencies": {
+    "@deramond.dev/storybook": "^0.1.0",
     "@storybook/addon-docs": "11.0.0-alpha.0",
     "@storybook/html-vite": "11.0.0-alpha.0",
     "react": "^19.3.0",
