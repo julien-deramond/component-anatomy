@@ -227,7 +227,7 @@ const renderedParts = await Promise.all(
 
   .ca-part-entry[data-active] {
     background: var(--ca-item-active-bg, rgba(99, 102, 241, 0.06));
-    border-color: color-mix(in srgb, var(--ca-label-bg, #6366f1) 15%, transparent);
+    border-color: color-mix(in srgb, var(--ca-panel-accent, var(--ca-label-bg, #6366f1)) 15%, transparent);
   }
 
   /* ─── Part header row ─── */
@@ -248,8 +248,8 @@ const renderedParts = await Promise.all(
   }
 
   .ca-part-entry[data-active] .ca-part-indicator {
-    background: var(--ca-label-bg, #4f46e5);
-    border-color: var(--ca-label-bg, #4f46e5);
+    background: var(--ca-panel-accent, var(--ca-label-bg, #4f46e5));
+    border-color: var(--ca-panel-accent, var(--ca-label-bg, #4f46e5));
   }
 
   .ca-part-name {
@@ -261,7 +261,7 @@ const renderedParts = await Promise.all(
   }
 
   .ca-part-entry[data-active] .ca-part-name {
-    color: var(--ca-label-bg, #4f46e5);
+    color: var(--ca-panel-accent, var(--ca-label-bg, #4f46e5));
   }
 
   .ca-part-id {
@@ -276,9 +276,9 @@ const renderedParts = await Promise.all(
   }
 
   .ca-part-entry[data-active] .ca-part-id {
-    background: color-mix(in srgb, var(--ca-label-bg, #6366f1) 8%, transparent);
-    border-color: color-mix(in srgb, var(--ca-label-bg, #6366f1) 20%, transparent);
-    color: var(--ca-label-bg, #4f46e5);
+    background: color-mix(in srgb, var(--ca-panel-accent, var(--ca-label-bg, #6366f1)) 8%, transparent);
+    border-color: color-mix(in srgb, var(--ca-panel-accent, var(--ca-label-bg, #6366f1)) 20%, transparent);
+    color: var(--ca-panel-accent, var(--ca-label-bg, #4f46e5));
   }
 
   /* ─── Markdown description ─── */
@@ -311,7 +311,7 @@ const renderedParts = await Promise.all(
     color: var(--ca-code-color, #374151);
   }
   .ca-part-description :global(a) {
-    color: var(--ca-label-bg, #4f46e5);
+    color: var(--ca-panel-accent, var(--ca-label-bg, #4f46e5));
     text-decoration: underline;
     text-underline-offset: 2px;
   }
@@ -338,7 +338,18 @@ const renderedParts = await Promise.all(
 </style>
 
 <script>
-  import { createAnatomy } from '@component-anatomy/core';
+  import { createAnatomy, resolvePanelAccent } from '@component-anatomy/core';
+  import type { AnatomyPresetName, AnatomyTheme } from '@component-anatomy/core';
+
+  /** The first opaque background behind `el`: what the panel's text is actually read on. */
+  function surfaceBehind(el: HTMLElement): string {
+    for (let node: HTMLElement | null = el; node; node = node.parentElement) {
+      const bg = getComputedStyle(node).backgroundColor;
+      const alpha = bg.match(/^rgba?\([^)]*[,/]\s*([\d.]+)\)$/)?.[1];
+      if (bg.startsWith('rgb') && (alpha === undefined || Number(alpha) >= 1)) return bg;
+    }
+    return 'rgb(255, 255, 255)'; // nothing painted: the canvas default
+  }
 
   function init() {
     document.querySelectorAll<HTMLElement>('[data-anatomy-root]').forEach((root) => {
@@ -368,13 +379,31 @@ const renderedParts = await Promise.all(
         config = JSON.parse(root.dataset.anatomyConfig ?? '{}');
       } catch { /* malformed config — fall back to defaults */ }
 
+      const preset = config.preset as AnatomyPresetName | undefined;
+      const theme = config.theme as AnatomyTheme | undefined;
+
       const anatomy = createAnatomy({
         root: preview,
         panel: panel ?? undefined,
-        preset: config.preset as import('@component-anatomy/core').AnatomyPresetName | undefined,
-        theme: config.theme as import('@component-anatomy/core').AnatomyTheme | undefined,
+        preset,
+        theme,
         overlay: { label: config.overlayLabel !== false },
       });
+
+      // The panel's accent (active name, indicator, id chip, links): the preset's or
+      // theme's color, made legible on the surface the panel really sits on. Presets
+      // are designed against the component, so `contrast`'s black or `minimal`'s grey
+      // would vanish on a dark page. With neither set, a page-wide --ca-label-bg counts
+      // as the caller's own color: adjusted if it must be, never swapped.
+      if (panel) {
+        const pageAccent = getComputedStyle(root).getPropertyValue('--ca-label-bg').trim();
+        const accent = resolvePanelAccent(
+          preset,
+          preset || theme ? theme : pageAccent ? { labelBg: pageAccent } : undefined,
+          { background: surfaceBehind(panel), foreground: getComputedStyle(panel).color },
+        );
+        root.style.setProperty('--ca-panel-accent', accent);
+      }
 
       // Sticky pill: show/hide based on whether the active panel entry is in view
       if (pill && panel) {
