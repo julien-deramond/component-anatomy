@@ -37,7 +37,7 @@ const pct = ((value - min) / (max - min)) * 100;
   .slider-track {
     position: relative;
     height: 6px;
-    background: #e5e7eb;
+    background: var(--color-line);
     border-radius: 99px;
     margin-bottom: 1.2rem;
   }
@@ -45,7 +45,7 @@ const pct = ((value - min) / (max - min)) * 100;
   .slider-range {
     position: absolute;
     top: 0; left: 0; bottom: 0;
-    background: #4f46e5;
+    background: var(--color-primary);
     border-radius: 99px;
     pointer-events: none;
   }
@@ -57,22 +57,22 @@ const pct = ((value - min) / (max - min)) * 100;
     width: 18px;
     height: 18px;
     border-radius: 50%;
-    background: #fff;
-    border: 2px solid #4f46e5;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+    background: var(--color-bg);
+    border: 2px solid var(--color-primary);
+    box-shadow: 0 1px 4px rgb(0 0 0 / 0.4);
     cursor: grab;
     transition: border-color 120ms;
   }
 
   .slider-thumb:focus-visible {
-    outline: 2px solid #818cf8;
+    outline: 2px solid var(--color-primary-lift);
     outline-offset: 2px;
   }
 
   .slider-output {
     font-size: 0.8rem;
     font-weight: 600;
-    color: #4f46e5;
+    color: var(--color-primary);
     text-align: right;
     font-variant-numeric: tabular-nums;
   }

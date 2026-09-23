@@ -1,5 +1,5 @@
 ---
-import Base from '../layouts/Base.astro';
+import Demo from '../layouts/Demo.astro';
 import ComponentAnatomy from '@component-anatomy/astro/ComponentAnatomy.astro';
 import type { AnatomyPartDefinition } from '@component-anatomy/core';
 
@@ -17,16 +17,15 @@ const buttonParts: AnatomyPartDefinition[] = [
   { id: 'button-icon', name: 'Icon', description: 'Optional 16px leading icon, `aria-hidden`.' },
 ];
 ---
-<Base title="Shadcn-style">
-  <h1 class="page-title">Shadcn-style components</h1>
-  <p class="page-subtitle">
+<Demo title="Shadcn-style components">
+  <Fragment slot="lead">
     The shadcn/ui look recreated with plain CSS — no build step, works in any
     CDN context. Anatomy ids mirror the slot names shadcn users know.
-  </p>
+  </Fragment>
 
   <div class="section">
     <p class="section-label">Card — with form field and actions</p>
-    <ComponentAnatomy parts={cardParts} theme={{ accent: '#18181b' }}>
+    <ComponentAnatomy parts={cardParts} theme={{ accent: '#fafafa', labelFg: '#18181b' }}>
       <div class="ui-card" data-part="card">
         <div class="ui-card-header" data-part="card-header">
           <h3 class="ui-card-title" data-part="card-title">Create project</h3>
@@ -48,7 +47,7 @@ const buttonParts: AnatomyPartDefinition[] = [
 
   <div class="section">
     <p class="section-label">Button — default variant with icon</p>
-    <ComponentAnatomy parts={buttonParts} theme={{ accent: '#18181b' }}>
+    <ComponentAnatomy parts={buttonParts} theme={{ accent: '#fafafa', labelFg: '#18181b' }}>
       <button class="ui-btn" data-part="button">
         <svg data-part="button-icon" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24"
              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
@@ -58,15 +57,15 @@ const buttonParts: AnatomyPartDefinition[] = [
       </button>
     </ComponentAnatomy>
   </div>
-</Base>
+</Demo>
 
 <style>
-  /* shadcn/ui zinc theme, hand-rolled for CDN contexts */
+  /* shadcn/ui zinc theme (dark), hand-rolled for CDN contexts */
   .ui-card {
     width: 340px;
-    border: 1px solid #e4e4e7;
+    border: 1px solid #27272a;
     border-radius: 12px;
-    background: #fff;
+    background: #09090b;
     box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
     font-family: inherit;
   }
@@ -75,16 +74,16 @@ const buttonParts: AnatomyPartDefinition[] = [
     font-size: 1rem;
     font-weight: 600;
     letter-spacing: -0.01em;
-    color: #09090b;
+    color: #fafafa;
     margin: 0 0 0.25rem;
   }
-  .ui-card-desc { font-size: 0.85rem; color: #71717a; margin: 0; }
+  .ui-card-desc { font-size: 0.85rem; color: #a1a1aa; margin: 0; }
   .ui-card-content { padding: 1.25rem 1.4rem; }
   .ui-label {
     display: block;
     font-size: 0.8rem;
     font-weight: 500;
-    color: #09090b;
+    color: #fafafa;
     margin-bottom: 0.4rem;
   }
   .ui-input {
@@ -93,13 +92,15 @@ const buttonParts: AnatomyPartDefinition[] = [
     padding: 0 0.75rem;
     font: inherit;
     font-size: 0.85rem;
-    border: 1px solid #e4e4e7;
+    color: #fafafa;
+    border: 1px solid #27272a;
     border-radius: 8px;
     background: transparent;
     outline: none;
     box-sizing: border-box;
   }
-  .ui-input:focus-visible { border-color: #18181b; box-shadow: 0 0 0 1px #18181b; }
+  .ui-input::placeholder { color: #a1a1aa; }
+  .ui-input:focus-visible { border-color: #d4d4d8; box-shadow: 0 0 0 1px #d4d4d8; }
   .ui-card-footer {
     display: flex;
     justify-content: flex-end;
@@ -115,17 +116,17 @@ const buttonParts: AnatomyPartDefinition[] = [
     font: inherit;
     font-size: 0.85rem;
     font-weight: 500;
-    color: #fafafa;
-    background: #18181b;
+    color: #18181b;
+    background: #fafafa;
     border: none;
     border-radius: 8px;
     cursor: pointer;
   }
-  .ui-btn:hover { background: #27272a; }
+  .ui-btn:hover { background: #e4e4e7; }
   .ui-btn-outline {
-    color: #09090b;
+    color: #fafafa;
     background: transparent;
-    border: 1px solid #e4e4e7;
+    border: 1px solid #27272a;
   }
-  .ui-btn-outline:hover { background: #f4f4f5; }
+  .ui-btn-outline:hover { background: #27272a; }
 </style>
