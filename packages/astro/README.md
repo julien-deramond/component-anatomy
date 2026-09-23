@@ -64,6 +64,42 @@ const parts = [
 
 The theme applies to both the canvas overlays and the panel accents. Layout variables (`--ca-gap`, `--ca-preview-bg`, `--ca-preview-padding`, `--ca-panel-max-height`) can be set on the wrapper via `class`. Full guide: [customization docs](https://julien-deramond.github.io/component-anatomy/docs/customization).
 
+### On a dark page
+
+Every colour the block uses is a CSS variable, with a light default. Set them on the wrapper via `class`, or on `:root` for every block on the page:
+
+| Variable | Default | Colours |
+|---|---|---|
+| `--ca-preview-bg` | `#f9fafb` | Preview background |
+| `--ca-preview-border` | `#e5e7eb` | Preview border |
+| `--ca-preview-dot` | `#d1d5db` | Preview dot grid |
+| `--ca-part-name-color` | `#111827` | Part names, bold text in descriptions |
+| `--ca-part-desc-color` | `#4b5563` | Descriptions, the header slot |
+| `--ca-text-subtle` | `#9ca3af` | Headings inside descriptions, the empty state |
+| `--ca-part-id-color` | `#6b7280` | The part id chip |
+| `--ca-code-color` | `#374151` | Inline code in descriptions |
+| `--ca-chip-bg` / `--ca-chip-border` | `#f3f4f6` / `#e5e7eb` | Part id chips, inline code, the scrollbar |
+| `--ca-indicator-border` | `#d1d5db` | The dot beside an inactive part |
+| `--ca-item-active-bg` | indigo wash | The active entry |
+| `--ca-label-bg` / `--ca-label-fg` | `#4f46e5` / `#fff` | Accent: overlay labels, the sticky pill, the active part name, id chip, dot and border |
+
+A theme's `accent` sets `--ca-label-bg`, so the active entry, its id chip and the sticky pill follow the theme.
+
+```css
+.dark-docs {
+  --ca-preview-bg: #1e293b;
+  --ca-preview-border: #334155;
+  --ca-preview-dot: #334155;
+  --ca-part-name-color: #f1f5f9;
+  --ca-part-desc-color: #94a3b8;
+  --ca-part-id-color: #94a3b8;
+  --ca-code-color: #e2e8f0;
+  --ca-chip-bg: #0f172a;
+  --ca-chip-border: #334155;
+  --ca-indicator-border: #64748b;
+}
+```
+
 `AnatomyPartDefinition`:
 
 ```ts
