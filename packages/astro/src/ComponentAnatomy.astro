@@ -129,7 +129,7 @@ const renderedParts = await Promise.all(
     overflow: hidden;
     background:
       /* dot grid */
-      radial-gradient(circle, #d1d5db 1px, transparent 1px),
+      radial-gradient(circle, var(--ca-preview-dot, #d1d5db) 1px, transparent 1px),
       var(--ca-preview-bg, #f9fafb);
     background-size: 20px 20px;
   }
@@ -153,7 +153,7 @@ const renderedParts = await Promise.all(
   .ca-panel-header {
     margin-bottom: 0.75rem;
     font-size: 0.875rem;
-    color: #4b5563;
+    color: var(--ca-part-desc-color, #4b5563);
   }
   .ca-panel-header :global(> :first-child) { margin-top: 0; }
   .ca-panel-header :global(> :last-child) { margin-bottom: 0; }
@@ -170,13 +170,13 @@ const renderedParts = await Promise.all(
     margin-bottom: 4px;
     border-radius: 6px;
     background: var(--ca-label-bg, #4f46e5);
-    color: #fff;
+    color: var(--ca-label-fg, #fff);
     font-size: 0.72rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.07em;
     pointer-events: none;
-    box-shadow: 0 2px 8px rgba(79,70,229,0.25);
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--ca-label-bg, #4f46e5) 25%, transparent);
   }
 
   .ca-active-pill.ca-pill--visible {
@@ -187,7 +187,7 @@ const renderedParts = await Promise.all(
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: rgba(255,255,255,0.7);
+    background: color-mix(in srgb, var(--ca-label-fg, #fff) 70%, transparent);
     flex-shrink: 0;
   }
 
@@ -203,12 +203,12 @@ const renderedParts = await Promise.all(
 
     /* Subtle scrollbar */
     scrollbar-width: thin;
-    scrollbar-color: #e5e7eb transparent;
+    scrollbar-color: var(--ca-chip-border, #e5e7eb) transparent;
   }
 
   .ca-panel::-webkit-scrollbar { width: 4px; }
   .ca-panel::-webkit-scrollbar-track { background: transparent; }
-  .ca-panel::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 99px; }
+  .ca-panel::-webkit-scrollbar-thumb { background: var(--ca-chip-border, #e5e7eb); border-radius: 99px; }
 
   /* ─── Part entries ─── */
   .ca-part-entry {
@@ -227,7 +227,7 @@ const renderedParts = await Promise.all(
 
   .ca-part-entry[data-active] {
     background: var(--ca-item-active-bg, rgba(99, 102, 241, 0.06));
-    border-color: rgba(99, 102, 241, 0.15);
+    border-color: color-mix(in srgb, var(--ca-label-bg, #6366f1) 15%, transparent);
   }
 
   /* ─── Part header row ─── */
@@ -242,7 +242,7 @@ const renderedParts = await Promise.all(
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    border: 2px solid #d1d5db;
+    border: 2px solid var(--ca-indicator-border, #d1d5db);
     flex-shrink: 0;
     transition: background 120ms ease, border-color 120ms ease;
   }
@@ -269,16 +269,16 @@ const renderedParts = await Promise.all(
     font-size: 0.68rem;
     padding: 1px 6px;
     border-radius: 4px;
-    background: #f3f4f6;
-    color: #6b7280;
-    border: 1px solid #e5e7eb;
+    background: var(--ca-chip-bg, #f3f4f6);
+    color: var(--ca-part-id-color, #6b7280);
+    border: 1px solid var(--ca-chip-border, #e5e7eb);
     flex-shrink: 0;
   }
 
   .ca-part-entry[data-active] .ca-part-id {
-    background: rgba(99,102,241,0.08);
-    border-color: rgba(99,102,241,0.2);
-    color: #4f46e5;
+    background: color-mix(in srgb, var(--ca-label-bg, #6366f1) 8%, transparent);
+    border-color: color-mix(in srgb, var(--ca-label-bg, #6366f1) 20%, transparent);
+    color: var(--ca-label-bg, #4f46e5);
   }
 
   /* ─── Markdown description ─── */
@@ -298,17 +298,17 @@ const renderedParts = await Promise.all(
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: #9ca3af;
+    color: var(--ca-text-subtle, #9ca3af);
     margin: 0.9em 0 0.3em;
   }
   .ca-part-description :global(code) {
     font-size: 0.78em;
     padding: 0.15em 0.4em;
     border-radius: 3px;
-    background: #f3f4f6;
-    border: 1px solid #e5e7eb;
+    background: var(--ca-chip-bg, #f3f4f6);
+    border: 1px solid var(--ca-chip-border, #e5e7eb);
     font-family: ui-monospace, 'Cascadia Code', monospace;
-    color: #374151;
+    color: var(--ca-code-color, #374151);
   }
   .ca-part-description :global(a) {
     color: var(--ca-label-bg, #4f46e5);
@@ -320,11 +320,11 @@ const renderedParts = await Promise.all(
     padding-left: 1.3em;
   }
   .ca-part-description :global(li) { margin-bottom: 0.2em; }
-  .ca-part-description :global(strong) { color: #111827; font-weight: 600; }
+  .ca-part-description :global(strong) { color: var(--ca-part-name-color, #111827); font-weight: 600; }
 
   .ca-no-parts {
     font-size: 0.875rem;
-    color: #9ca3af;
+    color: var(--ca-text-subtle, #9ca3af);
     font-style: italic;
     padding: 0.75rem;
   }
