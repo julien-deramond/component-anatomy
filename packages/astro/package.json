@@ -1,6 +1,6 @@
 {
   "name": "@component-anatomy/astro",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "Astro integration for component-anatomy — SSR-rendered anatomy panels with live hover sync",
   "license": "MIT",
   "author": "Julien Déramond",
