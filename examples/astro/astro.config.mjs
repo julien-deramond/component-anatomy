@@ -1,5 +1,3 @@
-import { readFileSync } from 'node:fs';
-
 import deramond from '@deramond.dev/astro/integration';
 import { defineConfig } from 'astro/config';
 
@@ -10,11 +8,6 @@ import { sidebar } from './src/sidebar.mjs';
 const site = process.env.SITE_URL;    // e.g. https://julien-deramond.github.io
 const base = process.env.BASE_PATH;   // e.g. /component-anatomy
 const root = (base ?? '').replace(/\/$/, '');
-
-// The version pill in the docs top bar follows the core package, which changesets bumps.
-const { version } = JSON.parse(
-  readFileSync(new URL('../../packages/core/package.json', import.meta.url), 'utf8'),
-);
 
 export default defineConfig({
   site,
@@ -37,7 +30,7 @@ export default defineConfig({
       brand: { mark: './src/brand/mark.svg', favicons: './src/brand/favicons/' },
       og: { art: './src/brand/og-art.png' },
       docs: {
-        tool: { version: `v${version}` },
+        // No version pill: the project ships several packages, each with its own version.
         tabs: [
           { label: 'Docs', href: `${root}/docs/` },
           { label: 'Storybook', href: `${root}/storybook/` },
