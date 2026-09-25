@@ -27,8 +27,8 @@ importers:
         specifier: workspace:^
         version: link:../../packages/core
       '@deramond.dev/astro':
-        specifier: ^0.6.0
-        version: 0.6.0(astro@7.3.4(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(yaml@2.9.1))
+        specifier: ^0.6.1
+        version: 0.6.1(astro@7.3.4(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(yaml@2.9.1))
       astro:
         specifier: ^7.3.4
         version: 7.3.4(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(yaml@2.9.1)
@@ -62,8 +62,8 @@ importers:
         version: link:../../packages/storybook
     devDependencies:
       '@deramond.dev/storybook':
-        specifier: ^0.1.0
-        version: 0.1.0(storybook@11.0.0-alpha.0(@types/react@19.3.0)(prettier@3.9.9)(react@19.3.0))
+        specifier: ^0.1.1
+        version: 0.1.1(storybook@11.0.0-alpha.0(@types/react@19.3.0)(prettier@3.9.9)(react@19.3.0))
       '@storybook/addon-docs':
         specifier: 11.0.0-alpha.0
         version: 11.0.0-alpha.0(@types/react@19.3.0)(storybook@11.0.0-alpha.0(@types/react@19.3.0)(prettier@3.9.9)(react@19.3.0))
@@ -455,20 +455,17 @@ packages:
     resolution: {integrity: sha512-QxULHAm7cNu72w97JUNCBFODFaXpbDg+dP8b/oWFAZ2MTRppA3U00Y2L1HqaS4J6yBqxwa/Y3nMBaxVKbB/NsA==}
     engines: {node: '>=20.19.0'}
 
-  '@deramond.dev/astro@0.6.0':
-    resolution: {integrity: sha512-apdvJeSCuxzt1gaSz5H7CabFYhsMs80QD59mdZrJba//vaDhBNpQsb1OopT/W9QqM7JbuZ0vpM5W/+OJquvpFA==}
+  '@deramond.dev/astro@0.6.1':
+    resolution: {integrity: sha512-xE+oZVxO9e6DDVi9Tu+u0SOY/vx+GrQKlER74IN4btH4YamAO4Ue2kfg9Q8he90Kcs9cF0aF50ggQRWkHRFWrg==}
     engines: {node: '>=22.12.0'}
     peerDependencies:
       astro: ^7.3.0
 
-  '@deramond.dev/storybook@0.1.0':
-    resolution: {integrity: sha512-W74Lbqxag0lpvIg5CxPBTqkWr4ln7hqB+gKjI+HR/iOgtK4G3bEa5Dz/uHHwiNEcW/fMNQ9nWVO6ZHWFOaOCWw==}
+  '@deramond.dev/storybook@0.1.1':
+    resolution: {integrity: sha512-L6El3vZssAg3ADOvCAajBokpT351YZN8r1q2ME/oixCtfJLx2jsweAZJEtD4HL7VF87ZubFJXFpGPTBbSMMr9g==}
     engines: {node: '>=20'}
     peerDependencies:
       storybook: ^10.0.0 || ^11.0.0-0
-
-  '@deramond.dev/tokens@0.1.1':
-    resolution: {integrity: sha512-QkGn2H7+5xWzkcBO2WG/rUeHBAojgmUdwMK3DGrP4f6JxrBQk2WOd+fJx7WA684PKenLXgIUDHH+dTfkk735Hw==}
 
   '@deramond.dev/tokens@0.2.0':
     resolution: {integrity: sha512-t3ODLh2Jh4abUupntifcOLGHXoBa5CbnyrGlcK9Xxoe+pR5Us9UJmvrAcA8vjh+E1lR2Z+bJpbQls4xmv84bbg==}
@@ -3499,7 +3496,7 @@ snapshots:
 
   '@csstools/css-tokenizer@4.0.0': {}
 
-  '@deramond.dev/astro@0.6.0(astro@7.3.4(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(yaml@2.9.1))':
+  '@deramond.dev/astro@0.6.1(astro@7.3.4(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(yaml@2.9.1))':
     dependencies:
       '@deramond.dev/tokens': 0.2.0
       '@fontsource/chakra-petch': 5.3.0
@@ -3510,12 +3507,10 @@ snapshots:
       pagefind: 1.5.2
       satori: 0.33.5
 
-  '@deramond.dev/storybook@0.1.0(storybook@11.0.0-alpha.0(@types/react@19.3.0)(prettier@3.9.9)(react@19.3.0))':
+  '@deramond.dev/storybook@0.1.1(storybook@11.0.0-alpha.0(@types/react@19.3.0)(prettier@3.9.9)(react@19.3.0))':
     dependencies:
-      '@deramond.dev/tokens': 0.1.1
+      '@deramond.dev/tokens': 0.2.0
       storybook: 11.0.0-alpha.0(@types/react@19.3.0)(prettier@3.9.9)(react@19.3.0)
-
-  '@deramond.dev/tokens@0.1.1': {}
 
   '@deramond.dev/tokens@0.2.0': {}
 
