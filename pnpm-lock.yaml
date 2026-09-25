@@ -27,8 +27,8 @@ importers:
         specifier: workspace:^
         version: link:../../packages/core
       '@deramond.dev/astro':
-        specifier: ^0.5.1
-        version: 0.5.1(astro@7.3.4(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(yaml@2.9.1))
+        specifier: ^0.6.0
+        version: 0.6.0(astro@7.3.4(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(yaml@2.9.1))
       astro:
         specifier: ^7.3.4
         version: 7.3.4(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(yaml@2.9.1)
@@ -455,8 +455,8 @@ packages:
     resolution: {integrity: sha512-QxULHAm7cNu72w97JUNCBFODFaXpbDg+dP8b/oWFAZ2MTRppA3U00Y2L1HqaS4J6yBqxwa/Y3nMBaxVKbB/NsA==}
     engines: {node: '>=20.19.0'}
 
-  '@deramond.dev/astro@0.5.1':
-    resolution: {integrity: sha512-ngm6NTFxLb6hlrc61UPVTY91RLVtaSKhtXJIPtAN87D2E8RpsT60ro8YJyLH3YgB6beoARCgI49OgFFZSjiDSA==}
+  '@deramond.dev/astro@0.6.0':
+    resolution: {integrity: sha512-apdvJeSCuxzt1gaSz5H7CabFYhsMs80QD59mdZrJba//vaDhBNpQsb1OopT/W9QqM7JbuZ0vpM5W/+OJquvpFA==}
     engines: {node: '>=22.12.0'}
     peerDependencies:
       astro: ^7.3.0
@@ -469,6 +469,9 @@ packages:
 
   '@deramond.dev/tokens@0.1.1':
     resolution: {integrity: sha512-QkGn2H7+5xWzkcBO2WG/rUeHBAojgmUdwMK3DGrP4f6JxrBQk2WOd+fJx7WA684PKenLXgIUDHH+dTfkk735Hw==}
+
+  '@deramond.dev/tokens@0.2.0':
+    resolution: {integrity: sha512-t3ODLh2Jh4abUupntifcOLGHXoBa5CbnyrGlcK9Xxoe+pR5Us9UJmvrAcA8vjh+E1lR2Z+bJpbQls4xmv84bbg==}
 
   '@emmetio/abbreviation@2.3.3':
     resolution: {integrity: sha512-mgv58UrU3rh4YgbE/TzgLQwJ3pFsHHhCLqY20aJq+9comytTXUDNGG/SMtSeMJdkpxgXSXunBGLD8Boka3JyVA==}
@@ -3496,9 +3499,9 @@ snapshots:
 
   '@csstools/css-tokenizer@4.0.0': {}
 
-  '@deramond.dev/astro@0.5.1(astro@7.3.4(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(yaml@2.9.1))':
+  '@deramond.dev/astro@0.6.0(astro@7.3.4(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(yaml@2.9.1))':
     dependencies:
-      '@deramond.dev/tokens': 0.1.1
+      '@deramond.dev/tokens': 0.2.0
       '@fontsource/chakra-petch': 5.3.0
       '@fontsource/instrument-sans': 5.3.0
       '@fontsource/roboto-mono': 5.3.0
@@ -3513,6 +3516,8 @@ snapshots:
       storybook: 11.0.0-alpha.0(@types/react@19.3.0)(prettier@3.9.9)(react@19.3.0)
 
   '@deramond.dev/tokens@0.1.1': {}
+
+  '@deramond.dev/tokens@0.2.0': {}
 
   '@emmetio/abbreviation@2.3.3':
     dependencies:
