@@ -27,8 +27,8 @@ importers:
         specifier: workspace:^
         version: link:../../packages/core
       '@deramond.dev/astro':
-        specifier: ^0.6.1
-        version: 0.6.1(astro@7.3.4(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(yaml@2.9.1))
+        specifier: ^0.7.0
+        version: 0.7.0(astro@7.3.4(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(yaml@2.9.1))
       astro:
         specifier: ^7.3.4
         version: 7.3.4(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(yaml@2.9.1)
@@ -455,8 +455,8 @@ packages:
     resolution: {integrity: sha512-QxULHAm7cNu72w97JUNCBFODFaXpbDg+dP8b/oWFAZ2MTRppA3U00Y2L1HqaS4J6yBqxwa/Y3nMBaxVKbB/NsA==}
     engines: {node: '>=20.19.0'}
 
-  '@deramond.dev/astro@0.6.1':
-    resolution: {integrity: sha512-xE+oZVxO9e6DDVi9Tu+u0SOY/vx+GrQKlER74IN4btH4YamAO4Ue2kfg9Q8he90Kcs9cF0aF50ggQRWkHRFWrg==}
+  '@deramond.dev/astro@0.7.0':
+    resolution: {integrity: sha512-rPzTcjAXK0Kdtcy5XXZKogc5npacu9tBFSWuYhCQF4goPa3sZURvTcwd64zOMHYbbi4GQCalGqvfjgL25a6U/Q==}
     engines: {node: '>=22.12.0'}
     peerDependencies:
       astro: ^7.3.0
@@ -3496,7 +3496,7 @@ snapshots:
 
   '@csstools/css-tokenizer@4.0.0': {}
 
-  '@deramond.dev/astro@0.6.1(astro@7.3.4(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(yaml@2.9.1))':
+  '@deramond.dev/astro@0.7.0(astro@7.3.4(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(yaml@2.9.1))':
     dependencies:
       '@deramond.dev/tokens': 0.2.0
       '@fontsource/chakra-petch': 5.3.0
