@@ -14,10 +14,10 @@
     "@component-anatomy/astro": "workspace:^",
     "@component-anatomy/core": "workspace:^",
     "@deramond.dev/astro": "^0.7.1",
-    "astro": "^7.3.3"
+    "astro": "^7.3.4"
   },
   "devDependencies": {
     "@astrojs/check": "0.9.10",
-    "typescript": "7.0.2"
+    "typescript": "6.0.3"
   }
 }
