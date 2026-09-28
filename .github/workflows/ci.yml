@@ -41,6 +41,9 @@ jobs:
       - name: Build sandbox example
         run: pnpm --filter examples-sandbox build
 
+      - name: Typecheck Astro example
+        run: pnpm --filter examples-astro typecheck
+
       - name: Build Astro example
         run: pnpm --filter examples-astro build
 

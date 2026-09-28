@@ -1,10 +1,13 @@
 version: 2
 updates:
   - package-ecosystem: 'npm'
+    # examples/astro is listed separately below. Add new examples here explicitly.
     directories:
       - '/'
       - '/packages/*'
-      - '/examples/*'
+      - '/examples/plain-html'
+      - '/examples/sandbox'
+      - '/examples/storybook'
     schedule:
       interval: 'weekly'
       day: 'monday'
@@ -17,6 +20,26 @@ updates:
       github-actions:
         patterns:
           - '*'
+  - package-ecosystem: 'npm'
+    directory: '/examples/astro'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+      time: '05:00'
+      timezone: 'Europe/Paris'
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 20
+    groups:
+      github-actions:
+        patterns:
+          - '*'
+    ignore:
+      # `astro check` (@astrojs/check) needs the TypeScript programmatic API,
+      # which the native TypeScript 7 compiler doesn't ship yet.
+      # Track https://github.com/withastro/roadmap/discussions/1321
+      - dependency-name: 'typescript'
+        versions: ['>=7']
   - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:
