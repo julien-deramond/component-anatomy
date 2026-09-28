@@ -73,12 +73,12 @@
     "@component-anatomy/core": "workspace:^"
   },
   "devDependencies": {
-    "@storybook/addon-docs": "11.0.0-alpha.0",
+    "@storybook/addon-docs": "11.0.0-alpha.1",
     "@types/react": "^19.3.0",
     "esbuild": "^0.28.2",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
-    "storybook": "11.0.0-alpha.0",
+    "storybook": "11.0.0-alpha.1",
     "typescript": "^7.0.2"
   },
   "peerDependencies": {
