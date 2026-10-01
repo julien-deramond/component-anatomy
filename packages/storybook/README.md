@@ -5,7 +5,7 @@ Storybook addon that adds an **Anatomy** panel — an interactive part list sync
 - Hover a part in the panel → the element is highlighted in the canvas
 - Hover a `data-part` element in the canvas → the panel entry activates
 - The same table renders **inside MDX** via `@component-anatomy/storybook/blocks`
-- Works with **Storybook 10 and 11**, any renderer (React, Vue, HTML, Web Components…)
+- Works with **Storybook 10 and 11**, any renderer (React, Vue, HTML, Web Components…) — parts inside open shadow roots included
 
 ## Install
 
@@ -70,6 +70,7 @@ export const Anatomy: Story = {
       theme: { accent: '#0d9488' },   // theme tokens for the canvas overlays
       overlayLabel: true,             // floating name chip
       overlayPadding: 2,              // inflate highlight boxes (px)
+      shadowParts: false,             // also read native `part` attributes in shadow roots
       root: '.my-component',          // narrow the anatomy root (CSS selector)
       disable: false,                 // turn off for a story
     } satisfies AnatomyParameters,
@@ -78,6 +79,8 @@ export const Anatomy: Story = {
 ```
 
 Omit `parts` (pass `{}`) and the panel lists parts auto-discovered from `data-part` attributes, with names derived from the ids.
+
+Web components work as they are: parts are found inside open shadow roots, and the panel updates when a component renders them late (Lit, Stencil) or is defined late. Set `shadowParts: true` to read the anatomy a component already exposes for `::part()` (`part="track"`) instead of adding `data-part`. Closed shadow roots can't be reached.
 
 `preset` and `theme` reach the panel and the `<Anatomy>` block too, not just the canvas overlays: the active row is accented with the same color the overlay paints. Where that color would be illegible on Storybook's own panel — `contrast` is black, the manager is dark by default — the table falls back to the most colorful alternative that meets WCAG AA, so `contrast` accents with its yellow on a dark panel and with black on a light one.
 

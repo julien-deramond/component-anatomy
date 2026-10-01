@@ -19,15 +19,25 @@ function idToName(id: string): string {
 export function createController(options: AnatomyOptions): AnatomyController {
   const { root, panel } = options;
 
-  const registry = new AnatomyRegistry(root);
+  const registry = new AnatomyRegistry(root, { shadowParts: options.shadowParts });
   const overlay = new AnatomyOverlay(
     resolveThemeVars(options.preset, options.theme),
     options.overlay ?? {}
   );
 
   // Resolve part definitions: explicit or auto-discovered
-  let parts: AnatomyPartDefinition[] = options.parts ??
+  const discoverParts = (): AnatomyPartDefinition[] =>
     registry.partIds().map((id) => ({ id, name: idToName(id) }));
+
+  let parts: AnatomyPartDefinition[] = options.parts ?? discoverParts();
+
+  /** Re-runs auto-discovery; tells subscribers when the part list changed. */
+  function rediscoverParts() {
+    if (options.parts) return;
+    const previous = parts.map((p) => p.id).join('\n');
+    parts = discoverParts();
+    if (parts.map((p) => p.id).join('\n') !== previous) emit('parts:change', '');
+  }
 
   function findPart(partId: string): AnatomyPartDefinition {
     return parts.find((p) => p.id === partId) ?? { id: partId, name: idToName(partId) };
@@ -40,8 +50,10 @@ export function createController(options: AnatomyOptions): AnatomyController {
     listeners.get(event)?.forEach((fn) => fn(partId));
   }
 
-  // Cleanup registry
+  // Element and panel listeners — torn down and re-attached on every refresh
   const cleanupFns: Array<() => void> = [];
+  // The MutationObserver outlives refreshes
+  let stopObserving: (() => void) | null = null;
 
   function highlight(partId: string, source: 'preview' | 'panel' = 'panel') {
     const elements = registry.query().get(partId) ?? [];
@@ -97,6 +109,13 @@ export function createController(options: AnatomyOptions): AnatomyController {
         });
       });
     });
+
+    // `scroll` doesn't cross shadow boundaries, so the window listener below
+    // never hears a scroller inside a web component.
+    registry.shadowRoots().forEach((shadow) => {
+      shadow.addEventListener('scroll', onScroll, { passive: true, capture: true });
+      cleanupFns.push(() => shadow.removeEventListener('scroll', onScroll, { capture: true }));
+    });
   }
 
   function attachPanelListeners() {
@@ -134,25 +153,18 @@ export function createController(options: AnatomyOptions): AnatomyController {
     resizeObserver.observe(root);
 
     // Watch for dynamic DOM changes
-    const stopObserving = registry.observe(() => {
+    stopObserving = registry.observe(() => {
       teardownListeners();
       // Re-resolve auto-discovered parts if none were explicitly provided
-      if (!options.parts) {
-        parts = registry.partIds().map((id) => ({ id, name: idToName(id) }));
-      }
+      rediscoverParts();
       attachElementListeners();
       attachPanelListeners();
     });
-    cleanupFns.push(stopObserving);
   }
 
   function teardownListeners() {
-    // Run all registered cleanup functions except the MutationObserver (last one)
-    // We rebuild element/panel listeners on refresh but keep the observer running
-    const observerCleanup = cleanupFns.pop(); // MutationObserver cleanup is last
     cleanupFns.forEach((fn) => fn());
     cleanupFns.length = 0;
-    if (observerCleanup) cleanupFns.push(observerCleanup); // put it back
   }
 
   setup();
@@ -164,17 +176,16 @@ export function createController(options: AnatomyOptions): AnatomyController {
     refresh() {
       unhighlight();
       teardownListeners();
-      if (!options.parts) {
-        parts = registry.partIds().map((id) => ({ id, name: idToName(id) }));
-      }
+      rediscoverParts();
       attachElementListeners();
       attachPanelListeners();
     },
 
     destroy() {
       unhighlight();
-      cleanupFns.forEach((fn) => fn());
-      cleanupFns.length = 0;
+      teardownListeners();
+      stopObserving?.();
+      stopObserving = null;
       window.removeEventListener('scroll', onScroll, { capture: true });
       window.removeEventListener('resize', onResize);
       resizeObserver.disconnect();

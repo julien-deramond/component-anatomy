@@ -11,7 +11,7 @@ export const sidebar = [
   { label: 'Documentation', items: ['core', 'customization', 'astro', 'storybook', 'faq'] },
   {
     label: 'Demos',
-    items: [page('Button', 'button'), page('Slider', 'slider'), page('Theming', 'theming'), page('Shadcn-style', 'shadcn')],
+    items: [page('Button', 'button'), page('Slider', 'slider'), page('Theming', 'theming'), page('Shadcn-style', 'shadcn'), page('Web Component', 'web-component')],
   },
   {
     label: 'Bootstrap via CDN',

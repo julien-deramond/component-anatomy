@@ -17,6 +17,11 @@ export interface Props {
   theme?: AnatomyTheme;
   /** Show the floating name label chip over highlighted elements. Default: true. */
   overlayLabel?: boolean;
+  /**
+   * Also treat the native `part` attribute (CSS Shadow Parts) on elements inside
+   * a web component's open shadow root as a part id. Default: false.
+   */
+  shadowParts?: boolean;
 }
 
 const {
@@ -26,6 +31,7 @@ const {
   preset,
   theme,
   overlayLabel = true,
+  shadowParts = false,
 } = Astro.props;
 
 const instanceId = `ca-${Math.random().toString(36).slice(2, 9)}`;
@@ -38,7 +44,7 @@ const themeVars = resolveThemeVars(preset, theme);
 const themeStyle = Object.entries(themeVars)
   .map(([k, v]) => `${k}: ${v};`)
   .join(' ');
-const clientConfig = JSON.stringify({ preset, theme, overlayLabel });
+const clientConfig = JSON.stringify({ preset, theme, overlayLabel, shadowParts });
 
 const renderedParts = await Promise.all(
   (parts ?? []).map(async (part) => ({
@@ -351,6 +357,18 @@ const renderedParts = await Promise.all(
     return 'rgb(255, 255, 255)'; // nothing painted: the canvas default
   }
 
+  const FOCUSABLE = 'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])';
+
+  /** Takes `node`'s focusable elements out of the tab order, open shadow roots included. */
+  function removeFromTabOrder(node: ParentNode) {
+    node.querySelectorAll<HTMLElement>(FOCUSABLE).forEach((el) => {
+      el.setAttribute('tabindex', '-1');
+    });
+    node.querySelectorAll('*').forEach((el) => {
+      if (el.shadowRoot) removeFromTabOrder(el.shadowRoot);
+    });
+  }
+
   function init() {
     document.querySelectorAll<HTMLElement>('[data-anatomy-root]').forEach((root) => {
       if (root.dataset.anatomyInit) return;
@@ -369,12 +387,14 @@ const renderedParts = await Promise.all(
       // We use tabindex="-1" rather than `inert` because `inert` also blocks
       // pointer events, which would break our mouseenter/mouseleave detection.
       preview.setAttribute('aria-hidden', 'true');
-      const FOCUSABLE = 'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])';
-      preview.querySelectorAll<HTMLElement>(FOCUSABLE).forEach((el) => {
-        el.setAttribute('tabindex', '-1');
-      });
+      removeFromTabOrder(preview);
 
-      let config: { preset?: string; theme?: object; overlayLabel?: boolean } = {};
+      let config: {
+        preset?: string;
+        theme?: object;
+        overlayLabel?: boolean;
+        shadowParts?: boolean;
+      } = {};
       try {
         config = JSON.parse(root.dataset.anatomyConfig ?? '{}');
       } catch { /* malformed config — fall back to defaults */ }
@@ -387,8 +407,13 @@ const renderedParts = await Promise.all(
         panel: panel ?? undefined,
         preset,
         theme,
+        shadowParts: config.shadowParts === true,
         overlay: { label: config.overlayLabel !== false },
       });
+
+      // A web component may render its shadow root after this ran (Lit, Stencil),
+      // or be defined later. Its parts appearing is the signal it has rendered.
+      anatomy.on('parts:change', () => removeFromTabOrder(preview));
 
       // The panel's accent (active name, indicator, id chip, links): the preset's or
       // theme's color, made legible on the surface the panel really sits on. Presets

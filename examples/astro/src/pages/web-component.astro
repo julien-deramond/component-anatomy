@@ -1,0 +1,164 @@
+---
+import Demo from '../layouts/Demo.astro';
+import ComponentAnatomy from '@component-anatomy/astro/ComponentAnatomy.astro';
+import type { AnatomyPartDefinition } from '@component-anatomy/core';
+
+const fieldParts: AnatomyPartDefinition[] = [
+  {
+    id: 'root',
+    name: 'Root',
+    description: 'The `<demo-field>` host element, in the page\'s light DOM.',
+  },
+  {
+    id: 'label',
+    name: 'Label',
+    description: 'Inside the shadow root. Tied to the input with `for`, both in the same shadow tree.',
+  },
+  {
+    id: 'control',
+    name: 'Control',
+    description: 'Inside the shadow root. The bordered box holding the icon slot and the input.',
+  },
+  {
+    id: 'icon',
+    name: 'Icon',
+    description: 'A **slotted** child: it lives in the light DOM, next to the host, and renders through `<slot name="icon">`.',
+  },
+  {
+    id: 'input',
+    name: 'Input',
+    description: 'Inside the shadow root. The native `<input>`.',
+  },
+  {
+    id: 'hint',
+    name: 'Hint',
+    description: 'Inside the shadow root. Supporting text under the control.',
+  },
+];
+
+const switchParts: AnatomyPartDefinition[] = [
+  {
+    id: 'control',
+    name: 'Control',
+    description: 'The `<button role="switch">`, exposed as `part="control"`.',
+  },
+  {
+    id: 'track',
+    name: 'Track',
+    description: 'Exposed as `part="track"` — what `demo-switch::part(track)` styles from outside.',
+  },
+  {
+    id: 'thumb',
+    name: 'Thumb',
+    description: 'Exposed as `part="thumb"`. No `data-part` anywhere: `shadowParts` reads the native names.',
+  },
+  {
+    id: 'label',
+    name: 'Label',
+    description: 'Exposed as `part="label"`, wrapping the default slot.',
+  },
+];
+---
+
+<Demo title="Web Component">
+  <Fragment slot="lead">
+    Two vanilla custom elements with open shadow roots. Their parts live inside the shadow tree,
+    and they render after the page loaded — the anatomy finds them anyway.
+  </Fragment>
+
+  <div class="section">
+    <p class="section-label">data-part inside a shadow root</p>
+    <ComponentAnatomy parts={fieldParts}>
+      <demo-field data-part="root">
+        <span slot="icon" data-part="icon" aria-hidden="true">✉</span>
+      </demo-field>
+    </ComponentAnatomy>
+  </div>
+
+  <div class="section">
+    <p class="section-label">Native part attributes, with shadowParts</p>
+    <ComponentAnatomy parts={switchParts} shadowParts>
+      <demo-switch>Notifications</demo-switch>
+    </ComponentAnatomy>
+  </div>
+</Demo>
+
+<script>
+  /**
+   * Like Lit or Stencil, both components attach their shadow root when created and render into
+   * it asynchronously, once connected.
+   */
+  abstract class AsyncElement extends HTMLElement {
+    constructor() {
+      super();
+      this.attachShadow({ mode: 'open' });
+    }
+
+    connectedCallback() {
+      Promise.resolve().then(() => {
+        if (!this.shadowRoot!.hasChildNodes()) this.shadowRoot!.innerHTML = this.template();
+      });
+    }
+
+    abstract template(): string;
+  }
+
+  customElements.define('demo-field', class extends AsyncElement {
+    template() {
+      return `
+        <style>
+          :host { display: grid; gap: 0.375rem; width: 16rem; font: 0.875rem/1.4 system-ui, sans-serif; color: var(--color-fg, #18181b); }
+          label { font-weight: 600; }
+          .control {
+            display: flex; align-items: center; gap: 0.5rem; padding: 0 0.625rem;
+            border: 1px solid var(--color-line, #d4d4d8); border-radius: 0.375rem;
+            background: var(--color-panel, #fff);
+          }
+          input { flex: 1; min-width: 0; padding: 0.5rem 0; border: 0; background: none; font: inherit; color: inherit; outline: none; }
+          p { margin: 0; font-size: 0.75rem; color: var(--color-muted, #71717a); }
+        </style>
+        <label data-part="label" for="email">Email</label>
+        <div class="control" data-part="control">
+          <slot name="icon"></slot>
+          <input id="email" type="email" data-part="input" placeholder="you@example.com">
+        </div>
+        <p data-part="hint">We'll never share it.</p>
+      `;
+    }
+  });
+
+  customElements.define('demo-switch', class extends AsyncElement {
+    template() {
+      return `
+        <style>
+          button {
+            display: inline-flex; align-items: center; gap: 0.625rem; padding: 0.25rem;
+            border: 0; background: none; font: 0.875rem/1.4 system-ui, sans-serif; color: var(--color-fg, #18181b); cursor: pointer;
+          }
+          [part="track"] {
+            position: relative; width: 2.25rem; height: 1.25rem; border-radius: 999px;
+            background: var(--color-line, #d4d4d8); transition: background 120ms ease;
+          }
+          [part="thumb"] {
+            position: absolute; top: 0.125rem; left: 0.125rem; width: 1rem; height: 1rem; border-radius: 50%;
+            background: #fff; box-shadow: 0 1px 2px rgb(0 0 0 / 0.3); transition: transform 120ms ease;
+          }
+          [aria-checked="true"] [part="track"] { background: var(--color-primary, #4f46e5); }
+          [aria-checked="true"] [part="thumb"] { transform: translateX(1rem); }
+        </style>
+        <button part="control" role="switch" aria-checked="true">
+          <span part="track"><span part="thumb"></span></span>
+          <span part="label"><slot></slot></span>
+        </button>
+      `;
+    }
+
+    constructor() {
+      super();
+      this.shadowRoot!.addEventListener('click', () => {
+        const button = this.shadowRoot!.querySelector('button')!;
+        button.setAttribute('aria-checked', String(button.getAttribute('aria-checked') !== 'true'));
+      });
+    }
+  });
+</script>

@@ -46,6 +46,7 @@ const parts = [
 | `preset` | `'default' \| 'minimal' \| 'contrast' \| 'blueprint'` | No | Visual preset for overlays and panel accent. |
 | `theme` | `AnatomyTheme` | No | Theme token overrides, e.g. `{ accent: '#0d9488', overlayRadius: 8 }`. |
 | `overlayLabel` | `boolean` | No | Show the floating name chip. Default `true`. |
+| `shadowParts` | `boolean` | No | Also read the native `part` attribute inside web components' shadow roots. Default `false`. |
 | `label` | `string` | No | Accessible label of the block. Default "Component anatomy". |
 | `class` | `string` | No | Extra class on the wrapper. |
 

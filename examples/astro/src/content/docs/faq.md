@@ -24,7 +24,7 @@ next:
 - If you rebuilt the panel DOM after `createAnatomy()`, call `controller.refresh()` to re-bind listeners.
 ### Dynamic content isn't picked up
 
-Added/removed `data-part` elements are detected automatically via MutationObserver. Attribute-only changes (changing a `data-part` value in place) are not — call `controller.refresh()`.
+Added/removed `data-part` elements are detected automatically via MutationObserver, inside open shadow roots too. Attribute-only changes (changing a `data-part` or `part` value in place) are not — call `controller.refresh()`. Same for a shadow root attached long after its element was defined, which no observer can see.
 
 ### Storybook panel says "No anatomy configured"
 
@@ -62,11 +62,15 @@ Overlays are `aria-hidden="true"` and ignore pointer events. The core adds no ta
 
 ### What's the bundle cost?
 
-Core is dependency-free, ~4&nbsp;kB min+gzip. The Astro panel renders server-side; the Storybook decorator only loads in Storybook.
+Core is dependency-free, ~4.5&nbsp;kB min+gzip. The Astro panel renders server-side; the Storybook decorator only loads in Storybook.
 
 ### Is `data-anatomy` supported instead of `data-part`?
 
 The attribute is `data-part`, aligning with design-system conventions (Zag.js, Ark UI, Radix internals) so annotations can double as styling/testing hooks.
+
+### Does it work with Web Components?
+
+Yes, with open shadow roots — the default for Lit, Stencil, Shoelace / Web Awesome and most libraries. `data-part` is found on the host, on slotted children and inside the shadow tree, and components that render late are picked up. Set `shadowParts: true` to use the native `part="…"` names instead. Closed shadow roots can't be read from outside the component. See [Web Components](../core/#web-components).
 
 ### Can I use it in React / Vue / Svelte?
 

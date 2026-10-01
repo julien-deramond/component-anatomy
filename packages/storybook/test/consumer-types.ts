@@ -18,6 +18,7 @@ const parameters: AnatomyParameters = {
   theme: { accent: '#0d9488' },
   overlayLabel: true,
   overlayPadding: 2,
+  shadowParts: true,
   root: '.my-component',
   disable: false,
 };

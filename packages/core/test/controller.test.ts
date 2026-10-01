@@ -233,6 +233,32 @@ describe('createController', () => {
     c.destroy();
   });
 
+  it('keeps watching the DOM across successive updates and refreshes', async () => {
+    const { root, panel } = mountSlider();
+    const c = createController({ root, panel });
+    const slider = root.querySelector('.slider')!;
+    const add = async (id: string) => {
+      const el = document.createElement('div');
+      el.dataset.part = id;
+      slider.appendChild(el);
+      await new Promise((r) => setTimeout(r, 0));
+    };
+
+    await add('one');
+    c.refresh();
+    await add('two');
+    await add('three');
+    expect(c.getParts().map((p) => p.id)).toEqual(
+      expect.arrayContaining(['one', 'two', 'three'])
+    );
+
+    // Panel listeners were not dropped along the way
+    panel.querySelector('[data-anatomy-item="mark"]')!.dispatchEvent(new Event('mouseenter'));
+    await raf();
+    expect(overlays()).toHaveLength(2);
+    c.destroy();
+  });
+
   it('supports multiple independent controllers on one page', async () => {
     document.body.innerHTML = `
       <div id="a"><div data-part="x"></div></div>

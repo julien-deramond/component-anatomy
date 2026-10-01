@@ -60,6 +60,7 @@ const anatomy = createAnatomy({
 | `root` | `HTMLElement` | Yes | The component preview container |
 | `panel` | `HTMLElement` | No | The documentation panel container |
 | `parts` | `AnatomyPartDefinition[]` | No | Part definitions (auto-discovered from DOM if omitted) |
+| `shadowParts` | `boolean` | No | Also read the native `part` attribute inside shadow roots. Default `false` |
 | `preset` | `'default' \| 'minimal' \| 'contrast' \| 'blueprint'` | No | Named visual preset |
 | `theme` | `AnatomyTheme` | No | Theme token overrides, e.g. `{ accent: '#0d9488' }` |
 | `overlay` | `OverlayOptions` | No | Overlay hooks: `label`, `padding`, `className`, `renderLabel`, `decorateOverlay` |
@@ -115,7 +116,23 @@ type AnatomyPartDefinition = {
 ```ts
 anatomy.on('part:enter', (partId) => console.log('hovered:', partId));
 anatomy.on('part:leave', (partId) => console.log('left:', partId));
+anatomy.on('parts:change', () => console.log('found:', anatomy.getParts()));
 ```
+
+`parts:change` fires when auto-discovery finds a different set of parts after the DOM changed — a web component rendering late, for example. It never fires when you pass `parts`.
+
+### Web Components
+
+Parts are found in open shadow roots too: put `data-part` on the host, on slotted children, or on elements inside the shadow tree. Shadow roots rendered after `createAnatomy()` — Lit and Stencil render asynchronously, autoloaders define elements late — are picked up automatically.
+
+Components that already expose their anatomy with the native `part` attribute (what `::part()` styles) can use it as is:
+
+```js
+createAnatomy({ root, shadowParts: true });
+// <my-slider> ⟶ #shadow-root ⟶ <div part="track">, <div part="thumb">
+```
+
+Closed shadow roots (`mode: 'closed'`) cannot be reached from outside the component and stay unsupported.
 
 ## CSS custom properties
 

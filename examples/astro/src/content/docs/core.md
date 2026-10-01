@@ -74,6 +74,7 @@ createAnatomy({
   root,                       // HTMLElement — required
   panel,                      // HTMLElement — optional
   parts,                      // AnatomyPartDefinition[] — optional (auto-discovered)
+  shadowParts: false,         // also read native `part` attributes in shadow roots
   preset: 'minimal',          // 'default' | 'minimal' | 'contrast' | 'blueprint'
   theme: { accent: '#0d9488' },
   overlay: {
@@ -93,12 +94,44 @@ See [Rendering customization](../customization/) for the full theming guide.
 ```js
 const off = controller.on('part:enter', (partId) => console.log('active:', partId));
 controller.on('part:leave', () => console.log('inactive'));
+controller.on('parts:change', () => console.log('found:', controller.getParts()));
 off(); // unsubscribe
 ```
 
+`parts:change` fires when auto-discovery finds a different set of parts after the DOM changed — a web component rendering late, for example. It never fires when you pass `parts`.
+
+## Web Components
+
+Parts are found inside open shadow roots too. Put `data-part` wherever the element lives: on the host, on a slotted child, or inside the shadow tree.
+
+```js
+class MySlider extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' }).innerHTML = `
+      <div data-part="track"><div data-part="range"></div></div>
+      <div data-part="thumb"></div>`;
+  }
+}
+customElements.define('my-slider', MySlider);
+
+createAnatomy({ root: document.querySelector('#preview') }); // track, range, thumb
+```
+
+Shadow roots rendered after `createAnatomy()` are picked up: Lit and Stencil render asynchronously, and autoloaders define elements only once they are on the page. With auto-discovery, listen to `parts:change` to know when they appeared.
+
+Many web components already name their anatomy with the native `part` attribute, the one `::part()` styles. Read it instead of adding `data-part`:
+
+```js
+createAnatomy({ root, shadowParts: true });
+// <div part="thumb focused"> is both the `thumb` and the `focused` part
+```
+
+`part` is only read inside shadow trees, where it has a meaning. Elements in a **closed** shadow root (`mode: 'closed'`) cannot be reached from outside the component: annotate the host or its slotted children instead.
+
 ## Behavior notes
 
-- Dynamic DOM: a `MutationObserver` re-binds listeners when `data-part` elements are added/removed. Call `refresh()` after replacing the panel markup.
+- Dynamic DOM: a `MutationObserver` — on the root and on every open shadow root inside it — re-binds listeners when `data-part` elements or web components are added/removed. Call `refresh()` after replacing the panel markup.
 - Multiple instances per page are fully independent — part ids only need to be unique within one root.
 - Nested parts work: hovering a child highlights the child, not the parent.
 - Overlays are `aria-hidden` and `pointer-events: none`; keyboard access goes through the panel entries.
