@@ -24,7 +24,7 @@ next:
 - If you rebuilt the panel DOM after `createAnatomy()`, call `controller.refresh()` to re-bind listeners.
 ### Dynamic content isn't picked up
 
-Added/removed `data-part` elements are detected automatically via MutationObserver, inside open shadow roots too. Attribute-only changes (changing a `data-part` or `part` value in place) are not — call `controller.refresh()`. Same for a shadow root attached long after its element was defined, which no observer can see.
+Added/removed `data-part` elements, and `data-part` (or, with `shadowParts`, `part`) values changed in place, are detected automatically via MutationObserver, inside open shadow roots too. A shadow root attached long after its element was defined is not — no observer can see it — so call `controller.refresh()` then.
 
 ### Storybook panel says "No anatomy configured"
 

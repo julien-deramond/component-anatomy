@@ -15,6 +15,18 @@ type Scan = {
 const isCustomElement = (el: Element) => el.localName.includes('-');
 
 /**
+ * What the registry watches on the root and on every shadow root: elements
+ * added or removed, and part names changed in place — Lit and similar
+ * libraries bind attributes, e.g. `part=${selected ? 'tab selected' : 'tab'}`.
+ */
+const OBSERVE_OPTIONS: MutationObserverInit = {
+  childList: true,
+  subtree: true,
+  attributes: true,
+  attributeFilter: ['data-part', 'part'],
+};
+
+/**
  * AnatomyRegistry — discovers and tracks [data-part] elements within a root.
  * Intentionally stateless between calls: query() always reads the live DOM.
  *
@@ -73,7 +85,8 @@ export class AnatomyRegistry {
   /**
    * Watches the root — and every open shadow root inside it — for DOM
    * mutations, and calls the callback when part elements or web components
-   * are added or removed. Returns a cleanup function.
+   * are added or removed, or when a part name changes. Returns a cleanup
+   * function.
    */
   observe(callback: () => void): () => void {
     this.destroy();
@@ -81,14 +94,16 @@ export class AnatomyRegistry {
 
     this.observer = new MutationObserver((mutations) => {
       const relevant = mutations.some((m) =>
-        Array.from(m.addedNodes).concat(Array.from(m.removedNodes)).some(
-          (n) => n instanceof Element && this.mayHoldParts(n)
-        )
+        m.type === 'attributes'
+          ? m.attributeName === 'data-part' || this.shadowParts
+          : Array.from(m.addedNodes).concat(Array.from(m.removedNodes)).some(
+              (n) => n instanceof Element && this.mayHoldParts(n)
+            )
       );
       if (relevant) this.changed();
     });
 
-    this.observer.observe(this.root, { childList: true, subtree: true });
+    this.observer.observe(this.root, OBSERVE_OPTIONS);
     this.scan(); // observes the shadow roots already rendered
 
     return () => this.destroy();
@@ -183,7 +198,7 @@ export class AnatomyRegistry {
     shadowRoots.forEach((shadow) => {
       if (this.observed.has(shadow)) return;
       this.observed.add(shadow);
-      this.observer!.observe(shadow, { childList: true, subtree: true });
+      this.observer!.observe(shadow, OBSERVE_OPTIONS);
     });
 
     // Defining a custom element upgrades it in place: it attaches its shadow

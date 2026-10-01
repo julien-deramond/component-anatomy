@@ -131,7 +131,7 @@ createAnatomy({ root, shadowParts: true });
 
 ## Behavior notes
 
-- Dynamic DOM: a `MutationObserver` — on the root and on every open shadow root inside it — re-binds listeners when `data-part` elements or web components are added/removed. Call `refresh()` after replacing the panel markup.
+- Dynamic DOM: a `MutationObserver` — on the root and on every open shadow root inside it — re-binds listeners when `data-part` elements or web components are added/removed, or a part name changes in place. Call `refresh()` after replacing the panel markup.
 - Multiple instances per page are fully independent — part ids only need to be unique within one root.
 - Nested parts work: hovering a child highlights the child, not the parent.
 - Overlays are `aria-hidden` and `pointer-events: none`; keyboard access goes through the panel entries.

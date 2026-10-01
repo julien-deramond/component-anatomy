@@ -190,6 +190,40 @@ describe('AnatomyRegistry — shadow DOM', () => {
       registry.destroy();
     });
 
+    it('notices part names changed in place, in the light DOM and in shadow roots', async () => {
+      const root = mount(`<i data-part="a"></i><x-tabs></x-tabs>`);
+      const tabs = shadow(root.querySelector('x-tabs')!, `<b part="tab"></b>`);
+      const registry = new AnatomyRegistry(root, { shadowParts: true });
+      const callback = vi.fn();
+      registry.observe(callback);
+
+      root.querySelector('i')!.setAttribute('data-part', 'renamed');
+      await tick();
+      expect(callback).toHaveBeenCalledTimes(1);
+
+      // What a Lit binding like part=${selected ? 'tab selected' : 'tab'} does
+      tabs.querySelector('b')!.setAttribute('part', 'tab selected');
+      await tick();
+      expect(callback).toHaveBeenCalledTimes(2);
+      expect(registry.partIds()).toEqual(['renamed', 'tab', 'selected']);
+      registry.destroy();
+    });
+
+    it('ignores other attributes, and part changes without shadowParts', async () => {
+      const root = mount(`<i data-part="a"></i><x-tabs></x-tabs>`);
+      const tabs = shadow(root.querySelector('x-tabs')!, `<b part="tab"></b>`);
+      const registry = new AnatomyRegistry(root);
+      const callback = vi.fn();
+      registry.observe(callback);
+
+      root.querySelector('i')!.className = 'active';
+      tabs.querySelector('b')!.setAttribute('part', 'tab selected');
+      tabs.querySelector('b')!.setAttribute('aria-selected', 'true');
+      await tick();
+      expect(callback).not.toHaveBeenCalled();
+      registry.destroy();
+    });
+
     it('stays quiet once destroyed', async () => {
       const tag = `x-lazy-${++tagCount}`;
       const root = mount(`<${tag}></${tag}>`);
@@ -275,6 +309,24 @@ describe('createController — shadow DOM', () => {
 
     auto.destroy();
     explicit.destroy();
+  });
+
+  it('highlights a part renamed in place under its new name', async () => {
+    const root = mount(`<x-tab></x-tab>`);
+    const tab = shadow(root.firstElementChild!, `<b part="tab"></b>`);
+    const c = createController({ root, shadowParts: true });
+    const onChange = vi.fn();
+    c.on('parts:change', onChange);
+
+    tab.querySelector('b')!.setAttribute('part', 'tab selected');
+    await tick();
+    expect(onChange).toHaveBeenCalledTimes(1);
+    expect(c.getParts().map((p) => p.id)).toEqual(['tab', 'selected']);
+
+    c.highlight('selected');
+    await raf();
+    expect(overlays()).toHaveLength(1);
+    c.destroy();
   });
 
   it('honors shadowParts', () => {

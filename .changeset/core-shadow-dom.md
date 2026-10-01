@@ -6,6 +6,8 @@ Web Components support ([#46](https://github.com/julien-deramond/component-anato
 
 Web components that render after `createAnatomy()` are picked up too. That covers Lit and Stencil, which render asynchronously, and autoloaders that define elements once they are on the page. The registry watches every open shadow root it finds, and waits on `customElements.whenDefined()` for elements that are not defined yet. A `scroll` inside a shadow root now repositions the overlays as well.
 
+Part names changed in place are now detected too, in the light DOM as in shadow roots. Until now, changing a `data-part` value on an existing element needed a `refresh()`. Libraries like Lit bind attributes, as in `part=${selected ? 'tab selected' : 'tab'}`, so this comes up with web components often.
+
 ```js
 createAnatomy({ root, shadowParts: true });
 // <my-slider> ⟶ #shadow-root ⟶ <div part="track">, <div part="thumb">
