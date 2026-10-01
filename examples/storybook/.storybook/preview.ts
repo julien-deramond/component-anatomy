@@ -1,11 +1,14 @@
-import type { Preview } from '@storybook/web-components-vite';
+import type { Preview } from '@storybook/html-vite';
 import '../src/components.css';
 
 /*
- * A plain `Preview` object rather than CSF Next's `definePreview({ addons })`,
- * on purpose: with a classic preview, Storybook composes the addon's
- * annotations from the `addons` list in `main.ts`, which is what registers the
- * anatomy decorator here — the path most projects take.
+ * Still a plain `Preview` object rather than CSF Next's `definePreview({ addons })`:
+ * as of storybook@11.0.0-alpha.0, `definePreview` and the `preview.meta()` /
+ * `meta.story()` factories ship from the framework package, and
+ * `@storybook/html`/`@storybook/html-vite` do not export them — only the
+ * React, Vue, Svelte and Next.js frameworks do. With a classic preview,
+ * Storybook composes the addon's annotations from the `addons` list in
+ * `main.ts`, which is what registers the anatomy decorator here.
  *
  * A CSF Next consumer registers it in `preview.ts` instead:
  *

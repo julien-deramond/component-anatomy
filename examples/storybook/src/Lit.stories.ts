@@ -1,13 +1,11 @@
-import { html } from 'lit';
-import type { Meta, StoryObj } from '@storybook/web-components-vite';
+import type { Meta, StoryObj } from '@storybook/html-vite';
 import type { AnatomyParameters } from '@component-anatomy/storybook';
 
 import './lit-components.js';
 
 /**
- * Real Lit components, rendered through the web-components renderer from a
- * Lit template. Lit renders into an open shadow root asynchronously, after
- * the story mounted.
+ * Real Lit components, mounted as plain HTML. Lit renders into an open shadow
+ * root asynchronously, after the story mounted.
  */
 const meta: Meta = {
   title: 'Web Components/Lit',
@@ -18,7 +16,7 @@ type Story = StoryObj;
 
 /** A Lit component of your own, annotated with `data-part` inside its template. */
 export const DataPart: Story = {
-  render: () => html`<sb-lit-rating value="3"></sb-lit-rating>`,
+  render: () => '<sb-lit-rating value="3"></sb-lit-rating>',
   parameters: {
     anatomy: {
       parts: [
@@ -39,7 +37,7 @@ export const DataPart: Story = {
  * element with several names highlights the first one listed in `parts`.
  */
 export const ShadowParts: Story = {
-  render: () => html`<sb-lit-tabs></sb-lit-tabs>`,
+  render: () => '<sb-lit-tabs></sb-lit-tabs>',
   parameters: {
     anatomy: {
       shadowParts: true,

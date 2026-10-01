@@ -1,5 +1,4 @@
-import { html } from 'lit';
-import type { Meta, StoryObj } from '@storybook/web-components-vite';
+import type { Meta, StoryObj } from '@storybook/html-vite';
 import type { AnatomyParameters } from '@component-anatomy/storybook';
 
 import { defineCustomElements } from '@ionic/core/loader';
@@ -22,7 +21,7 @@ export default meta;
 type Story = StoryObj;
 
 export const Toggle: Story = {
-  render: () => html`<ion-toggle checked>Notifications</ion-toggle>`,
+  render: () => '<ion-toggle checked>Notifications</ion-toggle>',
   parameters: {
     anatomy: {
       shadowParts: true,

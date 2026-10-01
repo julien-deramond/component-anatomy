@@ -1,5 +1,4 @@
-import { html } from 'lit';
-import type { Meta, StoryObj } from '@storybook/web-components-vite';
+import type { Meta, StoryObj } from '@storybook/html-vite';
 import type { AnatomyParameters } from '@component-anatomy/storybook';
 
 import '@shoelace-style/shoelace/dist/themes/light.css';
@@ -17,7 +16,7 @@ export default meta;
 type Story = StoryObj;
 
 export const Switch: Story = {
-  render: () => html`<sl-switch checked>Notifications</sl-switch>`,
+  render: () => '<sl-switch checked>Notifications</sl-switch>',
   parameters: {
     anatomy: {
       shadowParts: true,

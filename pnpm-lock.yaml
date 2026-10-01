@@ -73,9 +73,9 @@ importers:
       '@storybook/addon-docs':
         specifier: 11.0.0-alpha.1
         version: 11.0.0-alpha.1(@types/react@19.3.0)(storybook@11.0.0-alpha.1(@types/react@19.3.0)(prettier@3.9.9)(react@19.3.0))
-      '@storybook/web-components-vite':
+      '@storybook/html-vite':
         specifier: 11.0.0-alpha.1
-        version: 11.0.0-alpha.1(lit@3.3.3)(storybook@11.0.0-alpha.1(@types/react@19.3.0)(prettier@3.9.9)(react@19.3.0))(vite@8.3.0(esbuild@0.28.2)(yaml@2.9.1))
+        version: 11.0.0-alpha.1(storybook@11.0.0-alpha.1(@types/react@19.3.0)(prettier@3.9.9)(react@19.3.0))(vite@8.3.0(esbuild@0.28.2)(yaml@2.9.1))
       lit:
         specifier: ^3.3.3
         version: 3.3.3
@@ -1555,6 +1555,17 @@ packages:
   '@storybook/global@5.0.0':
     resolution: {integrity: sha512-FcOqPAXACP0I3oJ/ws6/rrPT9WGhu915Cg8D02a9YxLo0DE9zI+a9A5gRGvmQ09fiWPukqI8ZAEoQEdWUKMQdQ==}
 
+  '@storybook/html-vite@11.0.0-alpha.1':
+    resolution: {integrity: sha512-RUWNgSS8geywMTbVPO3RtuQvQM4nQCqafNGrEZifyRirhguy1wvXSq1BLKR6lkRznAcmFipIbrxGF6p27/yEug==}
+    peerDependencies:
+      storybook: ^11.0.0-alpha.1
+      vite: ^6.3.0 || ^7.0.0 || ^8.0.0
+
+  '@storybook/html@11.0.0-alpha.1':
+    resolution: {integrity: sha512-0+mTsuy0a1CZr2ANgr/A95WYEcdOoA8VixZw01SYpsVkuQRnqM/KluwnqP3gn3OV4utRuOORYvX0KFcG7o9Lkg==}
+    peerDependencies:
+      storybook: ^11.0.0-alpha.1
+
   '@storybook/icons@2.1.0':
     resolution: {integrity: sha512-Fxh9vYpX9bQqFeHRiY8h2ApeRGDzRSMLwJwNZ/AIRqnyOKHxRKL+yFe+ctEkVJmuptRE9u1Hrn8ZZNHyfDKKNg==}
     peerDependencies:
@@ -1573,18 +1584,6 @@ packages:
         optional: true
       '@types/react-dom':
         optional: true
-
-  '@storybook/web-components-vite@11.0.0-alpha.1':
-    resolution: {integrity: sha512-IU1H6zM6f2o0GN/di5SvWAsn48w1iKEcRXkDvvq78W9AthVEh6IeAHd76RVpcAeehKmuIJsVHkF2ATy5uUgINw==}
-    peerDependencies:
-      storybook: ^11.0.0-alpha.1
-      vite: ^6.3.0 || ^7.0.0 || ^8.0.0
-
-  '@storybook/web-components@11.0.0-alpha.1':
-    resolution: {integrity: sha512-kolFjLrjHOm7dZ42GFvt7m3ZSWkZI8QDuRmW5pwyNh5ovtQ/9jvrA3p0V2LBZKUPeD1+VY8JByMQNk9RW+DL7w==}
-    peerDependencies:
-      lit: ^2.0.0 || ^3.0.0
-      storybook: ^11.0.0-alpha.1
 
   '@testing-library/dom@10.4.2':
     resolution: {integrity: sha512-yzr2S9HyAIdhz2/6qHgbs665Q7PKVcDF05vsOlHPxG1mo36gKVesdYVeDLnXgfjJ03CrKRk08knc6+E/9m8v2Q==}
@@ -4531,6 +4530,19 @@ snapshots:
 
   '@storybook/global@5.0.0': {}
 
+  '@storybook/html-vite@11.0.0-alpha.1(storybook@11.0.0-alpha.1(@types/react@19.3.0)(prettier@3.9.9)(react@19.3.0))(vite@8.3.0(esbuild@0.28.2)(yaml@2.9.1))':
+    dependencies:
+      '@storybook/builder-vite': 11.0.0-alpha.1(storybook@11.0.0-alpha.1(@types/react@19.3.0)(prettier@3.9.9)(react@19.3.0))(vite@8.3.0(esbuild@0.28.2)(yaml@2.9.1))
+      '@storybook/html': 11.0.0-alpha.1(storybook@11.0.0-alpha.1(@types/react@19.3.0)(prettier@3.9.9)(react@19.3.0))
+      storybook: 11.0.0-alpha.1(@types/react@19.3.0)(prettier@3.9.9)(react@19.3.0)
+      vite: 8.3.0(esbuild@0.28.2)(yaml@2.9.1)
+
+  '@storybook/html@11.0.0-alpha.1(storybook@11.0.0-alpha.1(@types/react@19.3.0)(prettier@3.9.9)(react@19.3.0))':
+    dependencies:
+      '@storybook/global': 5.0.0
+      storybook: 11.0.0-alpha.1(@types/react@19.3.0)(prettier@3.9.9)(react@19.3.0)
+      ts-dedent: 2.3.0
+
   '@storybook/icons@2.1.0(react@19.3.0)':
     dependencies:
       react: 19.3.0
@@ -4542,23 +4554,6 @@ snapshots:
       storybook: 11.0.0-alpha.1(@types/react@19.3.0)(prettier@3.9.9)(react@19.3.0)
     optionalDependencies:
       '@types/react': 19.3.0
-
-  '@storybook/web-components-vite@11.0.0-alpha.1(lit@3.3.3)(storybook@11.0.0-alpha.1(@types/react@19.3.0)(prettier@3.9.9)(react@19.3.0))(vite@8.3.0(esbuild@0.28.2)(yaml@2.9.1))':
-    dependencies:
-      '@storybook/builder-vite': 11.0.0-alpha.1(storybook@11.0.0-alpha.1(@types/react@19.3.0)(prettier@3.9.9)(react@19.3.0))(vite@8.3.0(esbuild@0.28.2)(yaml@2.9.1))
-      '@storybook/web-components': 11.0.0-alpha.1(lit@3.3.3)(storybook@11.0.0-alpha.1(@types/react@19.3.0)(prettier@3.9.9)(react@19.3.0))
-      storybook: 11.0.0-alpha.1(@types/react@19.3.0)(prettier@3.9.9)(react@19.3.0)
-      vite: 8.3.0(esbuild@0.28.2)(yaml@2.9.1)
-    transitivePeerDependencies:
-      - lit
-
-  '@storybook/web-components@11.0.0-alpha.1(lit@3.3.3)(storybook@11.0.0-alpha.1(@types/react@19.3.0)(prettier@3.9.9)(react@19.3.0))':
-    dependencies:
-      '@storybook/global': 5.0.0
-      lit: 3.3.3
-      storybook: 11.0.0-alpha.1(@types/react@19.3.0)(prettier@3.9.9)(react@19.3.0)
-      tiny-invariant: 1.3.3
-      ts-dedent: 2.3.0
 
   '@testing-library/dom@10.4.2':
     dependencies:

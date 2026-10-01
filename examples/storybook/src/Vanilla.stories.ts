@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/web-components-vite';
+import type { Meta, StoryObj } from '@storybook/html-vite';
 import type { AnatomyParameters } from '@component-anatomy/storybook';
 
 import { defineStepper } from './web-components.js';
