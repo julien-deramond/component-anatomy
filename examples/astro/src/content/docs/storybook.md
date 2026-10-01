@@ -7,7 +7,7 @@ description: "@component-anatomy/storybook — an \"Anatomy\" panel next to Cont
 
 ## Compatibility
 
-Storybook **10 and 11**, any renderer (React, Vue, HTML, Web Components…). The canvas side is framework-agnostic — it only reads the rendered DOM.
+Storybook **10 and 11**, any renderer (React, Vue, HTML, Web Components…). The canvas side is framework-agnostic — it only reads the rendered DOM, open shadow roots included (see [Web Components](../core/#web-components)).
 
 The package is ESM-only, like Storybook itself. Storybook 9 is no longer supported — CSF Next registration needs `definePreviewAddon`, which Storybook only ships from 9.1 onwards.
 
@@ -71,6 +71,7 @@ Hover a part in the panel → the canvas element is highlighted. Hover the eleme
 | `theme` | `AnatomyTheme` | Token overrides for the overlays and the panel accent, e.g. `{ accent: "#0d9488" }`. |
 | `overlayLabel` | `boolean` | Show the floating name chip. Default true. |
 | `overlayPadding` | `number` | Inflate highlight boxes by N px. |
+| `shadowParts` | `boolean` | Also read the native `part` attribute inside web components' shadow roots. Default false. |
 | `root` | `string` | CSS selector narrowing the anatomy root inside the canvas. |
 | `disable` | `boolean` | Turn the addon off for a story. |
 
@@ -126,4 +127,4 @@ Auto-discovery reads the story as it renders, so a block relying on it needs a c
 
 ## Live examples
 
-The [deployed Storybook](../../storybook/) shows Button (default + blueprint theme), Slider (accent theme) and Tabs (auto-discovery, high-contrast preset, and that preset combined with a brand accent), plus an *Edge cases* group covering the states where there is nothing to show — no parts, disabled, unconfigured — and two MDX pages, *Docs → Anatomy in MDX* and the Button docs page, using the `<Anatomy>` block. Sources live in `examples/storybook` in the repo.
+The [deployed Storybook](../../storybook/) shows Button (default + blueprint theme), Slider (accent theme) and Tabs (auto-discovery, high-contrast preset, and that preset combined with a brand accent); a *Web Components* group with vanilla custom elements, Lit components, Shoelace's switch and Ionic's toggle (built with Stencil, lazy-loaded); plus an *Edge cases* group covering the states where there is nothing to show — no parts, disabled, unconfigured, a closed shadow root — and a component defined late, and two MDX pages, *Docs → Anatomy in MDX* and the Button docs page, using the `<Anatomy>` block. Sources live in `examples/storybook` in the repo.

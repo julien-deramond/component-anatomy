@@ -36,6 +36,7 @@ Your component just needs `data-part` attributes on the elements to document. Ev
 | `preset` | `'default' \| 'minimal' \| 'contrast' \| 'blueprint'` | `'default'` | Visual preset for overlays and panel accent. |
 | `theme` | `AnatomyTheme` | — | Token overrides, e.g. `{ accent: "#0d9488" }`. |
 | `overlayLabel` | `boolean` | `true` | Show the floating name chip. |
+| `shadowParts` | `boolean` | `false` | Also read the native `part` attribute inside web components' shadow roots. See [Web Components](../core/#web-components). |
 | `label` | `string` | "Component anatomy" | Accessible label of the block. |
 | `class` | `string` | — | Extra class on the wrapper. |
 
@@ -84,3 +85,4 @@ The client script re-initializes on `astro:page-load`, so it works with Astro vi
 - [Button](../../button/), [Slider](../../slider/) — custom Astro components
 - [Bootstrap via CDN](../../bs-button/) — Button, Alert, Card, Badge, Navbar
 - [Shadcn-style components](../../shadcn/)
+- [Web Component](../../web-component/) — parts inside a shadow root

@@ -7,7 +7,14 @@ export type AnatomyPartDefinition = {
   description?: string;
 };
 
-export type AnatomyEvent = 'part:enter' | 'part:leave';
+/**
+ * - `part:enter` — a part became active; the handler receives its id.
+ * - `part:leave` — the active part was deactivated; the handler receives `''`.
+ * - `parts:change` — auto-discovery found a different set of parts after the
+ *   DOM changed (e.g. a web component rendered its shadow root late); the
+ *   handler receives `''`, read `getParts()`. Never fires with explicit `parts`.
+ */
+export type AnatomyEvent = 'part:enter' | 'part:leave' | 'parts:change';
 export type AnatomyEventHandler = (partId: string) => void;
 
 /* ─────────────────────────── Theming ─────────────────────────── */
@@ -83,12 +90,24 @@ export type OverlayOptions = {
 /* ─────────────────────────── Options ─────────────────────────── */
 
 export type AnatomyOptions = {
-  /** The component preview container — where data-part elements live */
+  /**
+   * The component preview container — where data-part elements live.
+   * Open shadow roots inside it (web components) are searched too.
+   */
   root: HTMLElement;
   /** The documentation panel container — where data-anatomy-item elements live */
   panel?: HTMLElement;
   /** Part definitions. If omitted, auto-discovers from data-part values in the DOM */
   parts?: AnatomyPartDefinition[];
+  /**
+   * Also treat the native `part` attribute (CSS Shadow Parts, what `::part()`
+   * styles) as a part id, on elements inside open shadow roots. Each
+   * space-separated name is an id: `part="thumb active"` is both `thumb` and
+   * `active`. Hovering such an element highlights one of its names: the first
+   * documented (in `parts`, else in the panel's entries), else its first name.
+   * Default: false — only `data-part` is read.
+   */
+  shadowParts?: boolean;
   /** Named visual preset. Default: 'default'. */
   preset?: AnatomyPresetName;
   /** Per-instance theme token overrides (applied on top of the preset). */

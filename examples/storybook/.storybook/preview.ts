@@ -28,7 +28,7 @@ const preview: Preview = {
       // Without an explicit order Storybook floats ungrouped entries above the
       // sections and otherwise follows load order. The edge cases are the last
       // thing a visitor needs, so they go last.
-      storySort: { order: ['Docs', 'Components', 'Edge cases'] },
+      storySort: { order: ['Docs', 'Components', 'Web Components', ['Vanilla', 'Lit', 'Shoelace', 'Ionic (Stencil)'], 'Edge cases'] },
     },
   },
 };

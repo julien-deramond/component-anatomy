@@ -45,6 +45,7 @@ export const withComponentAnatomy = (
     const controller = createAnatomy({
       root,
       parts: params.parts,
+      shadowParts: params.shadowParts,
       preset: params.preset,
       theme: params.theme,
       overlay: {
@@ -57,6 +58,9 @@ export const withComponentAnatomy = (
       channel.emit(EVENTS.PARTS, { storyId, parts: controller.getParts() });
 
     announceParts();
+    // Parts can show up after this effect ran: a web component renders its
+    // shadow root asynchronously (Lit, Stencil), or is defined late.
+    const offChange = controller.on('parts:change', announceParts);
 
     const offEnter = controller.on('part:enter', (partId) =>
       channel.emit(EVENTS.PART_ENTER, { storyId, partId })
@@ -90,6 +94,7 @@ export const withComponentAnatomy = (
       channel.off(EVENTS.HOVER_ITEM, onHoverItem);
       channel.off(EVENTS.LEAVE_ITEM, onLeaveItem);
       channel.off(EVENTS.PARTS_REQUEST, onPartsRequest);
+      offChange();
       offEnter();
       offLeave();
       controller.destroy();
