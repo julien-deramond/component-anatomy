@@ -1,5 +1,16 @@
 # @component-anatomy/astro
 
+## 0.2.0
+
+### Minor Changes
+
+- [#47](https://github.com/julien-deramond/component-anatomy/pull/47) [`b1b257a`](https://github.com/julien-deramond/component-anatomy/commit/b1b257abad922ca51e3208a74df2dae2081498c8) Thanks [@julien-deramond](https://github.com/julien-deramond)! - Web Components support ([#46](https://github.com/julien-deramond/component-anatomy/issues/46)). Parts inside a web component's open shadow root are highlighted like any others, and a new `shadowParts` prop reads the native `part="…"` names instead of `data-part`. The preview is decorative and hidden from assistive technology, so the block also takes focusable elements inside open shadow roots out of the tab order. This includes elements of components that render after the page loaded.
+
+### Patch Changes
+
+- Updated dependencies [[`b1b257a`](https://github.com/julien-deramond/component-anatomy/commit/b1b257abad922ca51e3208a74df2dae2081498c8)]:
+  - @component-anatomy/core@0.2.0
+
 ## 0.1.0
 
 ### Minor Changes

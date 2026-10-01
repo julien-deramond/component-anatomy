@@ -1,5 +1,16 @@
 # @component-anatomy/storybook
 
+## 0.5.0
+
+### Minor Changes
+
+- [#47](https://github.com/julien-deramond/component-anatomy/pull/47) [`b1b257a`](https://github.com/julien-deramond/component-anatomy/commit/b1b257abad922ca51e3208a74df2dae2081498c8) Thanks [@julien-deramond](https://github.com/julien-deramond)! - Web Components support ([#46](https://github.com/julien-deramond/component-anatomy/issues/46)). Stories rendering web components are documented like any others: parts inside open shadow roots are auto-discovered and highlighted. The panel and the `<Anatomy>` block now update when parts appear after the story rendered, for example when a Lit or Stencil component renders asynchronously or an element is defined late. A new `shadowParts: true` parameter reads the native `part="…"` names a component already exposes for `::part()`, so no `data-part` needs to be added.
+
+### Patch Changes
+
+- Updated dependencies [[`b1b257a`](https://github.com/julien-deramond/component-anatomy/commit/b1b257abad922ca51e3208a74df2dae2081498c8)]:
+  - @component-anatomy/core@0.2.0
+
 ## 0.4.0
 
 ### Minor Changes
