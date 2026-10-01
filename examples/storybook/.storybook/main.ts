@@ -1,4 +1,4 @@
-import { defineMain } from '@storybook/html-vite/node';
+import { defineMain } from '@storybook/web-components-vite/node';
 
 export default defineMain({
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(ts|js)'],
@@ -13,7 +13,7 @@ export default defineMain({
     },
   ],
   framework: {
-    name: '@storybook/html-vite',
+    name: '@storybook/web-components-vite',
     options: {},
   },
 });

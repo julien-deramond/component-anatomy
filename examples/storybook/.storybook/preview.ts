@@ -1,14 +1,11 @@
-import type { Preview } from '@storybook/html-vite';
+import type { Preview } from '@storybook/web-components-vite';
 import '../src/components.css';
 
 /*
- * Still a plain `Preview` object rather than CSF Next's `definePreview({ addons })`:
- * as of storybook@11.0.0-alpha.0, `definePreview` and the `preview.meta()` /
- * `meta.story()` factories ship from the framework package, and
- * `@storybook/html`/`@storybook/html-vite` do not export them — only the
- * React, Vue, Svelte and Next.js frameworks do. With a classic preview,
- * Storybook composes the addon's annotations from the `addons` list in
- * `main.ts`, which is what registers the anatomy decorator here.
+ * A plain `Preview` object rather than CSF Next's `definePreview({ addons })`,
+ * on purpose: with a classic preview, Storybook composes the addon's
+ * annotations from the `addons` list in `main.ts`, which is what registers the
+ * anatomy decorator here — the path most projects take.
  *
  * A CSF Next consumer registers it in `preview.ts` instead:
  *
@@ -28,7 +25,7 @@ const preview: Preview = {
       // Without an explicit order Storybook floats ungrouped entries above the
       // sections and otherwise follows load order. The edge cases are the last
       // thing a visitor needs, so they go last.
-      storySort: { order: ['Docs', 'Components', 'Edge cases'] },
+      storySort: { order: ['Docs', 'Components', 'Web Components', ['Vanilla', 'Lit', 'Shoelace', 'Ionic (Stencil)'], 'Edge cases'] },
     },
   },
 };

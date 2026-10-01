@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/html-vite';
+import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { AnatomyParameters } from '@component-anatomy/storybook';
 
 import { defineStepper } from './web-components.js';
@@ -11,7 +11,7 @@ import { defineStepper } from './web-components.js';
  * in the light DOM. The addon finds both.
  */
 const meta: Meta = {
-  title: 'Components/Web Component',
+  title: 'Web Components/Vanilla',
   render: () => {
     const stepper = document.createElement(defineStepper('sb-stepper', 'data-part'));
     stepper.innerHTML = `<span slot="label" data-part="label">Quantity</span>`;

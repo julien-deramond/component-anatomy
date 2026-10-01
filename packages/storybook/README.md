@@ -163,8 +163,9 @@ against 10 and 11.
 
 ## Example
 
-A complete Storybook 11 setup with Button/Slider/Tabs stories — and two MDX
-pages using the `<Anatomy>` block — lives in [`examples/storybook`](https://github.com/julien-deramond/component-anatomy/tree/main/examples/storybook), deployed at https://julien-deramond.github.io/component-anatomy/storybook/.
+A complete Storybook 11 setup with Button/Slider/Tabs stories, web components
+(vanilla, Lit, Shoelace, and Ionic built with Stencil) — and two MDX pages using
+the `<Anatomy>` block — lives in [`examples/storybook`](https://github.com/julien-deramond/component-anatomy/tree/main/examples/storybook), deployed at https://julien-deramond.github.io/component-anatomy/storybook/.
 
 ## Docs
 

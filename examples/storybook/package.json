@@ -2,7 +2,7 @@
   "name": "examples-storybook",
   "private": true,
   "version": "0.0.0",
-  "description": "Storybook 11 example using the @component-anatomy/storybook addon with HTML components, including the MDX <Anatomy> doc block",
+  "description": "Storybook 11 example using the @component-anatomy/storybook addon with HTML and web components (vanilla, Lit, Shoelace, Ionic), including the MDX <Anatomy> doc block",
   "type": "module",
   "scripts": {
     "dev": "storybook dev -p 6006 --no-open",
@@ -13,8 +13,11 @@
   },
   "devDependencies": {
     "@deramond.dev/storybook": "^0.1.1",
+    "@ionic/core": "^9.0.6",
+    "@shoelace-style/shoelace": "^2.20.1",
     "@storybook/addon-docs": "11.0.0-alpha.1",
-    "@storybook/html-vite": "11.0.0-alpha.1",
+    "@storybook/web-components-vite": "11.0.0-alpha.1",
+    "lit": "^3.3.3",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "storybook": "11.0.0-alpha.1",
