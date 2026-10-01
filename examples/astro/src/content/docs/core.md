@@ -127,6 +127,8 @@ createAnatomy({ root, shadowParts: true });
 // <div part="thumb focused"> is both the `thumb` and the `focused` part
 ```
 
+An element with several names highlights one of them when hovered: the first one documented — listed in `parts`, or else among the panel's `data-anatomy-item` entries — otherwise its first name. List `selected` before `tab` and hovering the selected tab highlights `selected`. From the panel, every element carrying a name is highlighted, as usual.
+
 `part` is only read inside shadow trees, where it has a meaning. Elements in a **closed** shadow root (`mode: 'closed'`) cannot be reached from outside the component: annotate the host or its slotted children instead.
 
 ## Behavior notes

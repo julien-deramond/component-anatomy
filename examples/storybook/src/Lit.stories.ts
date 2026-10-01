@@ -34,6 +34,9 @@ export const DataPart: Story = {
  * The component exposes its anatomy with native `part` names only, and binds
  * the selected tab's: `part=${selected ? 'tab selected' : 'tab'}`. Pick
  * another tab, then hover **Selected**: the highlight follows.
+ *
+ * Hovering the selected tab itself highlights **Selected**, not **Tab**: an
+ * element with several names highlights the first one listed in `parts`.
  */
 export const ShadowParts: Story = {
   render: () => html`<sb-lit-tabs></sb-lit-tabs>`,
@@ -42,8 +45,8 @@ export const ShadowParts: Story = {
       shadowParts: true,
       parts: [
         { id: 'tablist', name: 'Tab list', description: '`part="tablist"`, the `role="tablist"` row.' },
+        { id: 'selected', name: 'Selected', description: 'Bound to state: only the selected tab carries `part="tab selected"`. Listed before **Tab**, so hovering that tab highlights this.' },
         { id: 'tab', name: 'Tab', description: '`part="tab"`, every tab.' },
-        { id: 'selected', name: 'Selected', description: 'Bound to state: only the selected tab carries `part="tab selected"`.' },
         { id: 'panel', name: 'Panel', description: '`part="panel"`, the selected tab\'s content.' },
       ],
     } satisfies AnatomyParameters,

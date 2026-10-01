@@ -103,7 +103,9 @@ export type AnatomyOptions = {
    * Also treat the native `part` attribute (CSS Shadow Parts, what `::part()`
    * styles) as a part id, on elements inside open shadow roots. Each
    * space-separated name is an id: `part="thumb active"` is both `thumb` and
-   * `active`. Default: false — only `data-part` is read.
+   * `active`. Hovering such an element highlights one of its names: the first
+   * documented (in `parts`, else in the panel's entries), else its first name.
+   * Default: false — only `data-part` is read.
    */
   shadowParts?: boolean;
   /** Named visual preset. Default: 'default'. */

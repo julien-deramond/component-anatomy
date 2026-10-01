@@ -68,6 +68,14 @@ export class AnatomyRegistry {
   }
 
   /**
+   * Returns every part element with the part ids it carries, in tree order.
+   * An element carries several ids with `shadowParts`: `part="tab selected"`.
+   */
+  elements(): Array<[HTMLElement, string[]]> {
+    return this.scan().parts;
+  }
+
+  /**
    * Returns all unique part IDs present in the DOM, in document order.
    */
   partIds(): string[] {

@@ -13,7 +13,7 @@ createAnatomy({ root, shadowParts: true });
 // <my-slider> ⟶ #shadow-root ⟶ <div part="track">, <div part="thumb">
 ```
 
-- **`shadowParts` option (new, off by default):** reads the native `part` attribute (CSS Shadow Parts, the one `::part()` styles) on elements inside shadow trees. Each space-separated name is a part id.
+- **`shadowParts` option (new, off by default):** reads the native `part` attribute (CSS Shadow Parts, the one `::part()` styles) on elements inside shadow trees. Each space-separated name is a part id. Hovering an element with several names (`part="tab selected"`) highlights one of them: the first one listed in `parts`, or else among the panel's entries, and otherwise the element's first name. Elements with a single name behave as before.
 - **`parts:change` event (new):** fires when auto-discovery finds a different set of parts after the DOM changed. Integrations use it to update a panel built before a component rendered. It never fires when `parts` are passed explicitly.
 
 Closed shadow roots cannot be reached from outside a component and stay unsupported.

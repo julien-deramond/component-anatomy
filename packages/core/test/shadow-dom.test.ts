@@ -329,6 +329,78 @@ describe('createController — shadow DOM', () => {
     c.destroy();
   });
 
+  describe('hovering an element with several part names', () => {
+    function mountTabs() {
+      const root = mount(`<x-tabs></x-tabs><i data-part="lonely"></i>`);
+      const tabs = shadow(root.firstElementChild!, `
+        <b part="tab selected"></b>
+        <b part="tab"></b>
+        <b data-part="tab-host" part="selected"></b>
+      `);
+      const [selected, other, both] = Array.from(tabs.querySelectorAll('b'));
+      return { root, selected, other, both };
+    }
+
+    async function hoverIds(c: ReturnType<typeof createController>, el: Element) {
+      const entered = vi.fn();
+      const off = c.on('part:enter', entered);
+      el.dispatchEvent(new Event('mouseenter'));
+      el.dispatchEvent(new Event('mouseleave'));
+      off();
+      return entered.mock.calls.map(([id]) => id);
+    }
+
+    it('highlights the first one listed in parts, once', async () => {
+      const { root, selected } = mountTabs();
+      let c = createController({ root, shadowParts: true, parts: [{ id: 'selected', name: 'Selected' }, { id: 'tab', name: 'Tab' }] });
+      expect(await hoverIds(c, selected)).toEqual(['selected']);
+      c.destroy();
+
+      c = createController({ root, shadowParts: true, parts: [{ id: 'tab', name: 'Tab' }, { id: 'selected', name: 'Selected' }] });
+      expect(await hoverIds(c, selected)).toEqual(['tab']);
+      c.destroy();
+    });
+
+    it('follows the panel entries\' order when there is no parts list', async () => {
+      const { root, selected } = mountTabs();
+      document.body.insertAdjacentHTML('beforeend', `
+        <div id="panel"><div data-anatomy-item="selected"></div><div data-anatomy-item="tab"></div></div>`);
+      const c = createController({ root, panel: document.getElementById('panel')!, shadowParts: true });
+      expect(await hoverIds(c, selected)).toEqual(['selected']);
+      c.destroy();
+    });
+
+    it('falls back to the element\'s first name — data-part before part', async () => {
+      const { root, selected, both } = mountTabs();
+      let c = createController({ root, shadowParts: true });
+      expect(await hoverIds(c, selected)).toEqual(['tab']);
+      expect(await hoverIds(c, both)).toEqual(['tab-host']);
+      c.destroy();
+
+      // Documented, but none of this element's names
+      c = createController({ root, shadowParts: true, parts: [{ id: 'panel', name: 'Panel' }] });
+      expect(await hoverIds(c, selected)).toEqual(['tab']);
+      c.destroy();
+    });
+
+    it('leaves elements with a single name alone, documented or not', async () => {
+      const { root, other } = mountTabs();
+      const c = createController({ root, shadowParts: true, parts: [{ id: 'selected', name: 'Selected' }] });
+      expect(await hoverIds(c, other)).toEqual(['tab']);
+      expect(await hoverIds(c, root.querySelector('[data-part="lonely"]')!)).toEqual(['lonely']);
+      c.destroy();
+    });
+
+    it('still highlights every element of a part from the panel', async () => {
+      const { root } = mountTabs();
+      const c = createController({ root, shadowParts: true, parts: [{ id: 'selected', name: 'Selected' }] });
+      c.highlight('tab');
+      await raf();
+      expect(overlays()).toHaveLength(2);
+      c.destroy();
+    });
+  });
+
   it('honors shadowParts', () => {
     const root = mount(`<x-native></x-native>`);
     shadow(root.firstElementChild!, `<i part="icon"></i>`);

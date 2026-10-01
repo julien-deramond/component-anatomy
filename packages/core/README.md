@@ -132,6 +132,8 @@ createAnatomy({ root, shadowParts: true });
 // <my-slider> ⟶ #shadow-root ⟶ <div part="track">, <div part="thumb">
 ```
 
+An element with several names (`part="tab selected"`) highlights one of them when hovered: the first listed in `parts` (or among the panel's entries), otherwise its first name.
+
 Closed shadow roots (`mode: 'closed'`) cannot be reached from outside the component and stay unsupported.
 
 ## CSS custom properties

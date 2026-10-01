@@ -90,23 +90,35 @@ export function createController(options: AnatomyOptions): AnatomyController {
     emit('part:leave', '');
   }
 
-  function attachElementListeners() {
-    const map = registry.query();
+  /** Part ids in the order they are documented: `parts`, else the panel's entries. */
+  function documentedOrder(): string[] {
+    if (options.parts) return options.parts.map((p) => p.id);
+    if (!panel) return [];
+    return Array.from(panel.querySelectorAll<HTMLElement>('[data-anatomy-item]'))
+      .map((el) => el.dataset.anatomyItem ?? '');
+  }
 
-    map.forEach((elements, partId) => {
-      elements.forEach((el) => {
-        // Mouse only — no focus/blur here.
-        // Preview elements are a live component; adding tabstops breaks
-        // their natural tab order and confuses assistive technology.
-        // Keyboard navigation is handled via the panel entries only.
-        const enter = () => highlight(partId, 'preview');
-        const leave = () => unhighlight();
-        el.addEventListener('mouseenter', enter);
-        el.addEventListener('mouseleave', leave);
-        cleanupFns.push(() => {
-          el.removeEventListener('mouseenter', enter);
-          el.removeEventListener('mouseleave', leave);
-        });
+  function attachElementListeners() {
+    const documented = documentedOrder();
+
+    registry.elements().forEach(([el, ids]) => {
+      // Hovering an element with several part names (`part="tab selected"`)
+      // highlights one: the first documented, else the element's first name.
+      const partId = ids.length === 1
+        ? ids[0]
+        : documented.find((id) => ids.includes(id)) ?? ids[0];
+
+      // Mouse only — no focus/blur here.
+      // Preview elements are a live component; adding tabstops breaks
+      // their natural tab order and confuses assistive technology.
+      // Keyboard navigation is handled via the panel entries only.
+      const enter = () => highlight(partId, 'preview');
+      const leave = () => unhighlight();
+      el.addEventListener('mouseenter', enter);
+      el.addEventListener('mouseleave', leave);
+      cleanupFns.push(() => {
+        el.removeEventListener('mouseenter', enter);
+        el.removeEventListener('mouseleave', leave);
       });
     });
 
