@@ -23,6 +23,33 @@ Design systems document component anatomy as static annotated images exported fr
 - Hover a part name in the panel → an overlay highlights the matching element(s) on the live component
 - Hover a `data-part` element → the panel scrolls to and highlights the matching entry
 
+Each side tells the controller returned by `createAnatomy`, which answers on the other side: an overlay box on the element, a highlighted panel entry. A part id (`data-part="thumb"`, `data-anatomy-item="thumb"`) ties the two.
+
+```mermaid
+%%{init: {"fontFamily": "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace", "flowchart": {"wrappingWidth": 480}, "theme": "base", "themeVariables": {"darkMode": true, "dropShadow": "none", "background": "#0A0C11", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace", "fontSize": "14px", "primaryColor": "#16181E", "primaryTextColor": "#E6E8EC", "primaryBorderColor": "#292C33", "secondaryColor": "#16181E", "tertiaryColor": "#0A0C11", "lineColor": "#3AB9BF", "textColor": "#E6E8EC", "clusterBkg": "#0A0C11", "clusterBorder": "#292C33", "titleColor": "#8F929A", "edgeLabelBackground": "#0A0C11"}}}%%
+flowchart LR
+  accTitle: How the preview and the anatomy panel stay in sync
+  accDescr: The controller returned by createAnatomy sits between the live component and the docs panel. Hovering an element marked data-part tells the controller, which marks the panel entry with the same id. Hovering or focusing a panel entry tells the controller, which draws an overlay box on the matching elements.
+
+  subgraph field[" "]
+    direction LR
+    subgraph preview["01 · PREVIEW"]
+      el["data-part"]
+    end
+    subgraph runtime["02 · RUNTIME"]
+      ctl["createAnatomy()"]
+    end
+    subgraph panel["03 · PANEL"]
+      entry["data-anatomy-item"]
+    end
+    el <-- "hover / box" --> ctl
+    ctl <-- "mark / hover" --> entry
+  end
+
+  linkStyle default stroke-width:1.5px,color:#8F929A
+  style field fill:#0A0C11,stroke:#292C33
+```
+
 ![Hovering a part name in the panel highlights the matching element of the slider, and hovering the slider highlights its entry in the panel](./docs/media/anatomy.gif)
 <!-- screenshot: storybook — Anatomy panel next to Controls -->
 
