@@ -57,6 +57,54 @@ const controller = createAnatomy({
 
 That's it. Hovering either side highlights the other. Panel entries with `tabindex="0"` also respond to keyboard focus. If you omit `parts`, they are auto-discovered from the DOM and names are derived from the ids (`leading-icon` → "Leading Icon").
 
+<figure class="dg" id="dg-sync">
+  <div class="dg__scroll">
+    <svg viewBox="0 0 320 424" role="img" aria-labelledby="dg-sync-t dg-sync-d">
+      <title id="dg-sync-t">How the preview and the anatomy panel stay in sync</title>
+      <desc id="dg-sync-d">The controller returned by createAnatomy sits between the live component and the docs panel. Hovering an element marked data-part tells the controller, which marks the panel entry with the same id. Hovering or focusing a panel entry tells the controller, which draws an overlay box on the matching elements of the live component.</desc>
+      <defs>
+        <marker id="dg-sync-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+          <path d="M0,0 L8,4 L0,8 Z" class="dg-head" />
+        </marker>
+      </defs>
+      <text class="dg-title" x="16" y="24"><tspan class="dg-num">01</tspan> Preview</text>
+      <text class="dg-title" x="16" y="148"><tspan class="dg-num">02</tspan> Runtime</text>
+      <text class="dg-title" x="16" y="272"><tspan class="dg-num">03</tspan> Panel</text>
+      <g class="dg-node"><rect x="16" y="36" width="288" height="56" /><text class="dg-text" x="160" y="55">Live component</text><text class="dg-code" x="160" y="76">data-part</text></g>
+      <g class="dg-node"><rect x="16" y="160" width="288" height="56" /><text class="dg-text" x="160" y="179">Controller</text><text class="dg-code" x="160" y="200">createAnatomy()</text></g>
+      <g class="dg-node"><rect x="16" y="284" width="288" height="56" /><text class="dg-text" x="160" y="303">Docs panel</text><text class="dg-code" x="160" y="324">data-anatomy-item</text></g>
+      <path class="dg-edge" d="M120,92 V158" pathLength="1" marker-end="url(#dg-sync-arrow)" style="--i:0" />
+      <path class="dg-edge" d="M224,160 V94" pathLength="1" marker-end="url(#dg-sync-arrow)" style="--i:0" />
+      <path class="dg-edge" d="M120,284 V218" pathLength="1" marker-end="url(#dg-sync-arrow)" style="--i:1" />
+      <path class="dg-edge" d="M224,216 V282" pathLength="1" marker-end="url(#dg-sync-arrow)" style="--i:1" />
+      <text class="dg-label" x="130" y="130">hover</text>
+      <text class="dg-label" x="234" y="130">box</text>
+      <text class="dg-label" x="130" y="254">hover</text>
+      <text class="dg-label" x="234" y="254">mark</text>
+      <text class="dg-note" x="16" y="372">One id ties both sides:</text>
+      <text class="dg-note" x="16" y="390">data-part="thumb" on the element,</text>
+      <text class="dg-note" x="16" y="408">data-anatomy-item="thumb" on its entry.</text>
+    </svg>
+  </div>
+  <figcaption>Figure 1 · either side tells the controller; it answers on the other side. Box: the overlay on the element. Mark: the highlighted panel entry.</figcaption>
+</figure>
+<style>
+  #dg-sync { margin: var(--space-6) 0; border: var(--stroke-hairline) solid var(--color-line); background: var(--color-bg); }
+  #dg-sync .dg__scroll { overflow: hidden; }
+  #dg-sync svg { display: block; width: 100%; max-width: 400px; height: auto; margin: 0 auto; }
+  #dg-sync figcaption { padding: var(--space-2) var(--space-3); border-top: var(--stroke-hairline) solid var(--color-line); font: var(--font-size-xs) / var(--font-line-height-body) var(--font-family-mono); color: var(--color-muted); }
+  #dg-sync .dg-node rect { fill: var(--color-panel); stroke: var(--color-line); stroke-width: 1; }
+  #dg-sync .dg-code, #dg-sync .dg-text { fill: var(--color-fg); text-anchor: middle; dominant-baseline: middle; }
+  #dg-sync .dg-code { font: var(--font-weight-regular) 13px var(--font-family-mono); }
+  #dg-sync .dg-text { font: var(--font-weight-regular) 14px var(--font-family-body); }
+  #dg-sync .dg-title { font: var(--font-weight-semibold) 11px var(--font-family-display); letter-spacing: var(--font-letter-spacing-eyebrow); text-transform: uppercase; fill: var(--color-muted); }
+  #dg-sync .dg-num { font-family: var(--font-family-mono); fill: var(--color-primary); }
+  #dg-sync .dg-label { font: 11px var(--font-family-mono); fill: var(--color-muted); text-anchor: start; }
+  #dg-sync .dg-note { font: 12px var(--font-family-body); fill: var(--color-muted); }
+  #dg-sync .dg-edge { fill: none; stroke: var(--color-primary); stroke-width: 1.5; }
+  #dg-sync .dg-head { fill: var(--color-primary); }
+</style>
+
 ## Core concepts
 
 | Concept | Role |
