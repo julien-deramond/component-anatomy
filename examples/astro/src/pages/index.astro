@@ -84,19 +84,6 @@ const packages = [
       <Button variant="gold" href={`${base}docs/core/`}>Get started →</Button>
       <Button href={GITHUB}>Star on GitHub</Button>
     </Fragment>
-    <figure slot="after" class="loop">
-      <video
-        autoplay
-        muted
-        loop
-        playsinline
-        preload="auto"
-        poster={`${base}demo/anatomy-poster.png`}
-        aria-label="Hovering a part name in the panel highlights the matching element of the slider, and hovering the slider highlights its entry in the panel."
-      >
-        <source src={`${base}demo/anatomy.mp4`} type="video/mp4" />
-      </video>
-    </figure>
     <pre slot="after" class="snippet"><code><span class="tk-c">// 1. Annotate your component</span>
 &lt;div class="thumb" <span class="tk-a">data-part="thumb"</span>&gt;&lt;/div&gt;
 
@@ -161,16 +148,6 @@ const packages = [
   </Section>
 </DocsLayout>
 
-<script>
-  // Reduced motion: keep the poster, never autoplay.
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    document.querySelectorAll<HTMLVideoElement>('.loop video').forEach((v) => {
-      v.removeAttribute('autoplay');
-      v.pause();
-    });
-  }
-</script>
-
 <style>
   .sub { font-size: 1.1875rem; max-width: 52ch; }
 
@@ -183,8 +160,6 @@ const packages = [
   .tk-f { color: var(--color-primary-lift); }
 
   .demo { margin-top: var(--space-8); }
-  .loop { margin: 0 0 var(--space-6); }
-  .loop video { display: block; width: 100%; height: auto; border: 1px solid var(--color-line); border-radius: var(--radius-md); }
   .more { margin: var(--space-6) 0 0; color: var(--color-muted); }
 
   .features, .packages { list-style: none; margin: var(--space-8) 0 0; padding: 0; display: grid; gap: var(--space-5); }

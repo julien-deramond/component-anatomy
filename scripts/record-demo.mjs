@@ -1,8 +1,6 @@
 #!/usr/bin/env node
 // Regenerates the hover-sync demo from the built Astro example:
-//   examples/astro/public/demo/anatomy.mp4         docs home loop
-//   examples/astro/public/demo/anatomy-poster.png  docs home poster (and reduced-motion still)
-//   docs/media/anatomy.gif                         README hero (kept under 2 MB)
+//   docs/media/anatomy.gif   README hero (kept under 2 MB)
 //
 // Usage: pnpm run demo [-- --skip-build]
 //
@@ -22,8 +20,6 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const PORT = 4399;
 const URL = `http://localhost:${PORT}/`;
 const VIEWPORT = { width: 1440, height: 900 };
-const OUT_VIDEO = join(root, 'examples/astro/public/demo/anatomy.mp4');
-const OUT_POSTER = join(root, 'examples/astro/public/demo/anatomy-poster.png');
 const OUT_GIF = join(root, 'docs/media/anatomy.gif');
 const GIF_LIMIT = 2 * 1024 * 1024;
 
@@ -50,7 +46,6 @@ if (!process.argv.includes('--skip-build')) {
   run('pnpm', ['--filter', 'examples-astro', 'build']);
 }
 
-mkdirSync(dirname(OUT_VIDEO), { recursive: true });
 mkdirSync(dirname(OUT_GIF), { recursive: true });
 const tmp = mkdtempSync(join(tmpdir(), 'anatomy-demo-'));
 
@@ -95,7 +90,6 @@ try {
   await sleep(700); // idle
   await hover(entry('track'), 1000); // panel entry -> overlay on the live track
   await hover(entry('thumb'), 900); // panel entry -> overlay on the live thumb
-  await page.screenshot({ path: OUT_POSTER, clip: { x: box.x, y: box.y, width: box.width, height: box.height } });
   await hover(page.locator('.demo [data-part="thumb"]'), 1300); // live thumb -> panel entry follows
   await hover(page.locator('.demo [data-part="output"]'), 1000); // live output
   await page.mouse.move(home.x, home.y, { steps: 30 });
@@ -115,9 +109,6 @@ try {
   const crop = `crop=${cw}:${ch}:${cx}:${cy}`;
   const trim = ['-ss', (start / 1000).toFixed(2), '-t', ((end - start) / 1000).toFixed(2)];
 
-  run(ffmpegPath, ['-y', '-loglevel', 'error', ...trim, '-i', webm, '-vf', `${crop},fps=30`, '-an',
-    '-c:v', 'libx264', '-crf', '24', '-preset', 'slow', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', OUT_VIDEO]);
-
   // GIF: try the widest width that fits under the limit.
   for (const [width, fps] of [[800, 15], [720, 12], [640, 12], [560, 10]]) {
     const filter = `${crop},fps=${fps},scale=${width}:-1:flags=lanczos,split[a][b];[a]palettegen=max_colors=64:stats_mode=diff[p];[b][p]paletteuse=dither=bayer:bayer_scale=5:diff_mode=rectangle`;
@@ -127,7 +118,6 @@ try {
     if (size <= GIF_LIMIT) break;
   }
   if (statSync(OUT_GIF).size > GIF_LIMIT) throw new Error('GIF is still over 2 MB at the smallest size');
-  console.log(`mp4: ${(statSync(OUT_VIDEO).size / 1024).toFixed(0)} KB`);
 } finally {
   await browser?.close();
   server.kill();
