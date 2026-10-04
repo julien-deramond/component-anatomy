@@ -19,11 +19,14 @@
     "version": "changeset version",
     "verify:dist": "node scripts/verify-package-dist.mjs",
     "release": "pnpm run build:packages && pnpm run verify:dist && changeset publish",
-    "test": "pnpm --filter @component-anatomy/core test && pnpm --filter @component-anatomy/storybook test"
+    "test": "pnpm --filter @component-anatomy/core test && pnpm --filter @component-anatomy/storybook test",
+    "demo": "node scripts/record-demo.mjs"
   },
   "devDependencies": {
     "@changesets/changelog-github": "^1.0.1",
     "@changesets/cli": "^3.0.3",
+    "ffmpeg-static": "^5.3.0",
+    "playwright": "^1.63.0",
     "typescript": "^7.0.2"
   },
   "engines": {

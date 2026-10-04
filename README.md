@@ -23,7 +23,7 @@ Design systems document component anatomy as static annotated images exported fr
 - Hover a part name in the panel → an overlay highlights the matching element(s) on the live component
 - Hover a `data-part` element → the panel scrolls to and highlights the matching entry
 
-<!-- screenshot: hero — slider with track highlighted and panel entry active -->
+![Hovering a part name in the panel highlights the matching element of the slider, and hovering the slider highlights its entry in the panel](./docs/media/anatomy.gif)
 <!-- screenshot: storybook — Anatomy panel next to Controls -->
 
 ## Packages
