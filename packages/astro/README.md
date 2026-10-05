@@ -79,6 +79,7 @@ Every colour the block uses is a CSS variable, with a light default. Set them on
 | `--ca-text-subtle` | `#9ca3af` | Headings inside descriptions, the empty state |
 | `--ca-part-id-color` | `#6b7280` | The part id chip |
 | `--ca-code-color` | `#374151` | Inline code in descriptions |
+| `--ca-code-font` | `ui-monospace, 'Cascadia Code', 'Fira Mono', monospace` | Font of the part id chips and inline code in descriptions |
 | `--ca-chip-bg` / `--ca-chip-border` | `#f3f4f6` / `#e5e7eb` | Part id chips, inline code, the scrollbar |
 | `--ca-indicator-border` | `#d1d5db` | The dot beside an inactive part |
 | `--ca-item-active-bg` | indigo wash | The active entry |
