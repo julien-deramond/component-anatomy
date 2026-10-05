@@ -4,7 +4,7 @@
   --ca-preview-bg: var(--color-panel);
   --ca-preview-border: var(--color-line);
   --ca-preview-dot: var(--color-line);
-  --ca-preview-radius: var(--radius-md);
+  --ca-preview-radius: var(--radius-none);
   --ca-part-name-color: var(--color-fg);
   --ca-part-desc-color: var(--color-muted);
   --ca-text-subtle: var(--color-muted);
