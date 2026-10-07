@@ -29,6 +29,26 @@ export default defineConfig({
       },
       brand: { mark: './src/brand/mark.svg', favicons: './src/brand/favicons/' },
       og: { art: './src/brand/og-art.png' },
+      // The author's other tools, in a quiet row of the docs footer; the same
+      // list on each of them, each leaving itself out. "More by Julien
+      // Déramond" (the default) ends the row.
+      related: [
+        {
+          name: 'dtgraph',
+          description: 'Interactive dependency graph for DTCG design tokens',
+          href: 'https://julien-deramond.github.io/dtgraph/',
+        },
+        {
+          name: 'Transtyle',
+          description: 'A compiler for design systems: native themes from one set of tokens',
+          href: 'https://transtyle.github.io/transtyle/',
+        },
+        {
+          name: 'Bootstrap Tokens',
+          description: 'Bootstrap 6 as design tokens, with a theme builder',
+          href: 'https://julien-deramond.github.io/bootstrap-tokens/',
+        },
+      ],
       docs: {
         // No version pill: the project ships several packages, each with its own version.
         tabs: [
