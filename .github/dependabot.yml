@@ -20,6 +20,11 @@ updates:
       github-actions:
         patterns:
           - '*'
+    ignore:
+      # Same TypeScript as examples/astro (see below): the workspace shares one lockfile,
+      # so a TypeScript 7 bump here reaches `astro check` too.
+      - dependency-name: 'typescript'
+        versions: ['>=7']
   - package-ecosystem: 'npm'
     directory: '/examples/astro'
     schedule:

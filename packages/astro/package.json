@@ -42,10 +42,10 @@
   },
   "dependencies": {
     "@component-anatomy/core": "workspace:^",
-    "marked": "^18.0.13"
+    "marked": "^18.0.14"
   },
   "devDependencies": {
-    "astro": "^7.3.3",
+    "astro": "^7.3.5",
     "typescript": "^7.0.2"
   },
   "peerDependencies": {
