@@ -83,6 +83,14 @@ controller.setTheme({ accent: picker.value }, 'minimal');
 }
 ```
 
+The font of the part id chips and of inline code in descriptions is a variable too, `--ca-code-font`, so they can follow your site's monospace font (unset, they use `ui-monospace, 'Cascadia Code', 'Fira Mono', monospace`):
+
+```css
+:root {
+  --ca-code-font: var(--font-family-mono);
+}
+```
+
 Instances without a preset/theme pick these up automatically — useful for theming a whole docs site in CSS only.
 
 ## 3. Overlay hooks

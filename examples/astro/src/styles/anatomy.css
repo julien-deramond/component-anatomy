@@ -10,6 +10,7 @@
   --ca-text-subtle: var(--color-muted);
   --ca-part-id-color: var(--color-muted);
   --ca-code-color: var(--color-fg);
+  --ca-code-font: var(--font-family-mono);
   --ca-chip-bg: var(--color-bg);
   --ca-chip-border: var(--color-line);
   --ca-indicator-border: var(--color-muted);
