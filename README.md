@@ -1,18 +1,29 @@
-<p align="center"><picture><source srcset=".github/header.svg" type="image/svg+xml"><img src=".github/header.png" width="830" alt="Component Anatomy: Interactive component anatomy for design system docs."></picture></p>
+<h1 align="center"><picture><source media="(prefers-color-scheme: dark)" srcset=".github/logo-title-dark.svg"><source media="(prefers-color-scheme: light)" srcset=".github/logo-title-light.svg"><img src=".github/logo-title-light.png" width="572" alt="Component Anatomy"></picture></h1>
 
-# Component Anatomy
+<p align="center">Interactive anatomy documentation for design system components — live, in-browser, framework-agnostic.</p>
 
-> Interactive anatomy documentation for design system components — live, in-browser, framework-agnostic.
+<p align="center"><a href="https://julien-deramond.github.io/component-anatomy/"><strong>Open the docs »</strong></a></p>
 
-[![@component-anatomy/core on npm](https://img.shields.io/npm/v/@component-anatomy/core?style=flat&label=%40component-anatomy%2Fcore&labelColor=16181E&color=3AB9BF)](https://www.npmjs.com/package/@component-anatomy/core)
-[![@component-anatomy/astro on npm](https://img.shields.io/npm/v/@component-anatomy/astro?style=flat&label=%40component-anatomy%2Fastro&labelColor=16181E&color=3AB9BF)](https://www.npmjs.com/package/@component-anatomy/astro)
-[![@component-anatomy/storybook on npm](https://img.shields.io/npm/v/@component-anatomy/storybook?style=flat&label=%40component-anatomy%2Fstorybook&labelColor=16181E&color=3AB9BF)](https://www.npmjs.com/package/@component-anatomy/storybook)
-[![License: MIT](https://img.shields.io/badge/license-MIT-2D7579?style=flat&labelColor=16181E)](./LICENSE)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-2D7579?style=flat&labelColor=16181E)](./CONTRIBUTING.md)
+<p align="center">
+  <a href="https://julien-deramond.github.io/component-anatomy/">Docs</a>
+  ·
+  <a href="https://julien-deramond.github.io/component-anatomy/storybook/">Storybook</a>
+  ·
+  <a href="#packages">Packages</a>
+  ·
+  <a href="https://github.com/julien-deramond/component-anatomy/issues/new/choose">Report a bug</a>
+</p>
 
-**Docs & live demos:** https://julien-deramond.github.io/component-anatomy/ · **Live Storybook:** https://julien-deramond.github.io/component-anatomy/storybook/
+<p align="center">
+  <a href="https://www.npmjs.com/package/@component-anatomy/core"><img src="https://img.shields.io/npm/v/@component-anatomy/core?style=flat&label=%40component-anatomy%2Fcore&labelColor=16181E&color=3AB9BF" alt="@component-anatomy/core on npm"></a>
+  <a href="https://www.npmjs.com/package/@component-anatomy/astro"><img src="https://img.shields.io/npm/v/@component-anatomy/astro?style=flat&label=%40component-anatomy%2Fastro&labelColor=16181E&color=3AB9BF" alt="@component-anatomy/astro on npm"></a>
+  <a href="https://www.npmjs.com/package/@component-anatomy/storybook"><img src="https://img.shields.io/npm/v/@component-anatomy/storybook?style=flat&label=%40component-anatomy%2Fstorybook&labelColor=16181E&color=3AB9BF" alt="@component-anatomy/storybook on npm"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/julien-deramond/component-anatomy?style=flat&labelColor=16181E&color=2D7579" alt="Licence: MIT"></a>
+</p>
 
----
+<p align="center">
+  <a href="https://julien-deramond.github.io/component-anatomy/"><img src="./docs/media/anatomy.gif" alt="Hovering a part name in the panel highlights the matching element of the slider, and hovering the slider highlights its entry in the panel" width="100%"></a>
+</p>
 
 ## The problem
 
@@ -22,9 +33,6 @@ Design systems document component anatomy as static annotated images exported fr
 
 - Hover a part name in the panel → an overlay highlights the matching element(s) on the live component
 - Hover a `data-part` element → the panel scrolls to and highlights the matching entry
-
-![Hovering a part name in the panel highlights the matching element of the slider, and hovering the slider highlights its entry in the panel](./docs/media/anatomy.gif)
-<!-- screenshot: storybook — Anatomy panel next to Controls -->
 
 ## Packages
 
