@@ -8,7 +8,7 @@
  * `bootstrap` loads Bootstrap's CSS from the CDN for that page only, in a cascade layer so it can
  * never restyle the site around the demo, and renders the demo in Bootstrap's dark mode.
  */
-import { DocsLayout } from '@deramond.dev/astro';
+import DocsLayout from '@deramond.dev/astro/layouts/DocsLayout.astro';
 import { buildSidebar } from '@deramond.dev/astro/docs';
 import { getCollection } from 'astro:content';
 
