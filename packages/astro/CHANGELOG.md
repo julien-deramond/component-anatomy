@@ -1,5 +1,11 @@
 # @component-anatomy/astro
 
+## 0.3.0
+
+### Minor Changes
+
+- [#57](https://github.com/julien-deramond/component-anatomy/pull/57) [`2ff1a65`](https://github.com/julien-deramond/component-anatomy/commit/2ff1a65d022ac7d65af2c5fe1851dbb77dff6192) Thanks [@julien-deramond](https://github.com/julien-deramond)! - The font of the part id chips and of inline code in descriptions is now the CSS variable `--ca-code-font` ([#53](https://github.com/julien-deramond/component-anatomy/issues/53)), so a site can match them to its own monospace font. Unset, the previous monospace stack applies and nothing changes.
+
 ## 0.2.0
 
 ### Minor Changes
