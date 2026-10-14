@@ -36,8 +36,8 @@ importers:
         specifier: workspace:^
         version: link:../../packages/core
       '@deramond.dev/astro':
-        specifier: ^0.15.0
-        version: 0.15.0(astro@7.3.5(yaml@2.9.1))
+        specifier: ^0.16.0
+        version: 0.16.0(astro@7.3.5(yaml@2.9.1))
       astro:
         specifier: ^7.3.5
         version: 7.3.5(yaml@2.9.1)
@@ -474,8 +474,8 @@ packages:
     resolution: {integrity: sha512-Vh5uy9Y1JBMId6J1f68TMXnZrTCvNdo9Fu2k0d1YnJngR+sM5kWTKl441c/3TFs+cG0NWOjRWgQ/iaWhbYx+7A==}
     engines: {node: '>=14'}
 
-  '@deramond.dev/astro@0.15.0':
-    resolution: {integrity: sha512-6MVzHjQqhhWnao/AIPYoqiy8YIw5dQd8wxMeM5HWsTe6Lj3UNqkqfozpiQc48RPfKzub//rjrPYdKmB3zZeTag==}
+  '@deramond.dev/astro@0.16.0':
+    resolution: {integrity: sha512-FBwlNS9tbwr8tmUZZnedSw26Ut8kmPeGziWBdRf0iENxNge+pdEEMGqKACa3a9p+ttFJ5nEGo9b43MtR1MAciQ==}
     engines: {node: '>=22.12.0'}
     peerDependencies:
       astro: ^7.3.0
@@ -489,8 +489,8 @@ packages:
   '@deramond.dev/tokens@0.2.0':
     resolution: {integrity: sha512-t3ODLh2Jh4abUupntifcOLGHXoBa5CbnyrGlcK9Xxoe+pR5Us9UJmvrAcA8vjh+E1lR2Z+bJpbQls4xmv84bbg==}
 
-  '@deramond.dev/tokens@0.3.0':
-    resolution: {integrity: sha512-2zb1aMCLyJ4pjlptDa0sWFwbQ2MHGme3NvZfmKd/HQ5LpL4xELYQnYiTOnkXrSiPVyu2wNk1Uq8A3gAMC4M6Fg==}
+  '@deramond.dev/tokens@0.4.0':
+    resolution: {integrity: sha512-vQyl535mB+/Cn7Bh8k2Lw+Pd81lS7dUxyolzIx3VIwWgpcvBG1al8q4+M0GaV5FvL1TAUDkHAXKA6UoRhBVzuw==}
 
   '@derhuerst/http-basic@8.2.4':
     resolution: {integrity: sha512-F9rL9k9Xjf5blCz8HsJRO4diy111cayL2vkY2XE4r4t3n0yPXVYy3KD3nJ1qbrSn9743UWSXH4IwuCa/HWlGFw==}
@@ -3619,9 +3619,9 @@ snapshots:
 
   '@ctrl/tinycolor@4.2.1': {}
 
-  '@deramond.dev/astro@0.15.0(astro@7.3.5(yaml@2.9.1))':
+  '@deramond.dev/astro@0.16.0(astro@7.3.5(yaml@2.9.1))':
     dependencies:
-      '@deramond.dev/tokens': 0.3.0
+      '@deramond.dev/tokens': 0.4.0
       '@fontsource/chakra-petch': 5.3.0
       '@fontsource/instrument-sans': 5.3.0
       '@fontsource/roboto-mono': 5.3.0
@@ -3638,7 +3638,7 @@ snapshots:
 
   '@deramond.dev/tokens@0.2.0': {}
 
-  '@deramond.dev/tokens@0.3.0': {}
+  '@deramond.dev/tokens@0.4.0': {}
 
   '@derhuerst/http-basic@8.2.4':
     dependencies:
