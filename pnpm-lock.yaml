@@ -36,8 +36,8 @@ importers:
         specifier: workspace:^
         version: link:../../packages/core
       '@deramond.dev/astro':
-        specifier: ^0.16.0
-        version: 0.16.0(astro@7.3.8(esbuild@0.28.2)(yaml@2.9.1))
+        specifier: ^0.17.0
+        version: 0.17.0(astro@7.3.8(esbuild@0.28.2)(yaml@2.9.1))
       astro:
         specifier: ^7.3.8
         version: 7.3.8(esbuild@0.28.2)(yaml@2.9.1)
@@ -474,8 +474,8 @@ packages:
     resolution: {integrity: sha512-Vh5uy9Y1JBMId6J1f68TMXnZrTCvNdo9Fu2k0d1YnJngR+sM5kWTKl441c/3TFs+cG0NWOjRWgQ/iaWhbYx+7A==}
     engines: {node: '>=14'}
 
-  '@deramond.dev/astro@0.16.0':
-    resolution: {integrity: sha512-FBwlNS9tbwr8tmUZZnedSw26Ut8kmPeGziWBdRf0iENxNge+pdEEMGqKACa3a9p+ttFJ5nEGo9b43MtR1MAciQ==}
+  '@deramond.dev/astro@0.17.0':
+    resolution: {integrity: sha512-TopFErxFAFXMGx8rcycGKY7k9NOpZIkTEniU2yTJDqCR96/S9aEThwkA4KUEwjqN7kT1L2uoS6QEWSTaq+pCIg==}
     engines: {node: '>=22.12.0'}
     peerDependencies:
       astro: ^7.3.0
@@ -3605,7 +3605,7 @@ snapshots:
 
   '@ctrl/tinycolor@4.2.1': {}
 
-  '@deramond.dev/astro@0.16.0(astro@7.3.8(esbuild@0.28.2)(yaml@2.9.1))':
+  '@deramond.dev/astro@0.17.0(astro@7.3.8(esbuild@0.28.2)(yaml@2.9.1))':
     dependencies:
       '@deramond.dev/tokens': 0.4.0
       '@fontsource/chakra-petch': 5.3.0
