@@ -13,7 +13,7 @@
   "dependencies": {
     "@component-anatomy/astro": "workspace:^",
     "@component-anatomy/core": "workspace:^",
-    "@deramond.dev/astro": "^0.17.0",
+    "@deramond.dev/astro": "^0.17.1",
     "astro": "^7.3.8"
   },
   "devDependencies": {
