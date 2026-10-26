@@ -73,11 +73,11 @@
     "@component-anatomy/core": "workspace:^"
   },
   "devDependencies": {
-    "@storybook/addon-docs": "11.0.0-alpha.5",
+    "@storybook/addon-docs": "11.0.0-alpha.6",
     "@types/react": "^19.3.0",
     "esbuild": "^0.28.2",
-    "react": "^19.3.0",
-    "react-dom": "^19.3.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
     "storybook": "11.0.0-alpha.6",
     "typescript": "^7.0.2"
   },
