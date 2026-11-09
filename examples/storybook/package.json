@@ -13,7 +13,7 @@
   },
   "devDependencies": {
     "@deramond.dev/storybook": "^0.1.1",
-    "@ionic/core": "^9.0.9",
+    "@ionic/core": "^9.0.10",
     "@shoelace-style/shoelace": "^2.20.1",
     "@storybook/addon-docs": "11.0.0-alpha.8",
     "@storybook/html-vite": "11.0.0-alpha.8",
