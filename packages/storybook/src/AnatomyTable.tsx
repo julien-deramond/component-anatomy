@@ -8,7 +8,7 @@
  * data acquisition differs between the two; the markup must not.
  */
 import React from 'react';
-import { useTheme } from 'storybook/theming';
+import * as theming from 'storybook/theming';
 import { resolvePanelAccent } from '@component-anatomy/core';
 import type {
   AnatomyPartDefinition,
@@ -28,6 +28,21 @@ type PartialStorybookTheme = {
   borderColor?: { default?: string };
   typography?: { fonts?: { base?: string; mono?: string } };
 };
+
+/**
+ * Storybook's `useTheme`, wherever this Storybook still exposes it.
+ *
+ * Storybook 10 exports it from `storybook/theming`. Storybook 11 moved it to
+ * `storybook/theming/emotion`, which Storybook 10 doesn't have, and kept a
+ * runtime alias in the manager only: in the preview (the docs blocks) the old
+ * export is gone. One static import can't serve both majors, so read it off
+ * the namespace at runtime (`Reflect.get`: a member access, even by string
+ * key, makes the consumer's bundler warn that the import is undefined) and
+ * fall back to an empty theme, which every read below already handles.
+ */
+const NO_THEME = {};
+const useTheme: () => unknown =
+  (Reflect.get(theming, 'useTheme') as (() => unknown) | undefined) ?? (() => NO_THEME);
 
 const FONT_BASE_FALLBACK =
   '"Nunito Sans", -apple-system, ".SFNSText-Regular", "San Francisco", BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif';
